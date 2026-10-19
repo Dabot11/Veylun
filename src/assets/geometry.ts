@@ -30,6 +30,19 @@ export class Geometry {
   box(name:string,parent:TransformNode|null,pos:XYZ,scale:XYZ,color:string,glow=0):Mesh{return this.place(CreateBox(name,{size:1},this.scene),parent,pos,scale,color,glow);}
   cylinder(name:string,parent:TransformNode|null,pos:XYZ,height:number,bottom:number,top:number,color:string,tess=10):Mesh{const m=CreateCylinder(name,{height,diameterBottom:bottom,diameterTop:top,tessellation:tess},this.scene);return this.place(m,parent,pos,[1,1,1],color);}
   tube(name:string,parent:TransformNode|null,points:XYZ[],radius:number,color:string,glow=0):Mesh{const m=CreateTube(name,{path:points.map(p=>new Vector3(...p)),radius,tessellation:6,cap:Mesh.CAP_ALL},this.scene);return this.place(m,parent,[0,0,0],[1,1,1],color,glow);}
+  tapered(name:string,parent:TransformNode|null,points:XYZ[],radius:number,color:string):Mesh{
+    const m=CreateTube(name,{path:points.map(p=>new Vector3(...p)),radiusFunction:i=>radius*Math.max(.035,Math.sin((.18+.82*i/(points.length-1))*Math.PI)),tessellation:7,cap:Mesh.CAP_ALL},this.scene);
+    return this.place(m,parent,[0,0,0],[1,1,1],color);
+  }
+  surface(name:string,parent:TransformNode|null,positions:number[],indices:number[],color:string):Mesh{
+    const m=new Mesh(name,this.scene),v=new VertexData();v.positions=positions;v.indices=indices;v.normals=[];
+    const coordinates=[0,1,2].map(axis=>positions.filter((_,i)=>i%3===axis));
+    const low=coordinates.map(values=>Math.min(...values)),span=coordinates.map((values,axis)=>Math.max(...values)-low[axis]!);
+    const flat=span.indexOf(Math.min(...span)),axes=[0,1,2].filter(axis=>axis!==flat);
+    v.uvs=[];for(let i=0;i<positions.length;i+=3)for(const axis of axes)v.uvs.push((positions[i+axis]!-low[axis]!)/Math.max(.00001,span[axis]!));
+    VertexData.ComputeNormals(positions,indices,v.normals);v.applyToMesh(m);
+    return this.place(m,parent,[0,0,0],[1,1,1],color);
+  }
   leaf(name:string,parent:TransformNode|null,pos:XYZ,width:number,length:number,color:string,glow=0):Mesh{
     const m=new Mesh(name,this.scene),v=new VertexData();
     const positions:number[]=[],indices:number[]=[];

@@ -1,10 +1,46 @@
-# Validación ejecutada — recorrido y continuidad
+# Validación ejecutada
+
+## Revisión artística de Ruen y del claro
+
+19 de octubre de 2026. Mismo entorno cloud descrito abajo. Cambios de geometría,
+articulación y decoración; controles, daño y progresión permanecen iguales.
+
+- 106 tests unitarios en 10 archivos: incluye apoyo de pies y espada, guardia,
+  limpieza de poses y flexión de carrera. La hoja se comprueba durante las
+  ventanas de impacto de los tres golpes mirando en cuatro direcciones.
+- TypeScript estricto y build Vite correctos.
+- Capturas preparadas: frontal, espalda, carrera, ataque, escudo y rodada;
+  claro a 800 × 600 y 390 × 844, sin desbordamiento horizontal.
+- Nueve casos únicos de Playwright aprobados: cuatro de inicio/guardado/mando,
+  tres ataques con teclado/ratón/Xbox simulado, Brote activo con bloqueo y
+  contraataque sin daño al jugador, y controles con activación final del altar.
+
+Los casos de navegador aprobaron en tres ejecuciones (5 + 3 + 1). Se repitieron
+solo los fallidos por tiempos de espera. Se conservaron las comprobaciones de
+daño, salud, guardado e interacción: las capturas de inicio se toman con la
+pausa normal; combate/controles usan 640 × 480 y esperas mayores para software.
+Teclado y mando de combate habían aprobado a 800 × 600. El inicio cubre
+1280 × 720 y después 390 × 844. Las sombras permanecen activadas en los
+encuentros y capturas de arte; el inicio también comprueba su desactivación
+desde Ajustes. El último caso de controles/altar aprobó en 2,3 minutos.
+
+No se repitieron en esta revisión los recorridos largos de Espíritu, Guardián
+y aventura completa en navegador: sus resultados anteriores se conservan abajo.
+La suite unitaria sí incluye sus reglas y el recorrido de simulación.
+
+Las capturas inspeccionan arte y poses; no miden fluidez o FPS. Se detiene el
+bucle después de renderizar cada pose para capturar en Chromium/SwiftShader.
+Los primeros intentos de captura agotaron el tiempo bajo renderizado continuo;
+no se interpretan como validación de rendimiento en hardware real.
+Detalle de alcance en `ART_PASS.md`.
+
+## Revisión anterior: recorrido y continuidad
 
 19 de octubre de 2026, UTC. Linux cloud, Node 24.19.0, npm 11.9.0 y Chromium
 con renderizado de software. El entorno y las dependencias existentes se
 reutilizaron; no hubo cambios de instalación ni de configuración cloud.
 
-| Comprobación | Resultado de esta revisión |
+| Comprobación | Resultado de la revisión anterior |
 |---|---|
 | `npm test` | 102 pruebas aprobadas en 9 archivos |
 | TypeScript estricto y build Vite | Correctos, incluido el ajuste final de orientación del cofre |
@@ -89,8 +125,8 @@ nueva prueba completa desde el inicio.
 
 ## Límites
 
-El build conserva el aviso de chunks mayores de 500 kB: aproximadamente 953 kB
-minificados / 235 kB gzip para el principal y 768 kB / 180 kB gzip para el cargador
+El build conserva el aviso de chunks mayores de 500 kB: aproximadamente 962 kB
+minificados / 239 kB gzip para el principal y 768 kB / 180 kB gzip para el cargador
 opcional de modelos. No impide compilar. No se midieron 60 FPS en macOS ni la
 mezcla de sonido con altavoces físicos.
 

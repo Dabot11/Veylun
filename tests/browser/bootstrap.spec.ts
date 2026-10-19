@@ -1,16 +1,20 @@
 import { test, expect } from '@playwright/test';
 import { freshSave, SAVE_KEY } from '../../src/progression/save';
-// Full-resolution screenshots and mouse steps are slow with software rendering.
-// Keep the same assertions and give the browser time to finish those operations.
+// Pause through the public control before capturing the canvas: continuous
+// software rendering can starve full-resolution screenshot readback.
 test.setTimeout(180000);
 test('new game, keyboard movement, jump, roll, camera, pause and responsive HUD',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('pointer lock'))errors.push(m.text());});
  await page.goto('/');await expect(page.locator('body')).toHaveAttribute('data-engine','ready',{timeout:60000});
  await page.getByRole('button',{name:'Nueva partida'}).click();await expect(page.locator('body')).toHaveAttribute('data-screen','none');
  await expect(page.locator('#health')).toHaveAttribute('aria-label','Salud: 10 de 10');
- await page.screenshot({path:'test-results/awakening.png'});
- const before=await page.locator('canvas').screenshot();await page.keyboard.down('KeyW');await page.waitForTimeout(1500);await page.keyboard.press('Space');await page.waitForTimeout(600);await page.keyboard.press('ShiftLeft');await page.waitForTimeout(500);await page.keyboard.up('KeyW');
+ await page.keyboard.press('Escape');await expect(page.getByRole('heading',{name:'Pausa'})).toBeVisible();
+ const before=await page.locator('canvas').screenshot({path:'test-results/awakening.png'});
+ await page.getByRole('button',{name:'Continuar',exact:true}).click();
+ await page.keyboard.down('KeyW');await page.waitForTimeout(1500);await page.keyboard.press('Space');await page.waitForTimeout(600);await page.keyboard.press('ShiftLeft');await page.waitForTimeout(500);await page.keyboard.up('KeyW');
+ await page.keyboard.press('Escape');await expect(page.getByRole('heading',{name:'Pausa'})).toBeVisible();
  expect((await page.locator('canvas').screenshot()).equals(before)).toBe(false);
+ await page.getByRole('button',{name:'Continuar',exact:true}).click();
  await page.mouse.move(800,380);await page.mouse.move(960,400,{steps:10});
  await page.keyboard.press('Escape');await expect(page.getByRole('heading',{name:'Pausa'})).toBeVisible();
  await page.getByRole('button',{name:'Ajustes'}).click();await expect(page.getByLabel('Volumen')).toBeVisible();await page.getByLabel('Sombras').uncheck();await page.getByRole('button',{name:'Volver',exact:true}).click();

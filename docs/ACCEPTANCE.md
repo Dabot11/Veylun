@@ -59,6 +59,8 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
       restaurar el altar, con muerte deliberada y recargas entre checkpoints.
 - [x] Guía transitable al cofre y salida, continuación sin almacenamiento local
       durante la sesión y pausa/reanudación de la ceremonia.
+- [x] Primera revisión procedural de Ruen y del claro: capa, cabello, equipo,
+      codos/rodillas, losas, vegetación y sombras locales. Ver `ART_PASS.md`.
 - [ ] Restauración de una nueva tarea cloud.
 
 Consultar `VALIDATION.md` para el resultado de las ejecuciones reales.

@@ -121,6 +121,11 @@ ilustraciones. No hay modelos GLB definitivos ni una conversión automática de
 imágenes. `VisualOverrides` carga GLB y sus clips cuando se configura una ruta
 real en `assetCatalog.ts`, sin cambiar la simulación.
 
+La primera revisión de Ruen añade cabello de mechones afinados, capa con
+emblema dorsal, equipo más definido y articulación de codos y rodillas. El claro
+incorpora anillos de piedra, helechos, flores, musgo y sombras del dosel cercano.
+Detalles y comprobaciones en `docs/ART_PASS.md`.
+
 ## Pruebas
 
 Pruebas de lógica: `npm test`. Incluyen un recorrido completo con comandos de

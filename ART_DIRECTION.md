@@ -45,10 +45,30 @@ retiran. Los aros ámbar anticipan ataques y la luz guía indica la ruta siguien
 El HUD evita ocupar el centro de combate; corazones, objetivo e interacción
 usan colores claros y tipografía simple.
 
+## Primera revisión de Ruen y del claro
+
+Ruen conserva su altura aproximada y la convención espada derecha/escudo
+izquierdo. `assets/ruen.ts` construye mechones curvos afinados, rostro con
+mandíbula y boca, capa continua de doble capa con emblema dorsal, capucha,
+arnés cruzado, bolsillos, frasco, rodillera y herrajes sin emisión. Las gemas
+son rombos facetados y la hoja tiene filo y nervadura. La espada se inclina
+hacia fuera en reposo para mantener la punta sobre el suelo.
+
+El movimiento incluye codos y rodillas, flexión al saltar y aterrizar, postura
+recogida al rodar y escudo adelantado. El ciclo de carrera sigue la velocidad;
+los tres ataques conservan sus tiempos y orientación de impacto. La capa se
+mueve desde su anclaje, sin simulación física de tela ni esqueleto con skinning.
+
+El Claro del despertar tiene dos anillos de losas con juntas, grabados bajos,
+sendero de piedras, helechos de frondas divididas, flores azul marfil, hiedra y
+musgo en los pilares existentes. Las copas cercanas y el primer arco proyectan
+sombras cuando están activadas. El acceso central permanece despejado y no se
+añaden obstáculos a la simulación.
+
 ## Mejoras siguientes
 
-Refinar siluetas del cabello/capa y escultura de corteza/piedra; mayor variedad
-de vegetación y distribución del escenario; animaciones con rig y transiciones
+Refinar el rostro y la escultura de corteza/piedra; extender la vegetación del
+claro al resto del recorrido; animaciones con rig y transiciones
 más orgánicas; cascadas animadas y efectos más ricos; iluminación medida en
 hardware real. Los GLB definitivos deberán conservar escala, pivotes y clips
 lógicos definidos en el catálogo.

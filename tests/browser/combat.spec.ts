@@ -1,8 +1,13 @@
-import { expect, test } from '@playwright/test';
+import { expect as baseExpect, test } from '@playwright/test';
 import './harness';
 
-test.use({ baseURL: 'http://127.0.0.1:5174', viewport: { width: 800, height: 600 } });
-test.setTimeout(90000);
+const expect=baseExpect.configure({timeout:30000});
+// Input/damage tests use a smaller software-rendered viewport. Art captures and
+// the production bootstrap separately cover larger viewports with shadows on.
+test.use({ baseURL: 'http://127.0.0.1:5174', viewport: { width: 640, height: 480 } });
+// SwiftShader can spend most of a minute on scene startup and rendered HUD reads.
+// Preserve every damage assertion while allowing all three input edges to finish.
+test.setTimeout(180000);
 
 for (const device of ['keyboard', 'mouse', 'gamepad'] as const) {
   test(`${device}: three real attack presses hit and defeat a nearby enemy`, async ({ page }) => {
@@ -77,7 +82,7 @@ test('active Brote: lock, block the charge, then counterattack without losing he
   await page.keyboard.down('KeyK');
   await page.keyboard.press('KeyQ');
   await expect(page.locator('.enemy-lock')).toBeVisible();
-  await expect(page.locator('#combat-notice')).toHaveText('Bloqueado · responde con la espada', { timeout: 15000 });
+  await expect(page.locator('#combat-notice')).toHaveText('Bloqueado · responde con la espada', { timeout: 45000 });
   expect(await page.evaluate(() => window.__veylun.sim.player.health)).toBe(10);
   expect(await page.evaluate(() => window.__veylun.sim.enemies[0]!.state)).toBe('recover');
   await page.keyboard.up('KeyK');

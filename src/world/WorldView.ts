@@ -13,6 +13,7 @@ import { CombatEffects } from './CombatEffects';
 import { SpiritView } from './SpiritView';
 import { GuardianView } from './GuardianView';
 import { SanctuaryView } from './SanctuaryView';
+import { createAwakeningArt } from './awakeningArt';
 export class WorldView {
   readonly visualOverrides=new VisualOverrides();readonly g:Geometry;readonly hero:CharacterRig;readonly enemyRigs:CharacterRig[];
   private seal:TransformNode;private gate:TransformNode;private grate:TransformNode;private lid:TransformNode;private switchGem:Mesh;private altar:Mesh;
@@ -56,6 +57,7 @@ export class WorldView {
       for(let i=0;i<50;i++){
         const angle=random()*Math.PI*2,r=1+random()*7;
         const x=Math.cos(angle)*r,sz=z+Math.sin(angle)*r;
+        if(zone.id==='awakening')continue;
         const tile=g.cylinder('ancient-paving',null,[x,groundHeight(x,sz)+.015,sz],.08,.8+random()*.5,.8+random()*.5,i%3?'#a8af8c':'#939e7e',6);tile.rotation.y=random()*6;
       }
       for(const side of [-1,1])for(const offset of [-5,5])this.pillar(side*7,z+offset,2.5+random()*1.8);
@@ -67,8 +69,14 @@ export class WorldView {
     }
     // Ruined arch marking the first path.
     this.arch(0,15,3.2);this.arch(0,43,3.1);this.arch(0,90,4.1);
+    createAwakeningArt(g);
+    for(let i=0;i<14;i++){
+      const z=5+i*.64,x=Math.sin(i*1.8)*1.25;
+      g.cylinder('awakening-path-stone',null,[x,groundHeight(x,z)+.015,z],.035,.8,.8,i%3?'#a4ab92':'#8c9380',7).scaling.z=.7;
+    }
     for(let i=0;i<650;i++){
       const z=-9+random()*140,x=(random()>.5?1:-1)*(4+random()*10);if(z>97&&Math.abs(x)<9)continue;
+      if(z<18)continue; // The opening has its own smaller feathered ferns and flower patches.
       const y=groundHeight(x,z);
       for(let j=0;j<3;j++){
         const leaf=g.leaf('fern',null,[x,y,z],.16+random()*.18,.35+random()*.65,j%2?'#6d994e':'#4b7848');leaf.rotation.y=random()*6;leaf.rotation.z=(random()-.5)*1.5;
@@ -87,9 +95,13 @@ export class WorldView {
     }
     const staticMeshes=scene.meshes.slice(staticStart).filter((m):m is Mesh=>m instanceof Mesh);
     const byMaterial=new Map<string,Mesh[]>();
-    for(const m of staticMeshes){const k=m.material?.name??'';const list=byMaterial.get(k)??[];list.push(m);byMaterial.set(k,list);}
-    for(const list of byMaterial.values()){
-      const merged=Mesh.MergeMeshes(list,true,true,undefined,false,true);if(merged){merged.isPickable=false;merged.freezeWorldMatrix();merged.receiveShadows=true;}
+    for(const m of staticMeshes){
+      const casts=m.position.z>-10&&m.position.z<18&&['canopy','sunlit-leaves','arch-block'].includes(m.name);
+      const k=(m.material?.name??'')+'|'+m.getVerticesDataKinds().sort().join(',')+(casts?'|awakening-shadow':'');
+      const list=byMaterial.get(k)??[];list.push(m);byMaterial.set(k,list);
+    }
+    for(const [key,list] of byMaterial){
+      const merged=Mesh.MergeMeshes(list,true,true,undefined,false,true);if(merged){merged.isPickable=false;merged.freezeWorldMatrix();merged.receiveShadows=true;if(key.endsWith('|awakening-shadow'))this.shadowCasters.push(merged);}
     }
     // Dynamic architecture stays separate from merged scenery.
     this.seal=g.node('root-seal');

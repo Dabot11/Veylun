@@ -37,7 +37,9 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `camera/FollowCamera.ts` | Seguimiento, órbita, colisión y encuadre del objetivo |
 | `progression` | Datos versionados, validación y almacenamiento local |
 | `progression/guidance.ts` | Indicaciones por etapa y ruta de la luz alrededor del recinto del cofre |
-| `assets/characters.ts` | Modelos originales y animaciones procedurales |
+| `assets/characters.ts`, `assets/ruen.ts` | Modelos originales y animaciones procedurales; Ruen con codos y rodillas |
+| `assets/characterRig.ts` | Contrato del rig y fusión de mallas por articulación/material/atributos |
+| `world/awakeningArt.ts` | Decoración estática del claro, fusionada por material y atributos en WorldView |
 | `assets/VisualOverrides.ts`, `ModelLoader.ts` | Sustitución opcional por GLB y clips |
 | `assets/geometry.ts`, `surfaceTexture.ts` | Mallas, materiales y texturas originales |
 | `ui/UI.ts` | HUD, menús, ajustes y navegación de mando |

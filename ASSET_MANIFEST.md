@@ -19,11 +19,12 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 
 | ID | Implementación | Escala inicial | Materiales y articulación | Estado |
 |---|---|---|---|---|
-| ruen | `createRuen` en `src/assets/characters.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas. Cadera, cabeza, brazos, piernas, capa, espada y escudo | 3D procedural provisional |
+| ruen | `createRuen` en `src/assets/ruen.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas facetadas. Cadera, cabeza, hombros, codos, piernas, rodillas, capa, espada y escudo | 3D procedural provisional, primera revisión artística |
 | corrupt-sprout | `createEnemyRig(..., 'sprout')` | ~1.1 m | Corteza, raíces, musgo, hojas y ojos ámbar. Cuerpo encorvado, cabeza baja y grandes brazos delanteros | 3D procedural provisional |
 | wandering-spirit | `createEnemyRig(..., 'spirit')` | ~1.25 m incluyendo aletas y cola | Núcleo emisivo, máscara de madera, ojos grandes, hojas y aletas de energía | 3D procedural provisional |
 | ancestral-guardian | `createEnemyRig(..., 'guardian')` | ~4.2 m | Raíces, placas de piedra, vegetación y runas turquesa. Cuerpo, cabeza, brazos y piernas | 3D procedural provisional |
 | forest-world | `src/world/WorldView.ts` | 1 unidad = 1 m | Suelo, árboles, raíces, flores, ruinas, acantilados, cascadas, reja, cofre, puerta y altar | Entorno procedural provisional |
+| awakening-dressing | `src/world/awakeningArt.ts` | 1 unidad = 1 m | Anillos de piedra, grabados, frondas, flores, hiedra y musgo; sombras locales del dosel | Primera revisión del claro |
 | surfaces | `src/assets/surfaceTexture.ts` | 128 × 128 por textura | Pigmento de piedra, corteza, tela y suelo; generación canvas original | Texturas de runtime |
 | sound-fx | `src/audio/AudioManager.ts` | Síntesis Web Audio | Pasos, espada, impacto, escudo, rodada, proyectil, cofre, interruptor, checkpoint, derrota y victoria | Efectos originales funcionales |
 

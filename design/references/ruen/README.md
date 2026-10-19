@@ -6,7 +6,8 @@ conserva nombres, dimensiones, tamaño y SHA-256; se omitieron únicamente los
 metadatos AppleDouble de `__MACOSX`.
 
 **Estado:** referencias conceptuales 2D revisadas. No contienen GLB, rig ni
-clips de animación. La construcción de la representación 3D sigue pendiente.
+clips de animación. Existe una representación procedural original revisada en
+`src/assets/ruen.ts`; el modelo definitivo sigue pendiente.
 
 ## Vistas y uso
 

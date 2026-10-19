@@ -99,13 +99,15 @@ describe('attack regressions', () => {
       const player = new Simulation().player;
       player.combo = combo;
       const attack = attacks[combo - 1]!;
-      for (const fraction of [.1, .5, .9]) {
+      for (const yaw of [0,Math.PI/2,Math.PI,-Math.PI/2]) for (const fraction of [.1, .5, .9]) {
+        player.yaw=yaw;
         player.attackTime = attack.windup + (attack.activeEnd - attack.windup) * fraction;
         rig.update(player, 0);
         const tip = Vector3.TransformCoordinates(
           new Vector3(0, -.78, 0), rig.parts['sword']!.computeWorldMatrix(true),
         );
-        expect(tip.z, `blade position during hit: ${tip.toString()}`).toBeGreaterThan(.65);
+        const forward=tip.x*Math.sin(yaw)+tip.z*Math.cos(yaw);
+        expect(forward, `blade position during hit: ${tip.toString()}`).toBeGreaterThan(.65);
       }
     } finally {
       scene.dispose();
