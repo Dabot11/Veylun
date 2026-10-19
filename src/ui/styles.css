@@ -19,3 +19,13 @@
 @media(max-width:700px){#enemy-status{top:151px;left:15px;width:235px}#combat-lesson{left:15px;bottom:115px;font-size:10px;max-width:240px}#combat-notice{font-size:11px;bottom:76px;max-width:95vw;white-space:normal;width:max-content}#toast{top:275px}}
 #hud:has(#enemy-status:not([hidden])) #zone-title{display:none}
 #combat-lesson{bottom:120px}
+
+#combat-notice[data-kind=magic-block],#combat-notice[data-kind=magic-dodge]{color:#b8f5e8;border-color:#8bd7c580}
+#ruins-guide{position:absolute;bottom:120px;left:35px;width:248px;padding:15px 16px;background:#10382de8;border:1px solid #d6be7980;border-radius:3px}
+#ruins-guide b{font:17px Georgia,serif;color:#ffe6aa}
+#ruins-guide p{font-size:12px;line-height:1.6;color:#dce8cf;margin:10px 0}
+#ruins-guide small{font-size:10px;color:#a9e6cf}
+#hud:has(#ruins-guide:not([hidden])) #zone-title{display:none}
+@media(max-width:700px){#ruins-guide{bottom:120px;left:15px;width:235px}}
+#hud:has(#enemy-status:not([hidden])) #toast,#hud:has(#ruins-guide:not([hidden])) #toast{top:108px;right:35px;left:auto;transform:none;max-width:min(420px,calc(100vw - 335px))}
+@media(max-width:700px){#hud:has(#enemy-status:not([hidden])) #toast,#hud:has(#ruins-guide:not([hidden])) #toast{top:275px;right:auto;left:50%;transform:translateX(-50%);max-width:90vw}}

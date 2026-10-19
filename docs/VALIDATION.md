@@ -1,4 +1,4 @@
-# Validación ejecutada — MVP y pulido del combate
+# Validación ejecutada — MVP, combate y Espíritu errante
 
 Fecha local: 18 de octubre de 2026 (America/Monterrey); registros del entorno:
 19 de octubre, UTC. Linux cloud, Node 24.19.0, npm 11.9.0 y Chromium del sistema
@@ -8,17 +8,18 @@ con renderizado de software.
 |---|---|
 | Instalación npm y repetición con `npm ci` | Correctas en la preparación del entorno; lockfile conservado |
 | TypeScript estricto y compilación Vite | Correctos; build estático en `dist/` |
-| `npm test` | 58 pruebas aprobadas en 6 archivos |
+| `npm test` | 73 pruebas aprobadas en 7 archivos |
 | Playwright, `bootstrap.spec.ts`, build estático | 4 pruebas de inicio, controles, guardado y mando |
 | Playwright, `scenarios.spec.ts`, desarrollo | 1 prueba de controles, entrada inmediata al iniciar, jefe y altar |
 | Playwright, `combat.spec.ts`, desarrollo | 4 pruebas: daño real con teclado, ratón y Xbox simulado; bloqueo y contraataque con IA activa |
-| Revisión visual nueva | Panel de vida, estado, flecha de embestida y encuadre a corta distancia en 800 × 600 y 390 × 844 |
+| Playwright, `spirit.spec.ts`, desarrollo | 2 pruebas aprobadas: bloqueo, aproximación, daño real, muerte y activación del interruptor con teclado y Xbox simulado |
+| Revisión visual | Panel de combate, carga de magia, cristal señalado y guía del interruptor; escritorio y 390 × 844 |
 | Referencias | 24 PNG originales conservados; inspección y hashes comprobados en la preparación inicial |
 | Publicación | GitHub Pages desde `gh-pages`; ver `DEPLOYMENT.md` y Actions para la revisión publicada |
 
 ## Lógica y recorrido
 
-Las 58 pruebas cubren timestep, carga de modelos, cámara, movimiento y colisiones,
+Las 73 pruebas cubren timestep, carga de modelos, cámara, movimiento y colisiones,
 salto, combo, escudo, esquiva, objetivos, los tres tipos de enemigo, progresión,
 muerte, checkpoints, altar y guardado. Una prueba recorre el nivel completo
 mediante comandos normales de movimiento, ataque e interacción hasta restaurar
@@ -30,12 +31,22 @@ de la espada y las ventanas de entrada. El pulido agrega ocho pruebas de combate
 sobre alternancia, bloqueo, reacción, daño efectivo, selección y panel, además
 de cuatro comprobaciones de cámara sobre órbita y encuadre. Ver `COMBAT_POLISH.md`.
 
+Las quince pruebas nuevas del Espíritu verifican preparación y dirección fija,
+retirada mirando a Ruen, cobertura, bloqueo seguido de contraataque desde seis
+metros, colisiones barridas y prioridad de contacto, altura, escudo frontal y
+trasero, esquiva, salto, aviso de peligro, limpieza al morir, progreso del
+interruptor y estabilidad del pool de mallas. Ver `SPIRIT_ENCOUNTER.md`.
+
 El cargador se prueba con una jerarquía sintética; no se recibió ni probó un GLB
 definitivo de personaje.
 
 ## Navegador
 
-Las nueve pruebas aprobaron en 3,2 minutos con un solo worker. Las cuatro sobre producción
+Las once pruebas aprobaron en ejecuciones separadas: dos del Espíritu (4,3 min),
+ocho regresiones en el lote general (9,3 min, que incluyó un timeout) y la
+repetición del inicio con su límite ampliado (2,6 min). Todas usaron un solo worker.
+
+Las cuatro pruebas sobre producción
 verifican inicio, controles, cámara, pausa, ajustes, HUD adaptable, guardado
 corrupto, recarga de progreso, confirmación de nueva partida y Gamepad API con
 un Xbox estándar simulado. No se conectó un mando físico.
@@ -56,16 +67,31 @@ con J, sin perder salud. Comprueba además la limpieza del panel al volver al
 checkpoint. Las pruebas vigilan errores de página; las de inicio y altar
 vigilan también consola.
 
+Las dos pruebas del Espíritu aprobaron en 4,3 minutos con un solo worker.
+Preparan únicamente el progreso previo de los Brotes y la posición inicial de
+Ruen; conservan IA y salud normales del Espíritu. Teclado o mando simulado
+bloquean la magia, se acercan, causan dos golpes, derrotan al enemigo y activan
+el interruptor. Comprueban salud intacta, desaparición de proyectiles, mensajes,
+señal del cristal y apertura de la reja. No conceden daño desde la preparación.
+
+Con SwiftShader, los encuentros usan el ajuste normal de sombras desactivadas.
+Las pruebas de inicio y Brotes mantienen sombras activadas. Los límites de tiempo
+permiten el renderizado lento por software: una primera ejecución del inicio
+agotó 90 segundos durante movimientos del ratón; se amplió a 180 segundos sin
+cambiar sus comprobaciones. El tiempo de ejecución de estas pruebas no equivale
+a la duración de una partida con GPU.
+
 La instrumentación `?test=1` solo existe en desarrollo. Las capturas con estados
 preparados no representan una partida completa jugada manualmente en navegador.
 
 ## Límites y rendimiento
 
 La agrupación inicial redujo la escena de 410 a 216 mallas. Esta iteración añade
-un pool de 24 partículas de impacto y dos flechas de embestida; los efectos
+un pool de 24 partículas de impacto, dos flechas de embestida, cuatro disparos
+reutilizables y señales de carga, recuperación e interruptor; los efectos
 se reutilizan y desactivan al expirar. Los nodos de audio se desconectan al acabar.
 Vite mantiene el aviso de chunks mayores de 500 kB: principal de aproximadamente
-935 kB minificado / 230 kB gzip; cargador opcional de 768 kB / 180 kB gzip.
+941 kB minificado / 232 kB gzip; cargador opcional de 768 kB / 180 kB gzip.
 El build concluye correctamente. Estas comprobaciones no demuestran 60 FPS en
 macOS ni validan la mezcla de sonido con altavoces físicos.
 

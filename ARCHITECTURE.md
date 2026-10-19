@@ -27,7 +27,9 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `world/level.ts` | Zonas, altura de suelo y colliders compartidos |
 | `world/WorldView.ts` | Bosque, arquitectura, interacciones y feedback visual |
 | `world/CombatEffects.ts` | Cuatro ráfagas reutilizables de impacto, con 24 partículas como máximo |
+| `world/SpiritView.ts` | Carga, dirección, recuperación y pool de cuatro proyectiles mágicos |
 | `enemies/types.ts` | Tipos de enemigo y estados |
+| `enemies/spiritCombat.ts` | Tiempos compartidos del Espíritu, amenaza de disparo y contacto barrido |
 | `input` | Acciones abstractas y adaptadores de dispositivo |
 | `camera/FollowCamera.ts` | Seguimiento, órbita, colisión y encuadre del objetivo |
 | `progression` | Datos versionados, validación y almacenamiento local |
@@ -60,7 +62,7 @@ la detección de daño, con la espada delante durante la ventana activa.
 Escudo 110°; rodada breve
 con invulnerabilidad parcial y recuperación. Enemigos separados en FSM de
 patrulla/persecución, preparación, ataque, recuperación y muerte. La muerte
-elimina ataques; proyectiles ya emitidos tienen vida independiente y acotada.
+elimina ataques; al derrotar al Espíritu también se disipan sus proyectiles.
 
 Los Brotes comparten un turno de preparación/embestida y una separación de
 350 ms entre ataques. Un bloqueo frontal pasa directamente a recuperación.
@@ -68,6 +70,14 @@ Los enemigos ordinarios pausan su estado 120 ms al recibir un golpe, o 240 ms
 con el tercero del combo; el Guardián conserva su ritmo. El evento de impacto
 incluye enemigo, daño efectivo y posición para sincronizar HUD, sonido y
 partículas. El destello usa overlays por malla, sin alterar materiales compartidos.
+
+El Espíritu prepara magia durante 950 ms y fija la dirección a los 500 ms.
+El proyectil viaja recto a 4,2 m/s; la recuperación dura 2,8 s sin desplazamiento.
+No inicia la carga sin línea de visión. La colisión de magia barre el segmento
+completo, amplía los obstáculos por su radio y resuelve el contacto más temprano
+con pared o jugador. La altura del obstáculo, la orientación del escudo y la
+ventana de invulnerabilidad de la rodada se conservan. El HUD avisa de un disparo
+entrante hasta que pasa, se esquiva a un lado, se bloquea o choca.
 
 La fijación prioriza la dirección de cámara y excluye líneas de visión
 obstruidas. LB/RB recorren los objetivos de izquierda a derecha; una obstrucción
@@ -83,6 +93,9 @@ del Guardián. El inicio es punto de aparición, no un tercer checkpoint. Un sel
 de raíces libera el sendero al terminar el primer combate. Espíritu → interruptor
 → reja → cofre → llave → interacción de puerta → Guardián → interacción de altar.
 La última interacción inicia tres segundos de restauración y la victoria.
+Tras vencer al Espíritu, `ruinsSwitchReady` deriva del guardado existente y
+enciende el haz del interruptor. Se apaga al activarlo; cargar una partida con
+el Espíritu derrotado conserva la guía. La reja sigue requiriendo interacción.
 
 `SaveStore` valida versión, tipos e invariantes entre llave/cofre/reja/puerta,
 checkpoints y victoria. Los datos corruptos se rechazan con aviso. No se guardan
@@ -96,7 +109,8 @@ raíces, ruinas, vegetación y personajes; texturas de pigmento, corteza, tela y
 piedra generadas localmente en canvas. Mallas estáticas combinadas por material;
 piezas rígidas de personajes combinadas por nodo articulado y material. Materiales
 reutilizados, sombra direccional configurable, fog y far plane limitado. Se
-eliminan proyectiles al expirar. Audio desconecta nodos al terminar.
+eliminan proyectiles lógicos al expirar y se reutilizan sus mallas. Audio
+desconecta nodos al terminar.
 
 El catálogo marca modelos provisionales procedurales con `modelPath: null`.
 Si se configura un GLB, `VisualOverrides` lo carga debajo de la raíz visual,

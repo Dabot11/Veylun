@@ -38,27 +38,33 @@ export function solid(o: Obstacle, save: SaveDataV1): boolean {
 }
 /** Segment/box intersection keeps melee damage on the visible side of solids. */
 export function clearMeleePath(from: V2 & { y: number }, to: V2 & { y: number }, save: SaveDataV1): boolean {
-  return !obstacles.some(o => {
-    if (!solid(o, save)) return false;
+  return firstSolidHit(from,to,save)===undefined;
+}
+/** Earliest solid contact; padding expands colliders for a projectile's radius. */
+export function firstSolidHit(from: V2 & { y: number }, to: V2 & { y: number }, save: SaveDataV1, padding=0): number | undefined {
+  let first: number | undefined;
+  for(const o of obstacles){
+    if (!solid(o, save)) continue;
     const floor = groundHeight(o.x, o.z);
     const axes = [
-      [from.x, to.x - from.x, o.x - o.w / 2, o.x + o.w / 2],
-      [from.y, to.y - from.y, floor, floor + o.height],
-      [from.z, to.z - from.z, o.z - o.d / 2, o.z + o.d / 2],
+      [from.x, to.x - from.x, o.x - o.w / 2-padding, o.x + o.w / 2+padding],
+      [from.y, to.y - from.y, floor-padding, floor + o.height+padding],
+      [from.z, to.z - from.z, o.z - o.d / 2-padding, o.z + o.d / 2+padding],
     ] as const;
     let enter = 0, exit = 1;
     for (const [origin, delta, min, max] of axes) {
       if (Math.abs(delta) < 1e-8) {
-        if (origin < min || origin > max) return false;
+        if (origin < min || origin > max) {enter=Infinity;break;}
       } else {
         const a = (min - origin) / delta, b = (max - origin) / delta;
         enter = Math.max(enter, Math.min(a, b));
         exit = Math.min(exit, Math.max(a, b));
-        if (enter > exit) return false;
+        if (enter > exit) break;
       }
     }
-    return true;
-  });
+    if(enter<=exit&&(first===undefined||enter<first))first=enter;
+  }
+  return first;
 }
 /** Axis-separated swept substeps avoid tunneling during rolls and charges. */
 export function moveWithCollisions(pos: V2, dx: number, dz: number, radius: number, y: number, save: SaveDataV1): V2 {

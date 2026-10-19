@@ -7,4 +7,6 @@ Espada: ruido filtrado corto. Impacto: ruido y tono grave descendente, más
 intenso en el tercer golpe. Bloqueo: dos tonos metálicos; muerte enemiga: campanada.
 El volumen se ajusta en pausa. El buffer de ruido se reutiliza y las fuentes,
 filtros y ganancias se desconectan al terminar.
+El Espíritu tiene una señal ascendente durante la carga, un disparo distinto
+del impacto de espada y un efecto breve cuando la magia choca contra cobertura.
 No hay música de fondo ni archivos de audio externos.

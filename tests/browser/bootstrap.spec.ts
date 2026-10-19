@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { freshSave, SAVE_KEY } from '../../src/progression/save';
-test.setTimeout(90000);
+// Full-resolution screenshots and mouse steps are slow with software rendering.
+// Keep the same assertions and give the browser time to finish those operations.
+test.setTimeout(180000);
 test('new game, keyboard movement, jump, roll, camera, pause and responsive HUD',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('pointer lock'))errors.push(m.text());});
  await page.goto('/');await expect(page.locator('body')).toHaveAttribute('data-engine','ready',{timeout:60000});

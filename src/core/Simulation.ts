@@ -1,5 +1,5 @@
 import { angleDelta, angleTo, clamp, distance, facing, type V2 } from './math';
-import { checkpoints, groundHeight, interactables, moveWithCollisions, clearMeleePath, zones, obstacles, solid } from '../world/level';
+import { checkpoints, groundHeight, interactables, moveWithCollisions, clearMeleePath, firstSolidHit, zones } from '../world/level';
 import { freshSave } from '../progression/save';
 import type { SaveDataV1, ZoneId } from '../progression/types';
 import type { OrdinaryEnemyId, EnemyType, EnemyState } from '../enemies/types';
@@ -7,10 +7,11 @@ import type { InteractionId } from '../interactions/types';
 import type { PlayerState } from '../player/types';
 import { attacks, shieldBlocks, swordHits } from '../player/combat';
 import { gameConfig as config } from '../config/gameConfig';
+import { spiritCombat, segmentCircleEntry } from '../enemies/spiritCombat';
 export interface Commands { x: number; z: number; jump?: boolean; dodge?: boolean; attack?: boolean; shield?: boolean; interact?: boolean; target?: boolean; cycle?: number; viewYaw?: number }
 export interface Player extends V2 { y: number; vx: number; vz: number; vy: number; yaw: number; health: number; grounded: boolean; state: PlayerState; stateTime: number; invulnerable: number; rollCooldown: number; combo: number; attackTime: number; attackBuffer: number; queued: boolean; shield: boolean; coyote: number; jumpBuffer: number; rollX: number; rollZ: number; hitIds: Set<string> }
 export interface Enemy extends V2 { id: string; kind: EnemyType; y: number; yaw: number; radius: number; hp: number; maxHp: number; state: EnemyState; timer: number; age: number; home: V2; attackIndex: number; hit: boolean; hurt: number; stagger: number; aim: V2 }
-export interface Projectile extends V2 { id: number; y: number; vx: number; vz: number; life: number }
+export interface Projectile extends V2 { id: number; ownerId: string; y: number; vx: number; vz: number; life: number }
 export interface GameEvent { type: string; text?: string; x?: number; y?: number; z?: number; enemyId?: string; damage?: number; strong?: boolean }
 export class Simulation {
   save: SaveDataV1;
@@ -46,6 +47,7 @@ export class Simulation {
   }
   persist(): void { this.emit('save'); }
   get target(): Enemy | undefined { return this.enemies.find(e => e.id===this.targetId && e.hp>0); }
+  get ruinsSwitchReady():boolean { return this.save.defeatedOrdinaryEnemies.includes('spirit-1')&&!this.save.switchActivated; }
   visibleEnemy(e:Enemy):boolean { return clearMeleePath({...this.player,y:this.player.y+.8},{...e,y:e.y+.8},this.save); }
   targets(): Enemy[] { return this.enemies.filter(e=>e.hp>0 && distance(e,this.player)<config.camera.lockRange && (e.kind!=='guardian'||this.save.doorUnlocked) && this.visibleEnemy(e)); }
   selectTarget(cycle = 0, viewYaw = this.player.yaw): void {
@@ -143,6 +145,10 @@ export class Simulation {
       if(e.id===this.targetId)this.targetId=null;
       if(e.kind==='guardian'){this.save.bossDefeated=true;this.emit('message','El Guardián descansa. Activa el altar para restaurar el santuario.');}
       else{this.save.defeatedOrdinaryEnemies.push(e.id as OrdinaryEnemyId);this.player.health=Math.min(10,this.player.health+1);}
+      if(e.kind==='spirit'){
+        this.projectiles=this.projectiles.filter(b=>b.ownerId!==e.id);
+        this.emit('spirit-cleared','El Espíritu descansa. Sigue la luz hasta el interruptor de las ruinas.');
+      }
       this.persist();
     }
   }
@@ -170,8 +176,11 @@ export class Simulation {
     if(e.state==='chase'){
       e.yaw=angleTo(e,p);
       if(e.kind==='spirit'){
-        if(d<4)this.moveEnemy(e,{x:e.x+(e.x-p.x),z:e.z+(e.z-p.z)},.8,dt);else if(d>7)this.moveEnemy(e,p,1.2,dt);
-        if(e.timer>1.6&&d<12){e.state='windup';e.timer=0;e.aim={x:p.x,z:p.z};}
+        if(d<4)this.moveEnemy(e,{x:e.x+(e.x-p.x),z:e.z+(e.z-p.z)},.8,dt);else if(d>spiritCombat.preferredRange)this.moveEnemy(e,p,1.2,dt);
+        // Retreat changes movement direction, but the mask must keep facing Ruen.
+        e.yaw=angleTo(e,p);
+        if(!this.visibleEnemy(e))e.timer=0;
+        else if(e.timer>spiritCombat.approachTime&&d<12){e.state='windup';e.timer=0;e.aim={x:p.x,z:p.z};this.emit('spirit-charge',undefined,e);}
       }else{
         const reach=e.kind==='guardian'?3.5:2.9;
         if(d>reach)this.moveEnemy(e,p,e.kind==='guardian'?1.3:1.9,dt);
@@ -180,10 +189,15 @@ export class Simulation {
         }
       }
     }else if(e.state==='windup'){
-      const windup=e.kind==='guardian'?1.15:e.kind==='spirit'?.8:.75;
-      if(e.timer<windup*.55){e.aim={x:p.x,z:p.z};e.yaw=angleTo(e,e.aim);}
+      const windup=e.kind==='guardian'?1.15:e.kind==='spirit'?spiritCombat.windup:.75;
+      if(e.timer<(e.kind==='spirit'?spiritCombat.aimLockTime:windup*.55)){e.aim={x:p.x,z:p.z};e.yaw=angleTo(e,e.aim);}
       if(e.timer>=windup){e.state='attack';e.timer=0;e.hit=false;
-        if(e.kind==='spirit'){const yaw=angleTo(e,e.aim);this.projectiles.push({id:++this.projectileId,x:e.x,z:e.z,y:groundHeight(e.x,e.z)+.9,vx:Math.sin(yaw)*3.4,vz:Math.cos(yaw)*3.4,life:5});this.emit('projectile');}
+        if(e.kind==='spirit'){
+          const yaw=angleTo(e,e.aim),dx=Math.sin(yaw),dz=Math.cos(yaw),y=groundHeight(e.x,e.z)+spiritCombat.projectileHeight;
+          const muzzle={x:e.x+dx*spiritCombat.muzzleOffset,y,z:e.z+dz*spiritCombat.muzzleOffset};
+          if(clearMeleePath({...e,y},muzzle,this.save))this.projectiles.push({id:++this.projectileId,ownerId:e.id,...muzzle,vx:dx*spiritCombat.projectileSpeed,vz:dz*spiritCombat.projectileSpeed,life:spiritCombat.projectileLife});
+          this.emit('projectile');
+        }
         if(e.kind==='guardian'&&e.attackIndex%2===1)this.emit('slam',undefined,e);
       }
     }else if(e.state==='attack'){
@@ -200,8 +214,8 @@ export class Simulation {
           e.hit=true;
         }
       }
-      if(e.timer>(e.kind==='guardian'?.6:.4)){e.state='recover';e.timer=0;if(e.kind==='sprout')this.sproutAttackCooldown=.35;}
-    }else if(e.state==='recover'&&e.timer>(e.kind==='guardian'?1.7:1.1)){e.state='chase';e.timer=0;e.attackIndex++;}
+      if(e.timer>(e.kind==='guardian'?.6:e.kind==='spirit'?spiritCombat.releaseTime:.4)){e.state='recover';e.timer=0;if(e.kind==='sprout')this.sproutAttackCooldown=.35;}
+    }else if(e.state==='recover'&&e.timer>(e.kind==='guardian'?1.7:e.kind==='spirit'?spiritCombat.recovery:1.1)){e.state='chase';e.timer=0;e.attackIndex++;}
     e.y=groundHeight(e.x,e.z)+(e.kind==='spirit'?.7:0);
   }
   private moveEnemy(e:Enemy,to:V2,speed:number,dt:number):void{
@@ -211,9 +225,21 @@ export class Simulation {
   private updateProjectiles(dt:number):void{
     const p=this.player;
     this.projectiles=this.projectiles.filter(b=>{
-      b.life-=dt;const old={x:b.x,z:b.z};b.x+=b.vx*dt;b.z+=b.vz*dt;
-      if(b.life<=0||Math.abs(b.x)>14||obstacles.some(o=>solid(o,this.save)&&Math.abs(b.x-o.x)<o.w/2+.1&&Math.abs(b.z-o.z)<o.d/2+.1))return false;
-      if(distance(b,p)<.5&&Math.abs(p.y+.7-b.y)<.8){this.receiveDamage(1,old);return false;}
+      b.life-=dt;if(b.life<=0)return false;
+      const old={x:b.x,y:b.y,z:b.z},next={x:b.x+b.vx*dt,y:b.y,z:b.z+b.vz*dt},r=spiritCombat.projectileRadius;
+      const wall=firstSolidHit(old,next,this.save,r);
+      const playerHit=b.y>=p.y-r&&b.y<=p.y+config.player.height+r?segmentCircleEntry(old,next,p,.28+r):undefined;
+      if(wall!==undefined&&(playerHit===undefined||wall<=playerHit)){
+        this.events.push({type:'magic-impact',x:old.x+(next.x-old.x)*wall,y:b.y,z:old.z+(next.z-old.z)*wall});return false;
+      }
+      if(playerHit!==undefined){
+        const result=this.receiveDamage(1,{x:p.x-b.vx,z:p.z-b.vz});
+        if(result==='blocked')this.emit('magic-block');
+        else if(result==='ignored'&&p.state==='roll'&&p.stateTime<config.combat.dodgeInvulnerability)this.emit('magic-dodge');
+        return false;
+      }
+      b.x=next.x;b.z=next.z;
+      if(Math.abs(b.x)>14||b.z< -10||b.z>132||b.y-r<=groundHeight(b.x,b.z))return false;
       return true;
     });
   }

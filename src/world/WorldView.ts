@@ -10,10 +10,13 @@ import { groundHeight, obstacles, interactables, zones } from './level';
 import { seededRandom } from '../core/math';
 import type { Simulation } from '../core/Simulation';
 import { CombatEffects } from './CombatEffects';
+import { SpiritView } from './SpiritView';
 export class WorldView {
   readonly visualOverrides=new VisualOverrides();readonly g:Geometry;readonly hero:CharacterRig;readonly enemyRigs:CharacterRig[];
   private seal:TransformNode;private gate:TransformNode;private grate:TransformNode;private lid:TransformNode;private switchGem:Mesh;private altar:Mesh;
-  private telegraphs:Mesh[]=[];private targetRing:Mesh;private destination:Mesh;private projectiles=new Map<number,Mesh>();private motes:Mesh[]=[];
+  private telegraphs:Mesh[]=[];private targetRing:Mesh;private destination:Mesh;private motes:Mesh[]=[];
+  readonly spiritView:SpiritView;
+  private switchBeacon:TransformNode;
   readonly shadowCasters:Mesh[]=[];
   readonly combatEffects:CombatEffects;
   private chargeArrows=new Map<string,TransformNode>();
@@ -99,6 +102,11 @@ export class WorldView {
     this.lid=g.node('chest-lid',chest,[0,.64,-.35]);g.box('chest-lid-wood',this.lid,[0,.08,.35],[1.12,.18,.74],'#956d42');g.gem('chest-lock',chest,[0,.42,.39],.13);
     const sw=interactables['ruins-switch'];g.cylinder('switch-plinth',null,[sw.x,groundHeight(sw.x,sw.z)+.4,sw.z],.8,.7,.55,'#a0a78d',8);
     this.switchGem=g.gem('switch-crystal',null,[sw.x,groundHeight(sw.x,sw.z)+1,sw.z],.28);
+    this.switchBeacon=g.node('ruins-switch-beacon',undefined,[sw.x,groundHeight(sw.x,sw.z),sw.z]);
+    const beam=g.box('switch-light-column',this.switchBeacon,[0,1.7,0],[.07,2.8,.07],'#ffe4a1',.8);beam.material=g.mat('#ffe4a1',.8,.45);
+    g.gem('switch-guide-diamond',this.switchBeacon,[0,2.9,0],.2,'#ffe4a1');
+    const switchRing=CreateTorus('switch-ready-ring',{diameter:1.5,thickness:.04,tessellation:40},scene);
+    g.place(switchRing,this.switchBeacon,[0,.08,0],[1,1,1],'#ffe4a1',.8);this.switchBeacon.setEnabled(false);
     g.cylinder('altar-base',null,[0,groundHeight(0,126)+.5,126],1,1.6,1.25,'#929b85',8);
     this.altar=g.gem('altar-heart',null,[0,groundHeight(0,126)+1.4,126],.58);
     this.hero=createRuen(g);this.enemyRigs=sim.enemies.map(e=>createEnemyRig(g,e.kind,e.id));
@@ -106,6 +114,7 @@ export class WorldView {
     for(const e of sim.enemies){const ring=CreateTorus('attack-warning',{diameter:e.kind==='guardian'?8.6:3.5,thickness:.055,tessellation:48},scene);ring.material=g.mat('#f4a45b',.7);ring.isPickable=false;this.telegraphs.push(ring);}
     this.targetRing=CreateTorus('target-ring',{diameter:1.5,thickness:.035,tessellation:48},scene);this.targetRing.material=g.mat('#fff3ba',.8);this.targetRing.isPickable=false;
     this.combatEffects=new CombatEffects(g);
+    this.spiritView=new SpiritView(g);
     for(const e of sim.enemies.filter(e=>e.kind==='sprout')){
       const arrow=g.node('charge-direction');
       g.box('charge-path',arrow,[0,0,1.5],[.07,.025,2.4],'#ffc178',.6);
@@ -140,6 +149,7 @@ export class WorldView {
   }
   update(sim:Simulation,dt:number):void{
     const t=sim.age;this.visualOverrides.update(sim);
+    this.spiritView.update(sim);
     this.combatEffects.update(dt);
     for(const e of sim.enemies){const arrow=this.chargeArrows.get(e.id);if(arrow){arrow.setEnabled(sim.mode==='playing'&&e.hp>0&&e.state==='windup');arrow.position.set(e.x,groundHeight(e.x,e.z)+.1,e.z);arrow.rotation.y=e.yaw;}}
     this.seal.setEnabled(!(sim.save.defeatedOrdinaryEnemies.includes('sprout-1')&&sim.save.defeatedOrdinaryEnemies.includes('sprout-2')));
@@ -147,14 +157,15 @@ export class WorldView {
     this.gate.position.y+=( (sim.save.doorUnlocked?-6:groundHeight(0,90))-this.gate.position.y)*Math.min(1,dt*2);
     this.grate.position.y+=((sim.save.grateOpened?-4:groundHeight(10,57))-this.grate.position.y)*Math.min(1,dt*3);
     this.lid.rotation.x+=((sim.save.chestOpened?-1.7:0)-this.lid.rotation.x)*Math.min(1,dt*4);
-    this.switchGem.rotation.y=t*.5;this.switchGem.material=this.g.mat(sim.save.switchActivated?'#b8f3a1':'#57e6dc',.7);
+    this.switchGem.rotation.y=t*.5;
+    this.switchGem.material=this.g.mat(sim.save.switchActivated?'#b8f3a1':sim.ruinsSwitchReady?'#ffe4a1':'#396b64',sim.ruinsSwitchReady?.9:.2);
+    this.switchGem.scaling.setAll(.28*(sim.ruinsSwitchReady?1+Math.sin(t*3)*.12:1));this.switchGem.scaling.y*=1.35;this.switchGem.scaling.z*=.55;
+    this.switchBeacon.setEnabled(sim.ruinsSwitchReady&&sim.mode==='playing');
     this.altar.rotation.y=t*.35;this.altar.scaling.setAll(sim.mode==='restoring'?1+Math.sin(t*8)*.15:1);this.altar.material=this.g.mat(sim.save.bossDefeated?'#88ffe2':'#468b83',sim.save.bossDefeated?1:.15);
-    this.telegraphs.forEach((m,i)=>{const e=sim.enemies[i]!;m.setEnabled(e.hp>0&&(e.state==='windup'||e.state==='attack'));m.position.set(e.x,groundHeight(e.x,e.z)+.08,e.z);m.visibility=e.state==='windup'?.4+Math.sin(t*12)*.2:.85;if(e.kind==='guardian')m.scaling.setAll(e.attackIndex%2===1?1:.7);});
+    this.telegraphs.forEach((m,i)=>{const e=sim.enemies[i]!;m.setEnabled(e.kind!=='spirit'&&e.hp>0&&(e.state==='windup'||e.state==='attack'));m.position.set(e.x,groundHeight(e.x,e.z)+.08,e.z);m.visibility=e.state==='windup'?.4+Math.sin(t*12)*.2:.85;if(e.kind==='guardian')m.scaling.setAll(e.attackIndex%2===1?1:.7);});
     const target=sim.target;this.targetRing.setEnabled(!!target);if(target)this.targetRing.position.set(target.x,groundHeight(target.x,target.z)+.09,target.z);
     const goal=sim.objectivePosition(),dx=goal.x-sim.player.x,dz=goal.z-sim.player.z,len=Math.hypot(dx,dz);
     this.destination.position.set(sim.player.x+dx/Math.max(1,len)*Math.min(4,len),sim.player.y+1.3+Math.sin(t*2)*.1,sim.player.z+dz/Math.max(1,len)*Math.min(4,len));this.destination.rotation.y=t;this.destination.setEnabled(len>4&&sim.mode==='playing');
-    const ids=new Set(sim.projectiles.map(b=>b.id));for(const[id,m]of this.projectiles)if(!ids.has(id)){m.dispose();this.projectiles.delete(id);}
-    for(const b of sim.projectiles){let m=this.projectiles.get(b.id);if(!m){m=this.g.sphere('magic-projectile',null,[b.x,b.y,b.z],[.25,.25,.25],'#86f2de',1,6);this.projectiles.set(b.id,m);}m.position.set(b.x,b.y,b.z);}
     this.motes.forEach((m,i)=>m.position.set(sim.player.x+Math.sin(i*2.4+t*.08)*9,1.5+Math.sin(i+t*.3)*1.1,sim.player.z+Math.cos(i*2.4+t*.05)*12));
   }
 }

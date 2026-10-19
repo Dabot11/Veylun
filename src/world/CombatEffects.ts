@@ -18,7 +18,7 @@ export class CombatEffects {
     }));
   }
   emit(event: GameEvent): void {
-    if (!['hit', 'shield'].includes(event.type) || event.x === undefined || event.z === undefined) return;
+    if (!['hit', 'shield', 'magic-impact'].includes(event.type) || event.x === undefined || event.z === undefined) return;
     const burst = this.bursts[this.next++ % this.bursts.length]!;
     Object.assign(burst, { age: 0, strong: !!event.strong, x: event.x, y: event.y ?? groundHeight(event.x, event.z) + .9, z: event.z });
     burst.meshes.forEach(mesh => mesh.setEnabled(true));

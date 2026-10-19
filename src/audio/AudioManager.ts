@@ -17,6 +17,12 @@ export class AudioManager {
       this.lastStep = t;
     }
     if (name === 'sword') { this.burst(.11, 2100, .11); return; }
+    if (name === 'spirit-charge') {
+      this.tone(280, 1000, t, .75, .12, 'sine');
+      this.tone(560, 1600, t + .15, .6, .06, 'sine');
+      return;
+    }
+    if (name === 'magic-impact') { this.burst(.09, 1500, .1); return; }
     if (name === 'hit') {
       this.burst(strong ? .15 : .09, strong ? 1000 : 1800, strong ? .32 : .22);
       this.tone(strong ? 130 : 190, strong ? 45 : 70, t, .16, strong ? .38 : .26, 'triangle');
@@ -32,7 +38,7 @@ export class AudioManager {
       step: [110], hurt: [160, 100], dodge: [220, 90], projectile: [780, 480],
       switch: [420, 640], door: [100, 160], chest: [523, 659, 784],
       checkpoint: [392, 523, 659], death: [220, 165, 110],
-      'enemy-death': [440, 660], restore: [262, 330, 392, 523, 659], victory: [523, 659, 784, 1047],
+      'enemy-death': [440, 660], 'magic-dodge':[880], restore: [262, 330, 392, 523, 659], victory: [523, 659, 784, 1047],
     };
     notes[name]?.forEach((frequency, i) => {
       this.tone(frequency, frequency, t + i * .12, .22, name === 'step' ? .05 : .17,

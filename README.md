@@ -52,6 +52,11 @@ Los Brotes alternan sus ataques y se detienen al chocar contra el escudo.
 El panel del enemigo muestra vida, objetivo fijado y oportunidad de respuesta;
 los impactos tienen destello, reacción, partículas y sonido propio.
 
+El Espíritu anuncia su magia con una esfera que crece y un sonido ascendente.
+La dirección se fija antes de disparar: bloquea de frente o esquiva a un lado.
+Después queda agotado y puedes acercarte para golpear. Al vencerlo, sigue el
+haz de luz hasta el interruptor y actívalo con E / Y para abrir la reja.
+
 ## Controles
 
 | Acción | Teclado / ratón | Xbox estándar |
@@ -112,7 +117,8 @@ Las pruebas aisladas sí crean estados concretos para verificar cada regla.
 
 Pruebas de navegador: cuatro sobre el build, una de controles/altar y cuatro de
 combate con teclado, ratón y Xbox simulado, incluido un bloqueo y contraataque
-con la IA del Brote activa. Las pruebas de desarrollo usan
+con la IA del Brote activa. Otras dos recorren el encuentro del Espíritu y
+activan el interruptor usando teclado y Xbox simulado. Las pruebas de desarrollo usan
 encuentros preparados para comprobar daño real desde la entrada del navegador:
 
 ```sh
@@ -141,3 +147,4 @@ conoce el recorrido. No hay música de fondo: los efectos son síntesis original
 Documentación: `GAME_DESIGN.md`, `ART_DIRECTION.md`, `ASSET_MANIFEST.md`,
 `ARCHITECTURE.md` y `docs/ACCEPTANCE.md`.
 El pulido del primer encuentro se describe en `docs/COMBAT_POLISH.md`.
+El combate a distancia y la guía al interruptor están en `docs/SPIRIT_ENCOUNTER.md`.

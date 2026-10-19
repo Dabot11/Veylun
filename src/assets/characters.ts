@@ -6,6 +6,7 @@ import '@babylonjs/core/Rendering/outlineRenderer';
 import { Geometry } from './geometry';
 import type { Player, Enemy } from '../core/Simulation';
 import { attackPose } from '../player/attackAnimation';
+import { spiritCombat } from '../enemies/spiritCombat';
 export interface CharacterRig { root:TransformNode; parts:Record<string,TransformNode>; update(state:Player|Enemy,time:number):void }
 function mergeRigidParts(root:TransformNode,parts:Record<string,TransformNode>):void{
  const groups=new Map<TransformNode,Map<string,Mesh[]>>();
@@ -145,7 +146,11 @@ export function createEnemyRig(g:Geometry,kind:'sprout'|'spirit'|'guardian',id:s
   if(e.state==='attack'){body.rotation.x=.18;if(parts['arm1'])parts['arm1'].rotation.x=.45;}
   if(e.hurt>0){const reaction=e.hurt/.28;body.rotation.z=Math.sin(time*40)*.07*reaction;body.position.z=-.16*reaction;body.rotation.x-=.14*reaction;}
   for(const mesh of meshes)mesh.renderOverlay=e.hurt>.14;
-  if(kind==='spirit'){for(const s of [-1,1])parts[`arm${s}`]!.rotation.x=Math.sin(time*5)*.2;}
+  if(kind==='spirit'){
+    const charge=e.state==='windup'?Math.min(1,e.timer/spiritCombat.windup):0,recover=e.state==='recover';
+    body.position.y+=charge*.12-(recover?.12:0);
+    for(const s of [-1,1]){parts[`arm${s}`]!.rotation.x=charge?-.45*charge:recover?.35:Math.sin(time*5)*.2;parts[`arm${s}`]!.rotation.z=-s*(recover?1.7:.7-charge*.5);}
+  }
   if(e.hp<=0){root.scaling.y=Math.max(.01,1-e.timer*.9);root.scaling.x=root.scaling.z=Math.max(.01,1-e.timer*.5);if(e.timer>2)root.setEnabled(false);}else{root.setEnabled(true);root.scaling.setAll(1);}
  }};
 }
