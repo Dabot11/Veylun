@@ -1,1 +1,0 @@
-export{t as PBRMaterialLoadingAdapter}from"./ModelLoader-BCgbHnVc.js";
