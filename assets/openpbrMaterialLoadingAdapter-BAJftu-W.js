@@ -1,0 +1,1 @@
+export{n as OpenPBRMaterialLoadingAdapter}from"./ModelLoader-aTcaP7YG.js";
