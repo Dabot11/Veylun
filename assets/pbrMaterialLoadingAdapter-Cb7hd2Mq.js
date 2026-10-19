@@ -1,1 +1,0 @@
-export{t as PBRMaterialLoadingAdapter}from"./ModelLoader-bPP_HzF6.js";

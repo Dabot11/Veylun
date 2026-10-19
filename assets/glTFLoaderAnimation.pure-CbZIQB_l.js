@@ -1,1 +1,0 @@
-export{r as AnimationPropertyInfo,i as RegisterGLTFLoaderAnimation,a as TransformNodeAnimationPropertyInfo,o as WeightAnimationPropertyInfo,s as getQuaternion,c as getVector3,l as getWeights}from"./ModelLoader-bPP_HzF6.js";
