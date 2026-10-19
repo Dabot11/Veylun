@@ -25,7 +25,9 @@ npm run preview
 ```
 
 El build comprueba TypeScript y genera `dist/` con rutas relativas. Se puede
-servir en GitHub Pages o cualquier hosting estático; el despliegue está pendiente.
+servir en GitHub Pages o cualquier hosting estático. La publicación en la rama
+`gh-pages` se realiza con `npm run deploy`; consulta `docs/DEPLOYMENT.md` para
+la activación inicial y la verificación del sitio.
 No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar

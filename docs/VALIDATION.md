@@ -66,5 +66,5 @@ Las cinco pruebas se ejecutaron en dos invocaciones, una por archivo.
 Se guardaron `install_script` y `start_skill` actualizados en el borrador del
 entorno y la plataforma confirmó el guardado. Esto no publica la configuración.
 Esta validación corresponde al MVP preparado para su primera publicación en
-GitHub. El historial Git registra la versión publicada; el despliegue del
-juego en hosting sigue pendiente.
+GitHub. El historial Git registra la versión publicada. `docs/DEPLOYMENT.md`
+documenta la rama de publicación y los límites de verificación del hosting.
