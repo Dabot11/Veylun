@@ -48,11 +48,47 @@ for (const device of ['keyboard', 'mouse', 'gamepad'] as const) {
     }
     await attack();
     await expect.poll(() => page.evaluate(() => window.__veylun.sim.enemies[0]!.hp), { timeout: 15000 }).toBe(2);
+    await expect(page.locator('#enemy-status')).toBeVisible();
+    await expect(page.locator('.enemy-health')).toHaveText('2 / 3');
+    await expect(page.getByRole('progressbar', { name: 'Vida del enemigo' })).toHaveAttribute('aria-valuenow', '2');
+    await expect(page.locator('#combat-notice')).toContainText('Impacto · −1');
     await attack();
     await expect.poll(() => page.evaluate(() => window.__veylun.sim.enemies[0]!.hp), { timeout: 15000 }).toBe(1);
     await attack();
     await expect.poll(() => page.evaluate(() => window.__veylun.sim.enemies[0]!.hp), { timeout: 15000 }).toBe(0);
+    await expect(page.locator('.enemy-state')).toHaveText('Purificado');
     expect(await page.evaluate(() => window.__veylun.sim.save.defeatedOrdinaryEnemies)).toContain('sprout-1');
     expect(errors).toEqual([]);
   });
 }
+
+test('active Brote: lock, block the charge, then counterattack without losing health', async ({ page }, testInfo) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/?test=1');
+  await expect(page.locator('body')).toHaveAttribute('data-engine', 'ready', { timeout: 60000 });
+  await page.getByRole('button', { name: 'Nueva partida' }).click();
+  // Move to the encounter; both enemies retain their normal AI and health.
+  await page.evaluate(() => {
+    const game = window.__veylun.sim;
+    Object.assign(game.player, { x: -2, z: 26, y: 0, yaw: 0, vx: 0, vz: 0 });
+    window.__veylun.camera.reset(game);
+  });
+  await page.keyboard.down('KeyK');
+  await page.keyboard.press('KeyQ');
+  await expect(page.locator('.enemy-lock')).toBeVisible();
+  await expect(page.locator('#combat-notice')).toHaveText('Bloqueado · responde con la espada', { timeout: 15000 });
+  expect(await page.evaluate(() => window.__veylun.sim.player.health)).toBe(10);
+  expect(await page.evaluate(() => window.__veylun.sim.enemies[0]!.state)).toBe('recover');
+  await page.keyboard.up('KeyK');
+  await page.keyboard.press('KeyJ');
+  await expect(page.locator('.enemy-health')).toHaveText('2 / 3', { timeout: 15000 });
+  await expect(page.locator('#combat-notice')).toHaveText('Impacto · −1');
+  await page.screenshot({ path: testInfo.outputPath('counterattack.png') });
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: 'Volver al checkpoint' }).click();
+  await expect(page.locator('#enemy-status')).toBeHidden();
+  await expect(page.locator('#combat-notice')).toBeHidden();
+  expect(await page.evaluate(() => window.__veylun.sim.player.health)).toBe(10);
+  expect(errors).toEqual([]);
+});

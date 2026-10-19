@@ -4,7 +4,11 @@ test.use({baseURL:'http://127.0.0.1:5174',viewport:{width:960,height:640}});
 test.setTimeout(120000);
 test('rendered gameplay responds to controls and victory requires the altar interaction',async({page})=>{
  const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
- await page.goto('/?test=1');await expect(page.locator('body')).toHaveAttribute('data-engine','ready',{timeout:60000});await page.getByRole('button',{name:'Nueva partida'}).click();
+ await page.goto('/?test=1');await expect(page.locator('body')).toHaveAttribute('data-engine','ready',{timeout:60000});
+ // A key arriving in the same event turn as Start must survive until the first
+ // gameplay frame, rather than being discarded using the previous menu state.
+ await page.evaluate(()=>document.addEventListener('click',()=>window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyW',bubbles:true})),{once:true}));
+ await page.getByRole('button',{name:'Nueva partida'}).click();
  await page.keyboard.down('KeyW');await expect.poll(()=>page.evaluate(()=>window.__veylun.sim.player.z)).toBeGreaterThan(1);await page.keyboard.up('KeyW');
  const z=await page.evaluate(()=>window.__veylun.sim.player.z);const cameraZ=await page.evaluate(()=>window.__veylun.camera.camera.position.z);expect(cameraZ).toBeLessThan(z);
  await page.keyboard.press('Space');await expect.poll(()=>page.evaluate(()=>window.__veylun.sim.player.y)).toBeGreaterThan(.2);

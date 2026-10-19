@@ -28,7 +28,7 @@ export class Application {
   this.world=new WorldView(this.scene,this.sim);this.camera=new FollowCamera(this.scene);this.camera.reset(this.sim);
   this.shadows=new ShadowGenerator(1024,sun);this.shadows.usePercentageCloserFiltering=true;this.shadows.bias=.002;this.shadows.normalBias=.02;this.shadows.darkness=.22;
   for(const m of this.world.shadowCasters)this.shadows.addShadowCaster(m);
-  this.input=new InputManager(canvas);this.ui=new UI();this.ui.onAction=this.action;this.ui.show('start',!!save);this.ui.warning(this.store.warning);
+  this.input=new InputManager(canvas,()=>this.ui?.screen==='none');this.ui=new UI();this.ui.onAction=this.action;this.ui.show('start',!!save);this.ui.warning(this.store.warning);
   window.addEventListener('resize',this.resize);document.addEventListener('visibilitychange',this.visibility);window.addEventListener('pagehide',this.persist);
   canvas.addEventListener('click',this.lock);
   this.scene.executeWhenReady(()=>{this.ui.ready();this.needsRender=true;document.body.dataset['engine']='ready';});
@@ -45,6 +45,7 @@ export class Application {
  private resume():void{this.ui.show('none');this.input.clear();this.loop.reset();this.previous=performance.now();this.input.lock();}
  private startGame(load:boolean):void{
   this.sim=new Simulation(load?(this.store.read()??freshSave()):freshSave());
+  this.ui.combat.reset();this.world.combatEffects.reset();
   this.world.enemyRigs.forEach(r=>r.root.setEnabled(true));this.camera.reset(this.sim);this.loop.reset();this.input.clear();
   this.ui.show(this.sim.mode==='won'?'victory':'none',false,this.sim.save);this.store.write(this.sim.save);this.ui.zone('Claro del despertar',this.sim.age);
   if(this.sim.mode!=='won')this.input.lock();
@@ -63,26 +64,27 @@ export class Application {
   else if(action==='settings-change'){const s=this.ui.settings;this.audio.volume=s.volume;this.camera.distance=s.distance;this.camera.sensitivity=s.sensitivity;this.camera.invert=s.invert;this.input.deadzone=s.deadzone;this.input.triggerThreshold=s.trigger;this.scene.shadowsEnabled=s.shadows;}
  };
  private render=():void=>{
-  const now=performance.now(),dt=Math.min(.1,(now-this.previous)/1000);this.previous=now;this.input.active=this.ui.screen==='none';this.input.poll();
+  const now=performance.now(),dt=Math.min(.1,(now-this.previous)/1000);this.previous=now;this.input.poll();
   if(this.input.take('pause')){if(this.ui.screen==='none')this.pause();else if(this.ui.screen==='pause')this.resume();else if(this.ui.screen==='settings'||this.ui.screen==='controls')this.action('back');}
   if(this.ui.screen==='none'){
     const look=this.input.consumeLook(dt,this.camera.sensitivity,this.camera.invert);
     this.camera.update(this.sim,dt,look,this.input.zoom);
     this.loop.advance(dt,step=>{
       const a=this.camera.yaw,x=this.input.movement.x,z=this.input.movement.y;
-      this.sim.step(step,{x:x*Math.cos(a)+z*Math.sin(a),z:z*Math.cos(a)-x*Math.sin(a),jump:this.input.take('jump'),dodge:this.input.take('dodge'),attack:this.input.take('attack'),shield:this.input.shield,interact:this.input.take('interact'),target:this.input.take('target'),cycle:this.input.take('nextTarget')?1:this.input.take('previousTarget')?-1:0});
+      this.sim.step(step,{x:x*Math.cos(a)+z*Math.sin(a),z:z*Math.cos(a)-x*Math.sin(a),viewYaw:a,jump:this.input.take('jump'),dodge:this.input.take('dodge'),attack:this.input.take('attack'),shield:this.input.shield,interact:this.input.take('interact'),target:this.input.take('target'),cycle:this.input.take('nextTarget')?1:this.input.take('previousTarget')?-1:0});
     });
     for(const e of this.sim.events){
       if(e.type==='save')this.store.write(this.sim.save);
-      else if(e.type==='respawn'){this.camera.reset(this.sim);this.input.clear();}
+      else if(e.type==='respawn'){this.camera.reset(this.sim);this.input.clear();this.ui.combat.reset();this.world.combatEffects.reset();}
       else if(e.type==='zone')this.ui.zone(e.text??'',this.sim.age);
-      else{this.audio.play(e.type);if(e.text)this.ui.toast(e.text,this.sim.age);}
+      else{this.audio.play(e.type,e.strong);this.ui.combat.feedback(e,this.sim);this.world.combatEffects.emit(e);if(e.text)this.ui.toast(e.text,this.sim.age);}
     }
     this.sim.events=[];
     if(this.sim.player.state==='run'||this.sim.player.state==='walk')this.audio.play('step');
     if(this.sim.mode==='won'){this.ui.show('victory',true,this.sim.save);document.exitPointerLock?.();}
     if(this.input.connectionNotice){this.ui.toast(this.input.connectionNotice,this.sim.age);this.input.connectionNotice='';}
     if(this.frame++%4===0)this.ui.update(this.sim,this.input);
+    this.ui.combat.update(this.sim,this.input.device);
   }else{
     this.ui.menuGamepad(this.input);this.input.pressed.clear();this.input.consumeLook(dt,1,false);
   }

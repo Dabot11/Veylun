@@ -1,9 +1,11 @@
 import type { Simulation } from '../core/Simulation';
 import type { InputManager } from '../input/InputManager';
+import { CombatHUD } from './CombatHUD';
 export type Screen='start'|'pause'|'settings'|'controls'|'confirm'|'victory'|'none';
 export const formatTime=(seconds:number):string=>`${Math.floor(seconds/60).toString().padStart(2,'0')}:${Math.floor(seconds%60).toString().padStart(2,'0')}`;
 const heart='<path d="M12 21C9 18 2 13 2 7a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 6-7 11-10 14Z"/>';
 export class UI {
+ readonly combat:CombatHUD;
  screen:Screen='start';private menu:HTMLElement;private hud:HTMLElement;private selection=0;private toastUntil=0;private zoneUntil=0;
  readonly settings={volume:.35,distance:5.8,sensitivity:1,deadzone:.18,trigger:.5,shadows:true,invert:false};
  onAction:(action:string)=>void=()=>{};
@@ -13,6 +15,7 @@ export class UI {
   <section id="hud" hidden><div id="health" aria-label="Salud"></div><div id="objective"><span>EL SANTUARIO OLVIDADO</span><p></p><small></small></div><div id="zone-title"></div><div id="toast" role="status"></div><div id="interaction"></div><div id="boss"><span>GUARDIÁN ANCESTRAL</span><div><i></i></div><small></small></div><div id="location"></div><div id="controls-hint"></div><div id="death-message">El bosque aún te necesita<small>Regresando al último recuerdo…</small></div><div id="restoration">La luz vuelve al santuario</div></section>
   <div id="save-warning" role="status"></div><div id="loading" role="status">Despertando el bosque…</div>`);
   this.menu=document.querySelector('#menu')!;this.hud=document.querySelector('#hud')!;
+  this.combat=new CombatHUD(this.hud);
   this.menu.addEventListener('click',e=>{const button=(e.target as HTMLElement).closest<HTMLButtonElement>('button[data-action]');if(button)this.onAction(button.dataset['action']!);});
   this.menu.addEventListener('input',e=>{const el=e.target as HTMLInputElement,key=el.name as keyof typeof this.settings;if(key in this.settings){if(key==='shadows'||key==='invert')this.settings[key]=el.checked;else this.settings[key]=Number(el.value);this.onAction('settings-change');}});
  }

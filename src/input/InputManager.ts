@@ -4,12 +4,12 @@ export function radialDeadzone(x:number,y:number,deadzone:number):{x:number;y:nu
  const length=Math.hypot(x,y);if(length<=deadzone)return{x:0,y:0};const scale=Math.min(1,(length-deadzone)/(1-deadzone))/length;return{x:x*scale,y:y*scale};
 }
 export class InputManager {
-  active=false;keys=new Set<string>();pressed=new Set<Action>();private mouse=new Set<number>();private lastButtons:boolean[]=[];
+  keys=new Set<string>();pressed=new Set<Action>();private mouse=new Set<number>();private lastButtons:boolean[]=[];
   movement={x:0,y:0};look={x:0,y:0};device:'keyboard-mouse'|'gamepad'='keyboard-mouse';
   gamepad:Gamepad|null=null;diagnostic='Sin mando conectado';connectionNotice='';
   deadzone:number=gameConfig.input.deadzone;triggerThreshold:number=gameConfig.input.triggerThreshold;
   private mouseX=0;private mouseY=0;private wheel=0;zoom=0;private menuAxis=0;menuMove=0;confirm=false;back=false;menuHorizontal=0;
-  constructor(private canvas:HTMLCanvasElement){
+  constructor(private canvas:HTMLCanvasElement,private gameplayActive:()=>boolean){
     window.addEventListener('keydown',this.keyDown);window.addEventListener('keyup',this.keyUp);
     canvas.addEventListener('mousedown',this.mouseDown);window.addEventListener('mouseup',this.mouseUp);
     window.addEventListener('mousemove',this.mouseMove);canvas.addEventListener('contextmenu',this.contextMenu);
@@ -17,13 +17,13 @@ export class InputManager {
     window.addEventListener('gamepadconnected',this.connected);window.addEventListener('gamepaddisconnected',this.disconnected);
   }
   private keyDown=(e:KeyboardEvent):void=>{
-    if(e.target instanceof HTMLInputElement||(!this.active&&e.code!=='Escape'))return;
+    if(e.target instanceof HTMLInputElement||(!this.gameplayActive()&&e.code!=='Escape'))return;
     if(['Space','Tab','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
     if(!this.keys.has(e.code)){for(const[a,codes]of Object.entries(keyboardCodes))if(codes?.includes(e.code))this.pressed.add(a as Action);}
     this.keys.add(e.code);this.device='keyboard-mouse';
   };
   private keyUp=(e:KeyboardEvent):void=>{this.keys.delete(e.code);};
-  private mouseDown=(e:MouseEvent):void=>{this.mouse.add(e.button);this.device='keyboard-mouse';if(e.button===0)this.pressed.add('attack');};
+  private mouseDown=(e:MouseEvent):void=>{if(!this.gameplayActive())return;this.mouse.add(e.button);this.device='keyboard-mouse';if(e.button===0)this.pressed.add('attack');};
   private mouseUp=(e:MouseEvent):void=>{this.mouse.delete(e.button);};
   private mouseMove=(e:MouseEvent):void=>{if(document.pointerLockElement===this.canvas||this.mouse.has(0)||this.mouse.has(2)){this.mouseX+=e.movementX;this.mouseY+=e.movementY;}};
   private onWheel=(e:WheelEvent):void=>{e.preventDefault();this.wheel+=e.deltaY;};

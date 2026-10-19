@@ -47,6 +47,11 @@ El brillo turquesa que acompaña a Ruen señala el objetivo siguiente. Los aros
 ámbar anuncian ataques. El Guardián alterna golpe frontal (bloqueable) y golpe
 al suelo (esquivar, alejarse o saltar). Aprovecha su recuperación para atacar.
 
+En el primer encuentro, una flecha indica la dirección de la embestida.
+Los Brotes alternan sus ataques y se detienen al chocar contra el escudo.
+El panel del enemigo muestra vida, objetivo fijado y oportunidad de respuesta;
+los impactos tienen destello, reacción, partículas y sonido propio.
+
 ## Controles
 
 | Acción | Teclado / ratón | Xbox estándar |
@@ -105,8 +110,9 @@ Pruebas de lógica: `npm test`. Incluyen un recorrido completo con comandos de
 movimiento, ataques e interacción, sin conceder daño ni objetos en esa prueba.
 Las pruebas aisladas sí crean estados concretos para verificar cada regla.
 
-Pruebas de navegador: cuatro sobre el build, una de controles/altar y tres de
-combate con teclado, ratón y Xbox simulado. Las pruebas de desarrollo usan
+Pruebas de navegador: cuatro sobre el build, una de controles/altar y cuatro de
+combate con teclado, ratón y Xbox simulado, incluido un bloqueo y contraataque
+con la IA del Brote activa. Las pruebas de desarrollo usan
 encuentros preparados para comprobar daño real desde la entrada del navegador:
 
 ```sh
@@ -134,3 +140,4 @@ conoce el recorrido. No hay música de fondo: los efectos son síntesis original
 
 Documentación: `GAME_DESIGN.md`, `ART_DIRECTION.md`, `ASSET_MANIFEST.md`,
 `ARCHITECTURE.md` y `docs/ACCEPTANCE.md`.
+El pulido del primer encuentro se describe en `docs/COMBAT_POLISH.md`.

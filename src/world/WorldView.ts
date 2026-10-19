@@ -9,11 +9,14 @@ import { createRuen, createEnemyRig, type CharacterRig } from '../assets/charact
 import { groundHeight, obstacles, interactables, zones } from './level';
 import { seededRandom } from '../core/math';
 import type { Simulation } from '../core/Simulation';
+import { CombatEffects } from './CombatEffects';
 export class WorldView {
   readonly visualOverrides=new VisualOverrides();readonly g:Geometry;readonly hero:CharacterRig;readonly enemyRigs:CharacterRig[];
   private seal:TransformNode;private gate:TransformNode;private grate:TransformNode;private lid:TransformNode;private switchGem:Mesh;private altar:Mesh;
   private telegraphs:Mesh[]=[];private targetRing:Mesh;private destination:Mesh;private projectiles=new Map<number,Mesh>();private motes:Mesh[]=[];
   readonly shadowCasters:Mesh[]=[];
+  readonly combatEffects:CombatEffects;
+  private chargeArrows=new Map<string,TransformNode>();
   constructor(readonly scene:Scene,sim:Simulation){
     this.g=new Geometry(scene);const g=this.g,random=seededRandom(84721);
     this.terrain();
@@ -102,6 +105,13 @@ export class WorldView {
     for(const rig of [this.hero,...this.enemyRigs])for(const m of rig.root.getChildMeshes())if(m instanceof Mesh)this.shadowCasters.push(m);
     for(const e of sim.enemies){const ring=CreateTorus('attack-warning',{diameter:e.kind==='guardian'?8.6:3.5,thickness:.055,tessellation:48},scene);ring.material=g.mat('#f4a45b',.7);ring.isPickable=false;this.telegraphs.push(ring);}
     this.targetRing=CreateTorus('target-ring',{diameter:1.5,thickness:.035,tessellation:48},scene);this.targetRing.material=g.mat('#fff3ba',.8);this.targetRing.isPickable=false;
+    this.combatEffects=new CombatEffects(g);
+    for(const e of sim.enemies.filter(e=>e.kind==='sprout')){
+      const arrow=g.node('charge-direction');
+      g.box('charge-path',arrow,[0,0,1.5],[.07,.025,2.4],'#ffc178',.6);
+      g.tube('charge-arrow',arrow,[[-.4,0,2.25],[0,0,2.8],[.4,0,2.25]],.045,'#ffc178',.6);
+      arrow.setEnabled(false);this.chargeArrows.set(e.id,arrow);
+    }
     this.destination=g.gem('guiding-wisp',null,[0,1,20],.15,'#93ecd9');
     for(let i=0;i<35;i++)this.motes.push(g.sphere('forest-mote',null,[0,0,0],[.025,.025,.025],i%3?'#bfde9a':'#73e6db',.6,3));
   }
@@ -130,6 +140,8 @@ export class WorldView {
   }
   update(sim:Simulation,dt:number):void{
     const t=sim.age;this.visualOverrides.update(sim);
+    this.combatEffects.update(dt);
+    for(const e of sim.enemies){const arrow=this.chargeArrows.get(e.id);if(arrow){arrow.setEnabled(sim.mode==='playing'&&e.hp>0&&e.state==='windup');arrow.position.set(e.x,groundHeight(e.x,e.z)+.1,e.z);arrow.rotation.y=e.yaw;}}
     this.seal.setEnabled(!(sim.save.defeatedOrdinaryEnemies.includes('sprout-1')&&sim.save.defeatedOrdinaryEnemies.includes('sprout-2')));
     this.hero.update(sim.player,t);this.enemyRigs.forEach((r,i)=>r.update(sim.enemies[i]!,t));
     this.gate.position.y+=( (sim.save.doorUnlocked?-6:groundHeight(0,90))-this.gate.position.y)*Math.min(1,dt*2);

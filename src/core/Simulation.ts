@@ -7,11 +7,11 @@ import type { InteractionId } from '../interactions/types';
 import type { PlayerState } from '../player/types';
 import { attacks, shieldBlocks, swordHits } from '../player/combat';
 import { gameConfig as config } from '../config/gameConfig';
-export interface Commands { x: number; z: number; jump?: boolean; dodge?: boolean; attack?: boolean; shield?: boolean; interact?: boolean; target?: boolean; cycle?: number }
+export interface Commands { x: number; z: number; jump?: boolean; dodge?: boolean; attack?: boolean; shield?: boolean; interact?: boolean; target?: boolean; cycle?: number; viewYaw?: number }
 export interface Player extends V2 { y: number; vx: number; vz: number; vy: number; yaw: number; health: number; grounded: boolean; state: PlayerState; stateTime: number; invulnerable: number; rollCooldown: number; combo: number; attackTime: number; attackBuffer: number; queued: boolean; shield: boolean; coyote: number; jumpBuffer: number; rollX: number; rollZ: number; hitIds: Set<string> }
-export interface Enemy extends V2 { id: string; kind: EnemyType; y: number; yaw: number; radius: number; hp: number; maxHp: number; state: EnemyState; timer: number; age: number; home: V2; attackIndex: number; hit: boolean; hurt: number; aim: V2 }
+export interface Enemy extends V2 { id: string; kind: EnemyType; y: number; yaw: number; radius: number; hp: number; maxHp: number; state: EnemyState; timer: number; age: number; home: V2; attackIndex: number; hit: boolean; hurt: number; stagger: number; aim: V2 }
 export interface Projectile extends V2 { id: number; y: number; vx: number; vz: number; life: number }
-export interface GameEvent { type: string; text?: string; x?: number; z?: number }
+export interface GameEvent { type: string; text?: string; x?: number; y?: number; z?: number; enemyId?: string; damage?: number; strong?: boolean }
 export class Simulation {
   save: SaveDataV1;
   player: Player;
@@ -25,6 +25,8 @@ export class Simulation {
   age = 0;
   private projectileId = 0;
   private autoSave = 0;
+  private lostTargetTime = 0;
+  private sproutAttackCooldown = 0;
   constructor(save = freshSave()) {
     this.save = structuredClone(save);
     this.player = this.makePlayer();
@@ -37,19 +39,23 @@ export class Simulation {
     return { ...p, y: groundHeight(p.x,p.z), vx: 0, vz: 0, vy: 0, yaw: 0, health: 10, grounded: true, state: 'idle', stateTime: 0, invulnerable: 0, rollCooldown: 0, combo: 0, attackTime: -1, attackBuffer: 0, queued: false, shield: false, coyote: .1, jumpBuffer: 0, rollX: 0, rollZ: 1, hitIds: new Set() };
   }
   private enemy(id: string, kind: EnemyType, x: number, z: number, hp: number): Enemy {
-    return {id,kind,x,z,y:groundHeight(x,z),yaw:Math.PI,radius:kind==='guardian'?1.15:kind==='sprout'?.55:.35,hp,maxHp:hp,state:'idle',timer:0,age:0,home:{x,z},attackIndex:0,hit:false,hurt:0,aim:{x,z}};
+    return {id,kind,x,z,y:groundHeight(x,z)+(kind==='spirit'?.7:0),yaw:Math.PI,radius:kind==='guardian'?1.15:kind==='sprout'?.55:.35,hp,maxHp:hp,state:'idle',timer:0,age:0,home:{x,z},attackIndex:0,hit:false,hurt:0,stagger:0,aim:{x,z}};
   }
   emit(type: string, text?: string, pos?: V2): void {
     const e: GameEvent = { type }; if (text) e.text = text; if (pos) { e.x=pos.x;e.z=pos.z; } this.events.push(e);
   }
   persist(): void { this.emit('save'); }
   get target(): Enemy | undefined { return this.enemies.find(e => e.id===this.targetId && e.hp>0); }
-  targets(): Enemy[] { return this.enemies.filter(e=>e.hp>0 && distance(e,this.player)<14 && (e.kind!=='guardian'||this.save.doorUnlocked)); }
-  selectTarget(cycle = 0): void {
-    const candidates=this.targets().sort((a,b)=>distance(a,this.player)-distance(b,this.player));
+  visibleEnemy(e:Enemy):boolean { return clearMeleePath({...this.player,y:this.player.y+.8},{...e,y:e.y+.8},this.save); }
+  targets(): Enemy[] { return this.enemies.filter(e=>e.hp>0 && distance(e,this.player)<config.camera.lockRange && (e.kind!=='guardian'||this.save.doorUnlocked) && this.visibleEnemy(e)); }
+  selectTarget(cycle = 0, viewYaw = this.player.yaw): void {
+    const candidates=this.targets();this.lostTargetTime=0;
     if (!cycle && this.targetId) { this.targetId=null;return; }
+    const bearing=(e:Enemy):number=>angleDelta(viewYaw,angleTo(this.player,e));
+    candidates.sort((a,b)=>bearing(a)-bearing(b));
     const index=candidates.findIndex(e=>e.id===this.targetId);
-    this.targetId=candidates[(index + (cycle||1) + candidates.length)%candidates.length]?.id??null;
+    if(cycle&&index>=0)this.targetId=candidates[(index+Math.sign(cycle)+candidates.length)%candidates.length]?.id??null;
+    else this.targetId=candidates.sort((a,b)=>(Math.abs(bearing(a))*3+distance(a,this.player)*.15)-(Math.abs(bearing(b))*3+distance(b,this.player)*.15))[0]?.id??null;
   }
   step(dt: number, input: Commands): void {
     this.age+=dt;
@@ -63,8 +69,10 @@ export class Simulation {
     if(this.autoSave>8){this.autoSave=0;this.persist();}
     const p=this.player;
     if(![p.x,p.y,p.z].every(Number.isFinite)||p.y < -12||Math.abs(p.x)>20||p.z < -18||p.z>140){this.respawn();return;}
-    if(input.target)this.selectTarget(); if(input.cycle)this.selectTarget(input.cycle);
+    this.sproutAttackCooldown=Math.max(0,this.sproutAttackCooldown-dt);
+    if(input.target)this.selectTarget(0,input.viewYaw); if(input.cycle)this.selectTarget(input.cycle,input.viewYaw);
     if(this.targetId && (!this.target || distance(this.target,p)>17))this.targetId=null;
+    if(this.target){this.lostTargetTime=this.visibleEnemy(this.target)?0:this.lostTargetTime+dt;if(this.lostTargetTime>.6)this.targetId=null;}
     p.invulnerable=Math.max(0,p.invulnerable-dt);p.rollCooldown=Math.max(0,p.rollCooldown-dt);p.stateTime+=dt;
     p.coyote=p.grounded?.1:Math.max(0,p.coyote-dt);p.jumpBuffer=input.jump?.12:Math.max(0,p.jumpBuffer-dt);
     p.attackBuffer=input.attack?config.combat.attackBuffer:Math.max(0,p.attackBuffer-dt);
@@ -123,10 +131,15 @@ export class Simulation {
     p.combo=combo;p.attackTime=0;p.attackBuffer=0;p.queued=false;p.hitIds.clear();p.state=`attack${combo}` as PlayerState;p.stateTime=0;this.emit('sword');
   }
   damageEnemy(e:Enemy,amount:number):void{
-    if(e.hp<=0)return;
-    e.hp=Math.max(0,e.hp-amount);e.hurt=.2;this.emit('hit',undefined,e);
+    if(e.hp<=0||!Number.isFinite(amount)||amount<=0)return;
+    const damage=Math.min(e.hp,amount);e.hp-=damage;e.hurt=.28;
+    // A brief reaction pauses ordinary enemies without resetting their attack
+    // telegraph. The Guardian keeps its attack rhythm.
+    if(e.kind!=='guardian')e.stagger=amount>1?.24:.12;
+    this.events.push({type:'hit',enemyId:e.id,damage,strong:amount>1,x:e.x,y:e.y+.65,z:e.z});
     if(e.hp===0){
       e.state='dead';e.timer=0;
+      this.emit('enemy-death',undefined,e);
       if(e.id===this.targetId)this.targetId=null;
       if(e.kind==='guardian'){this.save.bossDefeated=true;this.emit('message','El Guardián descansa. Activa el altar para restaurar el santuario.');}
       else{this.save.defeatedOrdinaryEnemies.push(e.id as OrdinaryEnemyId);this.player.health=Math.min(10,this.player.health+1);}
@@ -142,7 +155,10 @@ export class Simulation {
     return 'hurt';
   }
   private updateEnemy(e:Enemy,dt:number):void{
-    e.age+=dt;e.timer+=dt;e.hurt=Math.max(0,e.hurt-dt);if(e.hp<=0)return;
+    e.age+=dt;e.hurt=Math.max(0,e.hurt-dt);
+    if(e.hp<=0){e.timer+=dt;return;}
+    if(e.stagger>0){e.stagger=Math.max(0,e.stagger-dt);return;}
+    e.timer+=dt;
     const p=this.player,d=distance(e,p);
     if(e.kind==='guardian'&&(!this.save.doorUnlocked||p.z<94))return;
     const detect=e.kind==='guardian'?24:e.kind==='spirit'?12:10;
@@ -159,7 +175,9 @@ export class Simulation {
       }else{
         const reach=e.kind==='guardian'?3.5:2.9;
         if(d>reach)this.moveEnemy(e,p,e.kind==='guardian'?1.3:1.9,dt);
-        else{e.state='windup';e.timer=0;e.hit=false;e.aim={x:p.x,z:p.z};this.emit('telegraph',undefined,e);}
+        else if(e.kind!=='sprout'||(this.sproutAttackCooldown===0&&!this.enemies.some(other=>other!==e&&other.kind==='sprout'&&other.hp>0&&(other.state==='windup'||other.state==='attack')))){
+          e.state='windup';e.timer=0;e.hit=false;e.aim={x:p.x,z:p.z};this.emit('telegraph',undefined,e);
+        }
       }
     }else if(e.state==='windup'){
       const windup=e.kind==='guardian'?1.15:e.kind==='spirit'?.8:.75;
@@ -171,7 +189,10 @@ export class Simulation {
     }else if(e.state==='attack'){
       if(e.kind==='sprout'){
         const next=moveWithCollisions(e,Math.sin(e.yaw)*7*dt,Math.cos(e.yaw)*7*dt,e.radius,e.y,this.save);e.x=next.x;e.z=next.z;
-        if(!e.hit&&distance(e,p)<e.radius+.6&&p.y-e.y<.9){this.receiveDamage(1,e);e.hit=true;}
+        if(!e.hit&&distance(e,p)<e.radius+.6&&p.y-e.y<.9){
+          const result=this.receiveDamage(1,e);e.hit=true;
+          if(result==='blocked'){e.state='recover';e.timer=0;this.sproutAttackCooldown=.35;}
+        }
       }else if(e.kind==='guardian'&&!e.hit){
         const slam=e.attackIndex%2===1;
         if(e.timer>.12){
@@ -179,7 +200,7 @@ export class Simulation {
           e.hit=true;
         }
       }
-      if(e.timer>(e.kind==='guardian'?.6:.4)){e.state='recover';e.timer=0;}
+      if(e.timer>(e.kind==='guardian'?.6:.4)){e.state='recover';e.timer=0;if(e.kind==='sprout')this.sproutAttackCooldown=.35;}
     }else if(e.state==='recover'&&e.timer>(e.kind==='guardian'?1.7:1.1)){e.state='chase';e.timer=0;e.attackIndex++;}
     e.y=groundHeight(e.x,e.z)+(e.kind==='spirit'?.7:0);
   }
@@ -233,8 +254,8 @@ export class Simulation {
     if(index>zones.findIndex(z=>z.id===this.save.reachedZone)){this.save.reachedZone=zone.id;this.persist();}
   }
   respawn():void{
-    this.player=this.makePlayer();this.targetId=null;this.projectiles=[];this.mode='playing';this.modeTime=0;
-    for(const e of this.enemies)if(e.hp>0){e.x=e.home.x;e.z=e.home.z;e.y=groundHeight(e.x,e.z);e.hp=e.maxHp;e.state='idle';e.timer=0;e.attackIndex=0;e.hit=false;}
+    this.player=this.makePlayer();this.targetId=null;this.lostTargetTime=0;this.sproutAttackCooldown=0;this.projectiles=[];this.mode='playing';this.modeTime=0;
+    for(const e of this.enemies)if(e.hp>0){e.x=e.home.x;e.z=e.home.z;e.y=groundHeight(e.x,e.z)+(e.kind==='spirit'?.7:0);e.hp=e.maxHp;e.state='idle';e.timer=0;e.attackIndex=0;e.hit=false;e.hurt=0;e.stagger=0;}
     this.emit('respawn');this.persist();
   }
   objective():string{

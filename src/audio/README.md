@@ -3,5 +3,8 @@
 `AudioManager.ts` sintetiza efectos originales con Web Audio después de un
 gesto del usuario. Incluye pasos, espada, impactos, escudo, rodada, proyectiles,
 cofre, interruptor, puerta, checkpoint, derrota, restauración y victoria.
-El volumen se ajusta en pausa. Los osciladores se detienen y desconectan.
+Espada: ruido filtrado corto. Impacto: ruido y tono grave descendente, más
+intenso en el tercer golpe. Bloqueo: dos tonos metálicos; muerte enemiga: campanada.
+El volumen se ajusta en pausa. El buffer de ruido se reutiliza y las fuentes,
+filtros y ganancias se desconectan al terminar.
 No hay música de fondo ni archivos de audio externos.

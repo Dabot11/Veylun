@@ -11,6 +11,8 @@ suspensión. El render se ejecuta independientemente; los menús conservan el
 `InputManager.poll` lee Gamepad API en cada frame. Teclado y botones de mando
 registran flancos en un conjunto; `take` consume cada acción solo en un tick.
 Los flancos sobreviven a frames sin tick y no se duplican entre varios ticks.
+La admisión de teclas consulta el menú actual en el propio evento, para no
+perder entradas recibidas entre «Nueva partida»/«Continuar» y el siguiente frame.
 Los sticks usan deadzone radial, los gatillos umbral configurable. El mouse
 admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM.
 
@@ -24,6 +26,7 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `player/attackAnimation.ts` | Preparación, barrido frontal y recuperación sincronizados con esas ventanas |
 | `world/level.ts` | Zonas, altura de suelo y colliders compartidos |
 | `world/WorldView.ts` | Bosque, arquitectura, interacciones y feedback visual |
+| `world/CombatEffects.ts` | Cuatro ráfagas reutilizables de impacto, con 24 partículas como máximo |
 | `enemies/types.ts` | Tipos de enemigo y estados |
 | `input` | Acciones abstractas y adaptadores de dispositivo |
 | `camera/FollowCamera.ts` | Seguimiento, órbita, colisión y encuadre del objetivo |
@@ -32,6 +35,7 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `assets/VisualOverrides.ts`, `ModelLoader.ts` | Sustitución opcional por GLB y clips |
 | `assets/geometry.ts`, `surfaceTexture.ts` | Mallas, materiales y texturas originales |
 | `ui/UI.ts` | HUD, menús, ajustes y navegación de mando |
+| `ui/CombatHUD.ts` | Vida del enemigo, estado de ataque y confirmación de daño/bloqueo |
 | `audio/AudioManager.ts` | Efectos Web Audio activados tras gesto |
 | `config/gameConfig.ts` | Parámetros de diseño y balance inicial |
 
@@ -57,6 +61,20 @@ Escudo 110°; rodada breve
 con invulnerabilidad parcial y recuperación. Enemigos separados en FSM de
 patrulla/persecución, preparación, ataque, recuperación y muerte. La muerte
 elimina ataques; proyectiles ya emitidos tienen vida independiente y acotada.
+
+Los Brotes comparten un turno de preparación/embestida y una separación de
+350 ms entre ataques. Un bloqueo frontal pasa directamente a recuperación.
+Los enemigos ordinarios pausan su estado 120 ms al recibir un golpe, o 240 ms
+con el tercero del combo; el Guardián conserva su ritmo. El evento de impacto
+incluye enemigo, daño efectivo y posición para sincronizar HUD, sonido y
+partículas. El destello usa overlays por malla, sin alterar materiales compartidos.
+
+La fijación prioriza la dirección de cámara y excluye líneas de visión
+obstruidas. LB/RB recorren los objetivos de izquierda a derecha; una obstrucción
+de más de 600 ms libera el objetivo. La órbita manual suspende el recentrado
+650 ms. El encuadre eleva y desplaza suavemente la vista al fijar, adapta el
+desplazamiento al ancho de pantalla y amplía distancia para enemigos lejanos,
+conservando colisión.
 
 ## Progresión
 

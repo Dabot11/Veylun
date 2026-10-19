@@ -1,6 +1,8 @@
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
+import { Color3 } from '@babylonjs/core/Maths/math.color';
+import '@babylonjs/core/Rendering/outlineRenderer';
 import { Geometry } from './geometry';
 import type { Player, Enemy } from '../core/Simulation';
 import { attackPose } from '../player/attackAnimation';
@@ -132,14 +134,17 @@ export function createEnemyRig(g:Geometry,kind:'sprout'|'spirit'|'guardian',id:s
   for(let i=0;i<8;i++)g.leaf('chest-moss',body,[i*.17-.6,3.08,.27],.23,.3,moss).rotation.x=2.3;
  }
  mergeRigidParts(root,parts);
+ const meshes=root.getChildMeshes();
+ for(const mesh of meshes){mesh.overlayColor=Color3.FromHexString('#fff1bd');mesh.overlayAlpha=.4;}
  return{root,parts,update(state,time){
   const e=state as Enemy;root.position.set(e.x,e.y,e.z);root.rotation.y=e.yaw;
-  body.position.y=kind==='spirit'?Math.sin(time*2.8)*.1:0;body.rotation.set(0,0,0);
+  body.position.y=kind==='spirit'?Math.sin(time*2.8)*.1:0;body.position.z=0;body.rotation.set(0,0,0);
   const walking=e.state==='chase'||e.state==='patrol';
   for(const s of [-1,1]){const arm=parts[`arm${s}`];if(arm)arm.rotation.x=walking?Math.sin(time*(kind==='guardian'?3:9))*s*.18:0;const leg=parts[`leg${s}`];if(leg)leg.rotation.x=walking?Math.sin(time*3)*s*.23:0;}
   if(e.state==='windup'){body.rotation.x=-.12;if(parts['arm1'])parts['arm1'].rotation.x=-1.8*Math.min(1,e.timer);if(kind==='guardian'&&e.attackIndex%2===1)parts['arm-1']!.rotation.x=-1.8*Math.min(1,e.timer);}
   if(e.state==='attack'){body.rotation.x=.18;if(parts['arm1'])parts['arm1'].rotation.x=.45;}
-  if(e.hurt>0)body.rotation.z=Math.sin(time*40)*.10;
+  if(e.hurt>0){const reaction=e.hurt/.28;body.rotation.z=Math.sin(time*40)*.07*reaction;body.position.z=-.16*reaction;body.rotation.x-=.14*reaction;}
+  for(const mesh of meshes)mesh.renderOverlay=e.hurt>.14;
   if(kind==='spirit'){for(const s of [-1,1])parts[`arm${s}`]!.rotation.x=Math.sin(time*5)*.2;}
   if(e.hp<=0){root.scaling.y=Math.max(.01,1-e.timer*.9);root.scaling.x=root.scaling.z=Math.max(.01,1-e.timer*.5);if(e.timer>2)root.setEnabled(false);}else{root.setEnabled(true);root.scaling.setAll(1);}
  }};
