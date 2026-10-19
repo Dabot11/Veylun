@@ -1,0 +1,41 @@
+{
+  "archive": "1. Brote corrupto.zip",
+  "images": [
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 04_10_32 p.m-1.png",
+      "sha256": "528e2fcab19a33592a4a4925821cd91f6e455128611071eaf9fb43aef6f6b7e4",
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 04_10_33 p.m-2.png",
+      "sha256": "7733cc508984aabb04166e9847640e6bd1331e3790a780659ec252b961d6759c",
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 04_10_34 p.m-3.png",
+      "sha256": "ceb3cb04258256780afb9152d594b7286e7944ddce3b901fd79d7964ebdafff4",
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 04_10_35 p.m-4.png",
+      "sha256": "d5faeba968652527fdb0fc282f423527ba53b16189ec2006b08b7fa268877bb6",
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 04_10_36 p.m-5.png",
+      "sha256": "61ca7c8efc932d99452f80daf32471f7936268d00f9be46e1da9384fcbf4688e",
+      "width": 1122,
+      "height": 1402
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 04_10_37 p.m-6.png",
+      "sha256": "0a160cd53e6703cbfd188cb8582c86884c7af1d30d9abbdc0fec9d729bd53992",
+      "width": 1122,
+      "height": 1402
+    }
+  ]
+}

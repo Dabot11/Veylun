@@ -1,0 +1,48 @@
+{
+  "archive": "1. Ruen.zip",
+  "archive_sha256": "ed3a41b6a167706816ee4bc9c397586cb920d6c1ca3b6c2467212f41eb5515c2",
+  "images": [
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 03_57_25 p.m-1.png",
+      "bytes": 2201451,
+      "sha256": "68380dfc2fa77a2644d851f6faabeb318473c3eba50aab5fb87bf471254978fe",
+      "width": 1086,
+      "height": 1448
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 03_57_26 p.m-2.png",
+      "bytes": 2189001,
+      "sha256": "5934e85da0578925eda12893626a82fc6decd18801562ca1dadf3d0632f7d891",
+      "width": 1086,
+      "height": 1448
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 03_57_28 p.m-3.png",
+      "bytes": 2171082,
+      "sha256": "791bf09acfbebad5534ccbd0dc52cf84b830d95c6ea815ba9582090aa0c06810",
+      "width": 1086,
+      "height": 1448
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 03_57_29 p.m-4.png",
+      "bytes": 2146323,
+      "sha256": "af63698936c14b17b11147bdb76972aa0bf8e646eda863acf618b324ced97909",
+      "width": 1086,
+      "height": 1448
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 03_57_29 p.m-5.png",
+      "bytes": 2302193,
+      "sha256": "89d6d1922d73a9f3aa0bb0a3b16f8725e663c18d6a88baa9e4e3350213a27ac7",
+      "width": 1086,
+      "height": 1448
+    },
+    {
+      "file": "Imagen de ChatGPT 18 oct 2026, 03_57_30 p.m-6.png",
+      "bytes": 2309949,
+      "sha256": "b1d3909419bf9476b58075dbcbc6c0db5c680a71080aaafd4dd50c60dbe62b30",
+      "width": 1086,
+      "height": 1448
+    }
+  ]
+}
