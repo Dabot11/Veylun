@@ -13,6 +13,8 @@ npm 11.9.0 y Chromium del sistema con renderizado de software.
 | Errores de página/consola vigilados por las pruebas | Ninguno en las ejecuciones aprobadas |
 | Revisión visual | Inicio, bosque, HUD, cámara del Guardián y victoria revisados |
 | Referencias | 24 PNG inspeccionados; originales conservados y hashes verificados |
+| Build servido estáticamente bajo `/Veylun/` | Chromium: WebGL, nueva partida y cinco corazones; sin errores de página ni HTTP |
+| Publicación en GitHub Pages | Ejecución 39189859339: Success; URL directa bloqueada por la red cloud |
 
 ## Qué se comprobó
 
@@ -48,8 +50,10 @@ real; estas comprobaciones no demuestran 60 FPS en macOS.
 
 Pendientes: Xbox físico, recorrido completo manual en Chrome/macOS, duración
 de 10–15 minutos y ajuste de dificultad con jugadores. Los modelos, animación
-y escenario son provisionales y simplifican las referencias. No se publicó
-el juego ni se validó una restauración del entorno en otra tarea.
+y escenario son provisionales y simplifican las referencias. El juego se
+publicó posteriormente en GitHub Pages; la ejecución
+[39189859339](https://github.com/Dabot11/Veylun/actions/runs/39189859339)
+confirmó **Success**. No se validó una restauración del entorno en otra tarea.
 
 ## Repetir las comprobaciones
 

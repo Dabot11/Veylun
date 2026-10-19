@@ -5,6 +5,8 @@ combate de espada/escudo, tres enemigos, acertijo, dos checkpoints y victoria
 al restaurar el altar. Babylon.js + TypeScript estricto + Vite, sin backend.
 Veylun, Ruen y el título del nivel son nombres de trabajo.
 
+**[Jugar en Chrome](https://dabot11.github.io/Veylun/)** — publicado en GitHub Pages.
+
 ## Iniciar en Chrome
 
 Node.js 24 LTS y npm:

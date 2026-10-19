@@ -54,6 +54,7 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
 - [ ] Arte y animación definitivos: los cuatro modelos y el escenario son
       provisionales y simplifican las ilustraciones.
 - [ ] Validación de un GLB real de personaje y sus clips al disponer de ellos.
-- [ ] Publicación en hosting y restauración de una nueva tarea cloud.
+- [x] Publicación en GitHub Pages, confirmada por su ejecución de despliegue.
+- [ ] Restauración de una nueva tarea cloud.
 
 Consultar `VALIDATION.md` para el resultado de las ejecuciones reales.
