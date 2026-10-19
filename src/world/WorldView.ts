@@ -11,11 +11,15 @@ import { seededRandom } from '../core/math';
 import type { Simulation } from '../core/Simulation';
 import { CombatEffects } from './CombatEffects';
 import { SpiritView } from './SpiritView';
+import { GuardianView } from './GuardianView';
+import { SanctuaryView } from './SanctuaryView';
 export class WorldView {
   readonly visualOverrides=new VisualOverrides();readonly g:Geometry;readonly hero:CharacterRig;readonly enemyRigs:CharacterRig[];
   private seal:TransformNode;private gate:TransformNode;private grate:TransformNode;private lid:TransformNode;private switchGem:Mesh;private altar:Mesh;
   private telegraphs:Mesh[]=[];private targetRing:Mesh;private destination:Mesh;private motes:Mesh[]=[];
   readonly spiritView:SpiritView;
+  readonly guardianView:GuardianView;
+  readonly sanctuaryView:SanctuaryView;
   private switchBeacon:TransformNode;
   readonly shadowCasters:Mesh[]=[];
   readonly combatEffects:CombatEffects;
@@ -115,6 +119,7 @@ export class WorldView {
     this.targetRing=CreateTorus('target-ring',{diameter:1.5,thickness:.035,tessellation:48},scene);this.targetRing.material=g.mat('#fff3ba',.8);this.targetRing.isPickable=false;
     this.combatEffects=new CombatEffects(g);
     this.spiritView=new SpiritView(g);
+    this.guardianView=new GuardianView(g);this.sanctuaryView=new SanctuaryView(g);
     for(const e of sim.enemies.filter(e=>e.kind==='sprout')){
       const arrow=g.node('charge-direction');
       g.box('charge-path',arrow,[0,0,1.5],[.07,.025,2.4],'#ffc178',.6);
@@ -150,6 +155,7 @@ export class WorldView {
   update(sim:Simulation,dt:number):void{
     const t=sim.age;this.visualOverrides.update(sim);
     this.spiritView.update(sim);
+    this.guardianView.update(sim);this.sanctuaryView.update(sim);
     this.combatEffects.update(dt);
     for(const e of sim.enemies){const arrow=this.chargeArrows.get(e.id);if(arrow){arrow.setEnabled(sim.mode==='playing'&&e.hp>0&&e.state==='windup');arrow.position.set(e.x,groundHeight(e.x,e.z)+.1,e.z);arrow.rotation.y=e.yaw;}}
     this.seal.setEnabled(!(sim.save.defeatedOrdinaryEnemies.includes('sprout-1')&&sim.save.defeatedOrdinaryEnemies.includes('sprout-2')));
@@ -161,8 +167,8 @@ export class WorldView {
     this.switchGem.material=this.g.mat(sim.save.switchActivated?'#b8f3a1':sim.ruinsSwitchReady?'#ffe4a1':'#396b64',sim.ruinsSwitchReady?.9:.2);
     this.switchGem.scaling.setAll(.28*(sim.ruinsSwitchReady?1+Math.sin(t*3)*.12:1));this.switchGem.scaling.y*=1.35;this.switchGem.scaling.z*=.55;
     this.switchBeacon.setEnabled(sim.ruinsSwitchReady&&sim.mode==='playing');
-    this.altar.rotation.y=t*.35;this.altar.scaling.setAll(sim.mode==='restoring'?1+Math.sin(t*8)*.15:1);this.altar.material=this.g.mat(sim.save.bossDefeated?'#88ffe2':'#468b83',sim.save.bossDefeated?1:.15);
-    this.telegraphs.forEach((m,i)=>{const e=sim.enemies[i]!;m.setEnabled(e.kind!=='spirit'&&e.hp>0&&(e.state==='windup'||e.state==='attack'));m.position.set(e.x,groundHeight(e.x,e.z)+.08,e.z);m.visibility=e.state==='windup'?.4+Math.sin(t*12)*.2:.85;if(e.kind==='guardian')m.scaling.setAll(e.attackIndex%2===1?1:.7);});
+    this.altar.rotation.y=t*.35;this.altar.scaling.set(.58*(1+sim.restorationProgress*.25),.58*1.35*(1+sim.restorationProgress*.25),.58*.55*(1+sim.restorationProgress*.25));this.altar.material=this.g.mat(sim.save.bossDefeated?'#88ffe2':'#468b83',sim.save.bossDefeated?1:.15);
+    this.telegraphs.forEach((m,i)=>{const e=sim.enemies[i]!;m.setEnabled(e.kind==='sprout'&&e.hp>0&&(e.state==='windup'||e.state==='attack'));m.position.set(e.x,groundHeight(e.x,e.z)+.08,e.z);m.visibility=e.state==='windup'?.4+Math.sin(t*12)*.2:.85;});
     const target=sim.target;this.targetRing.setEnabled(!!target);if(target)this.targetRing.position.set(target.x,groundHeight(target.x,target.z)+.09,target.z);
     const goal=sim.objectivePosition(),dx=goal.x-sim.player.x,dz=goal.z-sim.player.z,len=Math.hypot(dx,dz);
     this.destination.position.set(sim.player.x+dx/Math.max(1,len)*Math.min(4,len),sim.player.y+1.3+Math.sin(t*2)*.1,sim.player.z+dz/Math.max(1,len)*Math.min(4,len));this.destination.rotation.y=t;this.destination.setEnabled(len>4&&sim.mode==='playing');

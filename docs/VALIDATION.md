@@ -1,4 +1,4 @@
-# Validación ejecutada — MVP, combate y Espíritu errante
+# Validación ejecutada — Guardián y restauración del santuario
 
 Fecha local: 18 de octubre de 2026 (America/Monterrey); registros del entorno:
 19 de octubre, UTC. Linux cloud, Node 24.19.0, npm 11.9.0 y Chromium del sistema
@@ -8,18 +8,19 @@ con renderizado de software.
 |---|---|
 | Instalación npm y repetición con `npm ci` | Correctas en la preparación del entorno; lockfile conservado |
 | TypeScript estricto y compilación Vite | Correctos; build estático en `dist/` |
-| `npm test` | 73 pruebas aprobadas en 7 archivos |
-| Playwright, `bootstrap.spec.ts`, build estático | 4 pruebas de inicio, controles, guardado y mando |
+| `npm test` | 91 pruebas aprobadas en 8 archivos |
+| Playwright, `bootstrap.spec.ts`, build estático | 4 aprobadas en la revisión anterior `f0cdd96`; no repetidas en esta iteración |
 | Playwright, `scenarios.spec.ts`, desarrollo | 1 prueba de controles, entrada inmediata al iniciar, jefe y altar |
-| Playwright, `combat.spec.ts`, desarrollo | 4 pruebas: daño real con teclado, ratón y Xbox simulado; bloqueo y contraataque con IA activa |
-| Playwright, `spirit.spec.ts`, desarrollo | 2 pruebas aprobadas: bloqueo, aproximación, daño real, muerte y activación del interruptor con teclado y Xbox simulado |
-| Revisión visual | Panel de combate, carga de magia, cristal señalado y guía del interruptor; escritorio y 390 × 844 |
+| Playwright, `guardian.spec.ts`, desarrollo | 3 aprobadas: dos encuentros completos con teclado/Xbox simulado; carga de victoria y reinicio visual |
+| Playwright, `combat.spec.ts`, desarrollo | 4 aprobadas en `f0cdd96`; no repetidas en esta iteración |
+| Playwright, `spirit.spec.ts`, desarrollo | 2 aprobadas en `f0cdd96`; no repetidas en esta iteración |
+| Revisión visual | Guardián, sector frontal, círculo de suelo, encuadre, guía del altar y ceremonia; escritorio y pantalla estrecha |
 | Referencias | 24 PNG originales conservados; inspección y hashes comprobados en la preparación inicial |
 | Publicación | GitHub Pages desde `gh-pages`; ver `DEPLOYMENT.md` y Actions para la revisión publicada |
 
 ## Lógica y recorrido
 
-Las 73 pruebas cubren timestep, carga de modelos, cámara, movimiento y colisiones,
+Las 91 pruebas cubren timestep, carga de modelos, cámara, movimiento y colisiones,
 salto, combo, escudo, esquiva, objetivos, los tres tipos de enemigo, progresión,
 muerte, checkpoints, altar y guardado. Una prueba recorre el nivel completo
 mediante comandos normales de movimiento, ataque e interacción hasta restaurar
@@ -37,12 +38,38 @@ metros, colisiones barridas y prioridad de contacto, altura, escudo frontal y
 trasero, esquiva, salto, aviso de peligro, limpieza al morir, progreso del
 interruptor y estabilidad del pool de mallas. Ver `SPIRIT_ENCOUNTER.md`.
 
+Las dieciocho pruebas del Guardián añaden alternancia, instante del impacto,
+escudo, geometría del ataque, rodada, salto, cobertura, reentrada a la arena,
+combo real en recuperación, muerte, persistencia, ceremonia, efectos reutilizables
+y encuadre con y sin fijación. Ver `GUARDIAN_ENCOUNTER.md`.
+
 El cargador se prueba con una jerarquía sintética; no se recibió ni probó un GLB
 definitivo de personaje.
 
 ## Navegador
 
-Las once pruebas aprobaron en ejecuciones separadas: dos del Espíritu (4,3 min),
+En esta iteración aprobaron cuatro pruebas de navegador: los dos encuentros
+completos del Guardián (5,2 min juntos), la carga de una victoria seguida de nueva
+aventura (19,5 s de prueba) y la regresión existente de controles/jefe/altar.
+No se repitieron las demás pruebas de navegador de la revisión anterior.
+
+Los combates conservan salud e IA normales del jefe. Entradas de teclado o Xbox
+simulado bloquean dos ataques frontales, salen del círculo del golpe al suelo,
+encadenan tres combos y activan el altar. Verifican salud 10/10, daño real 12 → 8
+→ 4 → 0, ausencia de victoria automática, guía, ceremonia, victoria y persistencia.
+La prueba adicional detecta una reaparición visual del jefe ya derrotado y
+verifica su corrección al cargar, además del reinicio de iluminación en nueva partida.
+
+El renderizado usa Chromium con SwiftShader, 640 × 480 y el ajuste normal de
+sombras desactivadas. Las pulsaciones del combo se coordinan con los frames de
+animación mediante eventos DOM o Gamepad API; esperar el HUD o varios viajes
+al proceso de pruebas podía exceder la ventana del combo. No se cambian el
+timestep, salud, daño ni ventanas de entrada para facilitar estas pruebas.
+Las revisiones visuales estáticas también usan sombras activadas.
+
+### Resultados de la revisión anterior
+
+En la revisión anterior `f0cdd96`, las once pruebas aprobaron en ejecuciones separadas: dos del Espíritu (4,3 min),
 ocho regresiones en el lote general (9,3 min, que incluyó un timeout) y la
 repetición del inicio con su límite ampliado (2,6 min). Todas usaron un solo worker.
 
@@ -90,8 +117,9 @@ La agrupación inicial redujo la escena de 410 a 216 mallas. Esta iteración añ
 un pool de 24 partículas de impacto, dos flechas de embestida, cuatro disparos
 reutilizables y señales de carga, recuperación e interruptor; los efectos
 se reutilizan y desactivan al expirar. Los nodos de audio se desconectan al acabar.
-Vite mantiene el aviso de chunks mayores de 500 kB: principal de aproximadamente
-941 kB minificado / 232 kB gzip; cargador opcional de 768 kB / 180 kB gzip.
+El Guardián añade sectores y aros reutilizables; la restauración reutiliza una
+onda y ocho luces. Vite mantiene el aviso de chunks mayores de 500 kB: principal de aproximadamente
+950 kB minificado / 234 kB gzip; cargador opcional de 768 kB / 180 kB gzip.
 El build concluye correctamente. Estas comprobaciones no demuestran 60 FPS en
 macOS ni validan la mezcla de sonido con altavoces físicos.
 

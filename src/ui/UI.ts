@@ -1,6 +1,9 @@
 import type { Simulation } from '../core/Simulation';
 import type { InputManager } from '../input/InputManager';
 import { CombatHUD } from './CombatHUD';
+import { guardianAttack } from '../enemies/guardianCombat';
+import { distance } from '../core/math';
+import { interactables } from '../world/level';
 export type Screen='start'|'pause'|'settings'|'controls'|'confirm'|'victory'|'none';
 export const formatTime=(seconds:number):string=>`${Math.floor(seconds/60).toString().padStart(2,'0')}:${Math.floor(seconds%60).toString().padStart(2,'0')}`;
 const heart='<path d="M12 21C9 18 2 13 2 7a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 6-7 11-10 14Z"/>';
@@ -15,6 +18,12 @@ export class UI {
   <section id="hud" hidden><div id="health" aria-label="Salud"></div><div id="objective"><span>EL SANTUARIO OLVIDADO</span><p></p><small></small></div><div id="zone-title"></div><div id="toast" role="status"></div><div id="interaction"></div><div id="boss"><span>GUARDIÁN ANCESTRAL</span><div><i></i></div><small></small></div><div id="location"></div><div id="controls-hint"></div><div id="death-message">El bosque aún te necesita<small>Regresando al último recuerdo…</small></div><div id="restoration">La luz vuelve al santuario</div></section>
   <div id="save-warning" role="status"></div><div id="loading" role="status">Despertando el bosque…</div>`);
   this.menu=document.querySelector('#menu')!;this.hud=document.querySelector('#hud')!;
+  document.querySelector('#boss>span')!.insertAdjacentHTML('beforeend','<b id="boss-health"></b>');
+  const bossTrack=document.querySelector('#boss>div')!;
+  bossTrack.setAttribute('role','progressbar');bossTrack.setAttribute('aria-label','Vida del Guardián');bossTrack.setAttribute('aria-valuemin','0');bossTrack.setAttribute('aria-valuemax','12');
+  document.querySelector('#boss')!.insertAdjacentHTML('beforeend','<p id="boss-controls"></p>');
+  this.hud.insertAdjacentHTML('beforeend','<section id="altar-guide" hidden><b>El santuario te espera</b><p>Sigue el haz de luz hasta el altar.</p><small></small></section>');
+  document.querySelector('#restoration')!.innerHTML='<b>La luz vuelve al santuario</b><small id="restoration-stage"></small><div role="progressbar" aria-label="Restauración del santuario" aria-valuemin="0" aria-valuemax="100"><i></i></div>';
   this.combat=new CombatHUD(this.hud);
   this.menu.addEventListener('click',e=>{const button=(e.target as HTMLElement).closest<HTMLButtonElement>('button[data-action]');if(button)this.onAction(button.dataset['action']!);});
   this.menu.addEventListener('input',e=>{const el=e.target as HTMLInputElement,key=el.name as keyof typeof this.settings;if(key in this.settings){if(key==='shadows'||key==='invert')this.settings[key]=el.checked;else this.settings[key]=Number(el.value);this.onAction('settings-change');}});
@@ -56,7 +65,19 @@ export class UI {
   const prompt=sim.interaction();const interaction=document.querySelector<HTMLElement>('#interaction')!;interaction.hidden=!prompt;interaction.textContent=prompt?`${input.device==='gamepad'?'Y':'E'}  ·  ${prompt.label}`:'';
   const boss=sim.enemies[3]!,bossEl=document.querySelector<HTMLElement>('#boss')!;bossEl.hidden=!(sim.save.doorUnlocked&&p.z>94&&boss.hp>0);
   document.querySelector<HTMLElement>('#boss i')!.style.width=`${boss.hp/boss.maxHp*100}%`;
-  document.querySelector('#boss small')!.textContent=boss.state==='windup'?(boss.attackIndex%2===1?'Golpe al suelo · aléjate o esquiva':'Golpe frontal · bloquea o esquiva'):'';
+  document.querySelector('#boss>div')!.setAttribute('aria-valuenow',String(boss.hp));
+  document.querySelector('#boss-health')!.textContent=`${boss.hp} / ${boss.maxHp}`;
+  bossEl.dataset['state']=boss.state;
+  const slam=guardianAttack(boss.attackIndex).kind==='slam';
+  document.querySelector('#boss small')!.textContent=boss.state==='windup'?(slam?'Golpe al suelo · sal del círculo':'Golpe frontal · bloquea de frente'):
+    boss.state==='attack'?(boss.hit?'El golpe ha pasado':slam?'¡Esquiva el impacto!':'¡Bloquea o esquiva!'):
+    boss.state==='recover'?'Expuesto · acércate y ataca':'Mantén la distancia y observa sus brazos';
+  document.querySelector('#boss-controls')!.textContent=boss.state==='recover'?(input.device==='gamepad'?'X · Espada':'J / clic · Espada'):
+    slam?(input.device==='gamepad'?'Stick + B · Esquiva al impacto. El escudo no lo detiene.':'WASD + Shift · Esquiva al impacto. El escudo no lo detiene.'):
+    input.device==='gamepad'?'LT · Escudo   B · Rodar   RT · Fijar':'K · Escudo   Shift · Rodar   Q · Fijar';
+  const altarGuide=document.querySelector<HTMLElement>('#altar-guide')!;
+  altarGuide.hidden=!sim.altarReady||sim.mode!=='playing'||p.z<94||distance(p,interactables['restoration-altar'])<2.2;
+  altarGuide.querySelector('small')!.textContent=`${input.device==='gamepad'?'Y':'E'} · Restaurar al acercarte`;
   const names={awakening:'Claro del despertar',roots:'Sendero de las raíces',ruins:'Patio de las ruinas',gate:'Puerta del santuario',guardian:'Cámara del Guardián'};
   document.querySelector('#location')!.textContent=`◇ ${names[sim.zone]}`;
   document.querySelector('#controls-hint')!.textContent=input.device==='gamepad'?'X Espada   LT Escudo   B Rodar   RT Fijar   Menu Pausa':'J Espada   K Escudo   Shift Rodar   Q Fijar   Esc Pausa';
@@ -64,6 +85,10 @@ export class UI {
   document.querySelector<HTMLElement>('#zone-title')!.hidden=sim.age>this.zoneUntil;
   document.querySelector<HTMLElement>('#death-message')!.hidden=sim.mode!=='dead';
   document.querySelector<HTMLElement>('#restoration')!.hidden=sim.mode!=='restoring';
+  const progress=sim.restorationProgress;
+  document.querySelector('#restoration-stage')!.textContent=progress<1/3?'Las runas despiertan':progress<2/3?'Las raíces recobran su luz':'El santuario vuelve a respirar';
+  document.querySelector('#restoration>div')!.setAttribute('aria-valuenow',String(Math.round(progress*100)));
+  document.querySelector<HTMLElement>('#restoration i')!.style.width=`${progress*100}%`;
   document.body.classList.toggle('hurt',p.invulnerable>.5);
  }
 }

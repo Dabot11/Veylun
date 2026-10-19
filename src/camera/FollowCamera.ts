@@ -4,6 +4,7 @@ import type { Scene } from '@babylonjs/core/scene';
 import type { Simulation } from '../core/Simulation';
 import { obstacles, solid, groundHeight } from '../world/level';
 import { angleDelta, angleTo, clamp, distance } from '../core/math';
+import { interactables } from '../world/level';
 export class FollowCamera {
  readonly camera:FreeCamera;yaw=0;pitch=.28;distance=5.8;sensitivity=1;invert=false;
  private currentDistance=5.8;private target=new Vector3();private manualLookTime=0;private combatFraming=0;
@@ -19,6 +20,17 @@ export class FollowCamera {
    if(this.manualLookTime===0)this.yaw+=angleDelta(this.yaw,angleTo(p,e))*(1-Math.exp(-4*dt));
    tx=p.x*.7+e.x*.3;tz=p.z*.7+e.z*.3;ty=p.y+1.1;
    wantedDistance=Math.max(this.distance,Math.min(10.5,3+distance(p,e)*.55));
+  }
+  const guardian=sim.enemies[3]!;
+  if(sim.target?.kind==='guardian'||!sim.target&&guardian.hp>0&&sim.save.doorUnlocked&&p.z>=94&&distance(p,guardian)<9){
+   ty=p.y+1.85;
+   const aspect=Math.min(1,this.camera.getEngine().getAspectRatio(this.camera));
+   wantedDistance=Math.max(wantedDistance,Math.min(11,6.8+(1-aspect)*5+distance(p,guardian)*.2));
+  }
+  if(sim.mode==='restoring'){
+   const altar=interactables['restoration-altar'];
+   this.yaw+=angleDelta(this.yaw,angleTo(p,altar))*(1-Math.exp(-2*dt));
+   tx=p.x*.45+altar.x*.55;tz=p.z*.45+altar.z*.55;ty=p.y+1.7;wantedDistance=Math.max(this.distance,7);
   }
   const shoulder=.85*Math.min(1,this.camera.getEngine().getAspectRatio(this.camera))*this.combatFraming;
   tx+=Math.cos(this.yaw)*shoulder;tz-=Math.sin(this.yaw)*shoulder;

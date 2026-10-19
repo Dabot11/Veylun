@@ -1,4 +1,4 @@
-import { angleDelta, angleTo, clamp, distance, facing, type V2 } from './math';
+import { angleDelta, angleTo, clamp, distance, type V2 } from './math';
 import { checkpoints, groundHeight, interactables, moveWithCollisions, clearMeleePath, firstSolidHit, zones } from '../world/level';
 import { freshSave } from '../progression/save';
 import type { SaveDataV1, ZoneId } from '../progression/types';
@@ -8,6 +8,7 @@ import type { PlayerState } from '../player/types';
 import { attacks, shieldBlocks, swordHits } from '../player/combat';
 import { gameConfig as config } from '../config/gameConfig';
 import { spiritCombat, segmentCircleEntry } from '../enemies/spiritCombat';
+import { guardianAttack, guardianCombat, guardianHits } from '../enemies/guardianCombat';
 export interface Commands { x: number; z: number; jump?: boolean; dodge?: boolean; attack?: boolean; shield?: boolean; interact?: boolean; target?: boolean; cycle?: number; viewYaw?: number }
 export interface Player extends V2 { y: number; vx: number; vz: number; vy: number; yaw: number; health: number; grounded: boolean; state: PlayerState; stateTime: number; invulnerable: number; rollCooldown: number; combo: number; attackTime: number; attackBuffer: number; queued: boolean; shield: boolean; coyote: number; jumpBuffer: number; rollX: number; rollZ: number; hitIds: Set<string> }
 export interface Enemy extends V2 { id: string; kind: EnemyType; y: number; yaw: number; radius: number; hp: number; maxHp: number; state: EnemyState; timer: number; age: number; home: V2; attackIndex: number; hit: boolean; hurt: number; stagger: number; aim: V2 }
@@ -32,7 +33,7 @@ export class Simulation {
     this.save = structuredClone(save);
     this.player = this.makePlayer();
     this.enemies = [this.enemy('sprout-1','sprout',-2,28,3),this.enemy('sprout-2','sprout',3,34,3),this.enemy('spirit-1','spirit',-2,56,2),this.enemy('guardian','guardian',0,114,12)];
-    for (const e of this.enemies) if (e.kind === 'guardian' ? save.bossDefeated : save.defeatedOrdinaryEnemies.includes(e.id as OrdinaryEnemyId)) { e.hp = 0; e.state = 'dead'; }
+    for (const e of this.enemies) if (e.kind === 'guardian' ? save.bossDefeated : save.defeatedOrdinaryEnemies.includes(e.id as OrdinaryEnemyId)) { e.hp = 0; e.state = 'dead'; e.timer = 3; }
     if (save.completed) this.mode = 'won';
   }
   private makePlayer(): Player {
@@ -48,6 +49,8 @@ export class Simulation {
   persist(): void { this.emit('save'); }
   get target(): Enemy | undefined { return this.enemies.find(e => e.id===this.targetId && e.hp>0); }
   get ruinsSwitchReady():boolean { return this.save.defeatedOrdinaryEnemies.includes('spirit-1')&&!this.save.switchActivated; }
+  get altarReady():boolean { return this.save.bossDefeated&&!this.save.altarActivated; }
+  get restorationProgress():number { return this.mode==='restoring'?clamp(this.modeTime/guardianCombat.restorationDuration,0,1):this.save.completed?1:0; }
   visibleEnemy(e:Enemy):boolean { return clearMeleePath({...this.player,y:this.player.y+.8},{...e,y:e.y+.8},this.save); }
   targets(): Enemy[] { return this.enemies.filter(e=>e.hp>0 && distance(e,this.player)<config.camera.lockRange && (e.kind!=='guardian'||this.save.doorUnlocked) && this.visibleEnemy(e)); }
   selectTarget(cycle = 0, viewYaw = this.player.yaw): void {
@@ -63,8 +66,9 @@ export class Simulation {
     this.age+=dt;
     if (this.mode !== 'playing') {
       this.modeTime+=dt;this.player.stateTime+=dt;
+      for(const enemy of this.enemies)if(enemy.hp<=0)enemy.timer+=dt;
       if (this.mode==='dead' && this.modeTime>1.6) this.respawn();
-      if (this.mode==='restoring' && this.modeTime>3) {this.mode='won';this.emit('victory');}
+      if (this.mode==='restoring' && this.modeTime>guardianCombat.restorationDuration) {this.mode='won';this.emit('victory');}
       return;
     }
     this.save.playedSeconds+=dt; this.autoSave+=dt;
@@ -143,7 +147,7 @@ export class Simulation {
       e.state='dead';e.timer=0;
       this.emit('enemy-death',undefined,e);
       if(e.id===this.targetId)this.targetId=null;
-      if(e.kind==='guardian'){this.save.bossDefeated=true;this.emit('message','El Guardián descansa. Activa el altar para restaurar el santuario.');}
+      if(e.kind==='guardian'){this.save.bossDefeated=true;this.emit('guardian-cleared','El Guardián descansa. Sigue la luz hasta el altar y devuelve la vida al santuario.');}
       else{this.save.defeatedOrdinaryEnemies.push(e.id as OrdinaryEnemyId);this.player.health=Math.min(10,this.player.health+1);}
       if(e.kind==='spirit'){
         this.projectiles=this.projectiles.filter(b=>b.ownerId!==e.id);
@@ -166,7 +170,9 @@ export class Simulation {
     if(e.stagger>0){e.stagger=Math.max(0,e.stagger-dt);return;}
     e.timer+=dt;
     const p=this.player,d=distance(e,p);
-    if(e.kind==='guardian'&&(!this.save.doorUnlocked||p.z<94))return;
+    if(e.kind==='guardian'&&(!this.save.doorUnlocked||p.z<94)){
+      e.state='idle';e.timer=0;e.hit=false;e.attackIndex=0;return;
+    }
     const detect=e.kind==='guardian'?24:e.kind==='spirit'?12:10;
     if(e.state==='idle'||e.state==='patrol'){
       if(d<detect){e.state='chase';e.timer=0;}
@@ -184,13 +190,15 @@ export class Simulation {
       }else{
         const reach=e.kind==='guardian'?3.5:2.9;
         if(d>reach)this.moveEnemy(e,p,e.kind==='guardian'?1.3:1.9,dt);
-        else if(e.kind!=='sprout'||(this.sproutAttackCooldown===0&&!this.enemies.some(other=>other!==e&&other.kind==='sprout'&&other.hp>0&&(other.state==='windup'||other.state==='attack')))){
-          e.state='windup';e.timer=0;e.hit=false;e.aim={x:p.x,z:p.z};this.emit('telegraph',undefined,e);
+        else if((e.kind!=='guardian'||this.visibleEnemy(e))&&(e.kind!=='sprout'||(this.sproutAttackCooldown===0&&!this.enemies.some(other=>other!==e&&other.kind==='sprout'&&other.hp>0&&(other.state==='windup'||other.state==='attack'))))){
+          e.state='windup';e.timer=0;e.hit=false;e.aim={x:p.x,z:p.z};
+          this.emit(e.kind==='guardian'?`guardian-${guardianAttack(e.attackIndex).kind}-charge`:'telegraph',undefined,e);
         }
       }
     }else if(e.state==='windup'){
-      const windup=e.kind==='guardian'?1.15:e.kind==='spirit'?spiritCombat.windup:.75;
-      if(e.timer<(e.kind==='spirit'?spiritCombat.aimLockTime:windup*.55)){e.aim={x:p.x,z:p.z};e.yaw=angleTo(e,e.aim);}
+      const windup=e.kind==='guardian'?guardianAttack(e.attackIndex).windup:e.kind==='spirit'?spiritCombat.windup:.75;
+      const lock=e.kind==='guardian'?guardianAttack(e.attackIndex).aimLock:e.kind==='spirit'?spiritCombat.aimLockTime:windup*.55;
+      if(e.timer<lock){e.aim={x:p.x,z:p.z};e.yaw=angleTo(e,e.aim);}
       if(e.timer>=windup){e.state='attack';e.timer=0;e.hit=false;
         if(e.kind==='spirit'){
           const yaw=angleTo(e,e.aim),dx=Math.sin(yaw),dz=Math.cos(yaw),y=groundHeight(e.x,e.z)+spiritCombat.projectileHeight;
@@ -198,7 +206,6 @@ export class Simulation {
           if(clearMeleePath({...e,y},muzzle,this.save))this.projectiles.push({id:++this.projectileId,ownerId:e.id,...muzzle,vx:dx*spiritCombat.projectileSpeed,vz:dz*spiritCombat.projectileSpeed,life:spiritCombat.projectileLife});
           this.emit('projectile');
         }
-        if(e.kind==='guardian'&&e.attackIndex%2===1)this.emit('slam',undefined,e);
       }
     }else if(e.state==='attack'){
       if(e.kind==='sprout'){
@@ -208,14 +215,19 @@ export class Simulation {
           if(result==='blocked'){e.state='recover';e.timer=0;this.sproutAttackCooldown=.35;}
         }
       }else if(e.kind==='guardian'&&!e.hit){
-        const slam=e.attackIndex%2===1;
-        if(e.timer>.12){
-          if((slam?d<4.3:d<3.6&&facing(e,e.yaw,p,Math.PI*.75))&&p.y-e.y<(slam?.6:1.7))this.receiveDamage(2,e,!slam);
+        const attack=guardianAttack(e.attackIndex);
+        if(e.timer>=attack.impact){
+          this.emit(`guardian-${attack.kind}-impact`,undefined,e);
+          if(guardianHits(e,p)&&this.visibleEnemy(e)){
+            const result=this.receiveDamage(guardianCombat.damage,e,attack.blockable);
+            if(result==='blocked')this.emit('guardian-block');
+            else if(result==='ignored'&&p.state==='roll'&&p.stateTime<config.combat.dodgeInvulnerability)this.emit('guardian-dodge');
+          }
           e.hit=true;
         }
       }
-      if(e.timer>(e.kind==='guardian'?.6:e.kind==='spirit'?spiritCombat.releaseTime:.4)){e.state='recover';e.timer=0;if(e.kind==='sprout')this.sproutAttackCooldown=.35;}
-    }else if(e.state==='recover'&&e.timer>(e.kind==='guardian'?1.7:e.kind==='spirit'?spiritCombat.recovery:1.1)){e.state='chase';e.timer=0;e.attackIndex++;}
+      if(e.timer>(e.kind==='guardian'?guardianAttack(e.attackIndex).release:e.kind==='spirit'?spiritCombat.releaseTime:.4)){e.state='recover';e.timer=0;if(e.kind==='sprout')this.sproutAttackCooldown=.35;}
+    }else if(e.state==='recover'&&e.timer>(e.kind==='guardian'?guardianAttack(e.attackIndex).recovery:e.kind==='spirit'?spiritCombat.recovery:1.1)){e.state='chase';e.timer=0;e.attackIndex++;}
     e.y=groundHeight(e.x,e.z)+(e.kind==='spirit'?.7:0);
   }
   private moveEnemy(e:Enemy,to:V2,speed:number,dt:number):void{
@@ -265,7 +277,10 @@ export class Simulation {
       if(!s.hasKey){this.emit('message','Encuentra la llave en el Patio de las ruinas.');return false;}
       s.doorUnlocked=true;this.checkpoint('before-guardian');this.emit('door','El santuario se abre. El Guardián te espera.');
     }else{
-      if(!s.bossDefeated)return false;s.altarActivated=true;s.completed=true;this.mode='restoring';this.modeTime=0;this.player.state='victory';this.emit('restore');
+      if(!s.bossDefeated)return false;s.altarActivated=true;s.completed=true;this.mode='restoring';this.modeTime=0;
+      this.player.state='victory';this.player.stateTime=0;this.player.shield=false;
+      this.player.vx=this.player.vz=this.player.vy=0;this.player.y=groundHeight(this.player.x,this.player.z);
+      this.player.yaw=angleTo(this.player,interactables['restoration-altar']);this.targetId=null;this.emit('restore');
     }
     if(this.mode==='playing'){this.player.state='interact';this.player.stateTime=0;}this.persist();return true;
   }

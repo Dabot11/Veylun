@@ -57,6 +57,11 @@ La dirección se fija antes de disparar: bloquea de frente o esquiva a un lado.
 Después queda agotado y puedes acercarte para golpear. Al vencerlo, sigue el
 haz de luz hasta el interruptor y actívalo con E / Y para abrir la reja.
 
+El Guardián alterna un sector frontal bloqueable y un golpe al suelo circular
+que exige salir del área o esquivar a tiempo. Ataca cuando el panel indique
+«Expuesto». Al derrotarlo, sigue la luz del altar e interactúa para restaurar el
+santuario; la victoria llega después de la ceremonia.
+
 ## Controles
 
 | Acción | Teclado / ratón | Xbox estándar |
@@ -118,7 +123,9 @@ Las pruebas aisladas sí crean estados concretos para verificar cada regla.
 Pruebas de navegador: cuatro sobre el build, una de controles/altar y cuatro de
 combate con teclado, ratón y Xbox simulado, incluido un bloqueo y contraataque
 con la IA del Brote activa. Otras dos recorren el encuentro del Espíritu y
-activan el interruptor usando teclado y Xbox simulado. Las pruebas de desarrollo usan
+activan el interruptor usando teclado y Xbox simulado. Dos más completan el
+combate del Guardián hasta restaurar el altar, y otra comprueba la carga de una
+victoria y el reinicio visual de nueva aventura. Las pruebas de desarrollo usan
 encuentros preparados para comprobar daño real desde la entrada del navegador:
 
 ```sh
@@ -148,3 +155,4 @@ Documentación: `GAME_DESIGN.md`, `ART_DIRECTION.md`, `ASSET_MANIFEST.md`,
 `ARCHITECTURE.md` y `docs/ACCEPTANCE.md`.
 El pulido del primer encuentro se describe en `docs/COMBAT_POLISH.md`.
 El combate a distancia y la guía al interruptor están en `docs/SPIRIT_ENCOUNTER.md`.
+El jefe y la restauración se describen en `docs/GUARDIAN_ENCOUNTER.md`.

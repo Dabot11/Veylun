@@ -17,6 +17,23 @@ export class AudioManager {
       this.lastStep = t;
     }
     if (name === 'sword') { this.burst(.11, 2100, .11); return; }
+    if (name === 'guardian-frontal-charge' || name === 'guardian-slam-charge') {
+      const slam=name==='guardian-slam-charge';
+      this.tone(slam?95:180,slam?240:480,t,slam?1.1:.8,.16,'triangle');
+      if(slam)this.tone(190,480,t+.15,.9,.06,'sine');
+      return;
+    }
+    if(name==='guardian-frontal-impact'||name==='guardian-slam-impact'){
+      const slam=name==='guardian-slam-impact';
+      this.burst(slam?.24:.13,slam?550:1100,slam?.3:.2);
+      this.tone(slam?110:170,45,t,.3,.25,'triangle');return;
+    }
+    if(name==='guardian-cleared'){
+      [196,294,392,587].forEach((frequency,i)=>this.tone(frequency,frequency,t+i*.2,.65,.15,'sine'));return;
+    }
+    if(name==='restore'){
+      [262,330,392,523,659].forEach((frequency,i)=>this.tone(frequency,frequency,t+i*.45,.9,.14,'sine'));return;
+    }
     if (name === 'spirit-charge') {
       this.tone(280, 1000, t, .75, .12, 'sine');
       this.tone(560, 1600, t + .15, .6, .06, 'sine');

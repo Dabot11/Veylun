@@ -58,6 +58,8 @@ export class CombatHUD {
       this.focusUntil = sim.age + (sim.enemies.find(e => e.id === event.enemyId)?.hp === 0 ? 1.2 : 3);
       this.notice.textContent = `${event.strong ? 'Golpe final' : 'Impacto'} · −${event.damage}`;
     } else if (event.type === 'magic-block') this.notice.textContent = 'Magia bloqueada · acércate y ataca';
+    else if (event.type === 'guardian-block') this.notice.textContent = 'Golpe bloqueado · prepara tu contraataque';
+    else if (event.type === 'guardian-dodge') this.notice.textContent = 'Golpe esquivado · prepara tu contraataque';
     else if (event.type === 'magic-dodge') this.notice.textContent = 'Magia esquivada · acércate y ataca';
     else if (event.type === 'shield') this.notice.textContent = 'Bloqueado · responde con la espada';
     else return;

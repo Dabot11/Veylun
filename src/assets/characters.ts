@@ -7,6 +7,7 @@ import { Geometry } from './geometry';
 import type { Player, Enemy } from '../core/Simulation';
 import { attackPose } from '../player/attackAnimation';
 import { spiritCombat } from '../enemies/spiritCombat';
+import { guardianAttack } from '../enemies/guardianCombat';
 export interface CharacterRig { root:TransformNode; parts:Record<string,TransformNode>; update(state:Player|Enemy,time:number):void }
 function mergeRigidParts(root:TransformNode,parts:Record<string,TransformNode>):void{
  const groups=new Map<TransformNode,Map<string,Mesh[]>>();
@@ -151,6 +152,28 @@ export function createEnemyRig(g:Geometry,kind:'sprout'|'spirit'|'guardian',id:s
     body.position.y+=charge*.12-(recover?.12:0);
     for(const s of [-1,1]){parts[`arm${s}`]!.rotation.x=charge?-.45*charge:recover?.35:Math.sin(time*5)*.2;parts[`arm${s}`]!.rotation.z=-s*(recover?1.7:.7-charge*.5);}
   }
-  if(e.hp<=0){root.scaling.y=Math.max(.01,1-e.timer*.9);root.scaling.x=root.scaling.z=Math.max(.01,1-e.timer*.5);if(e.timer>2)root.setEnabled(false);}else{root.setEnabled(true);root.scaling.setAll(1);}
+  if(kind==='guardian'){
+    const attack=guardianAttack(e.attackIndex),slam=attack.kind==='slam';
+    for(const s of [-1,1]){parts[`arm${s}`]!.rotation.y=0;parts[`arm${s}`]!.rotation.z=0;}
+    if(e.state==='windup'){
+      const charge=Math.min(1,e.timer/attack.windup);body.rotation.x=-.12*charge;
+      parts['arm1']!.rotation.x=-2.4*charge;
+      if(slam)parts['arm-1']!.rotation.x=-2.4*charge;
+      else parts['arm1']!.rotation.y=-.65*charge;
+    }else if(e.state==='attack'||e.state==='recover'){
+      const strike=e.state==='attack'?Math.min(1,e.timer/attack.impact):1;
+      const rise=e.state==='recover'?Math.max(0,(e.timer/attack.recovery-.65)/.35):0;
+      body.position.y=-(slam?.7:.2)*strike*(1-rise);body.rotation.x=.22*strike*(1-rise);
+      parts['arm1']!.rotation.x=(-2.4+strike*(slam?2.25:1.3))*(1-rise);
+      if(slam)parts['arm-1']!.rotation.x=parts['arm1']!.rotation.x;
+      else parts['arm1']!.rotation.y=-.65*(1-strike);
+    }
+    // A deliberate kneel and fade replaces the generic shrinking death.
+    if(e.hp<=0){const fall=Math.min(1,e.timer/1.2);body.position.y=-1.2*fall;body.rotation.x=.45*fall;
+      parts['arm1']!.rotation.x=parts['arm-1']!.rotation.x=-.25;
+      for(const mesh of meshes)mesh.visibility=Math.max(0,1-Math.max(0,e.timer-1.4)/.8);
+      root.setEnabled(e.timer<2.2);root.scaling.setAll(1);
+    }else{for(const mesh of meshes)mesh.visibility=1;root.setEnabled(true);root.scaling.setAll(1);}
+  }else if(e.hp<=0){root.scaling.y=Math.max(.01,1-e.timer*.9);root.scaling.x=root.scaling.z=Math.max(.01,1-e.timer*.5);if(e.timer>2)root.setEnabled(false);}else{root.setEnabled(true);root.scaling.setAll(1);}
  }};
 }

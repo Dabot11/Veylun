@@ -29,3 +29,28 @@
 @media(max-width:700px){#ruins-guide{bottom:120px;left:15px;width:235px}}
 #hud:has(#enemy-status:not([hidden])) #toast,#hud:has(#ruins-guide:not([hidden])) #toast{top:108px;right:35px;left:auto;transform:none;max-width:min(420px,calc(100vw - 335px))}
 @media(max-width:700px){#hud:has(#enemy-status:not([hidden])) #toast,#hud:has(#ruins-guide:not([hidden])) #toast{top:275px;right:auto;left:50%;transform:translateX(-50%);max-width:90vw}}
+
+#boss{top:35px;bottom:auto;left:auto;right:35px;transform:none;width:285px;padding:14px 16px;text-align:left;background:#10382de8;border:1px solid #b6d5ac66;border-radius:3px}
+#boss>span{font-size:9px;letter-spacing:1.5px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+#boss-health{font:11px Arial,sans-serif;letter-spacing:0;white-space:nowrap}
+#boss small{font-size:12px;line-height:1.5;color:#e7e4c8}
+#boss-controls{font-size:10px;line-height:1.6;margin:8px 0 0;color:#c6dec9}
+#boss[data-state=windup],#boss[data-state=attack]{border-color:#efb075}
+#boss[data-state=windup] small,#boss[data-state=attack] small{color:#ffcb91}
+#boss[data-state=recover] small{color:#a9f2cf}
+#hud:has(#boss:not([hidden])) #zone-title,#hud:has(#altar-guide:not([hidden])) #zone-title{display:none}
+#hud:has(#boss:not([hidden])) #objective{display:none}
+#hud:has(#boss:not([hidden])) #toast{top:108px;right:35px;left:auto;transform:none;max-width:calc(100vw - 370px)}
+#combat-notice[data-kind=guardian-block],#combat-notice[data-kind=guardian-dodge]{color:#b8f5e8;border-color:#8bd7c580}
+#altar-guide{position:absolute;bottom:120px;left:35px;width:248px;padding:15px 16px;background:#10382de8;border:1px solid #baffe080;border-radius:3px}
+#altar-guide b{font:17px Georgia,serif;color:#e5f5cd}
+#altar-guide p{font-size:12px;line-height:1.6;color:#dce8cf;margin:10px 0}
+#altar-guide small{font-size:10px;color:#a9e6cf}
+#restoration{inset:auto;top:35px;left:50%;transform:translateX(-50%);width:350px;max-width:90vw;padding:20px;background:#173e32e8;border:1px solid #d8f5c580;text-align:center}
+#restoration b{font:22px Georgia,serif;font-weight:normal}
+#restoration small{font:11px Arial,sans-serif;margin-top:12px;color:#e0f2d5}
+#restoration>div{height:4px;background:#082a22;width:100%;margin-top:18px}
+#restoration i{display:block;height:100%;background:#d7efb3}
+#hud:has(#restoration:not([hidden])) :is(#objective,#health,#location,#controls-hint,#interaction,#combat-notice,#toast){display:none}
+#hud:has(#altar-guide:not([hidden])) #toast{top:108px;right:35px;left:auto;transform:none;max-width:min(420px,calc(100vw - 335px))}
+@media(max-width:700px){#boss{top:60px;left:auto;right:15px;width:280px;max-width:calc(100% - 30px)}#boss>span{font-size:8px}#boss-controls{font-size:9px}#hud:has(#boss:not([hidden])) #toast{top:295px;right:auto;left:50%;transform:translateX(-50%);max-width:90vw}#altar-guide{left:15px;width:235px}#hud:has(#altar-guide:not([hidden])) #toast{top:145px;right:15px;left:auto;transform:none;max-width:280px}}

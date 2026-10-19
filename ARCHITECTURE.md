@@ -28,8 +28,11 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `world/WorldView.ts` | Bosque, arquitectura, interacciones y feedback visual |
 | `world/CombatEffects.ts` | Cuatro ráfagas reutilizables de impacto, con 24 partículas como máximo |
 | `world/SpiritView.ts` | Carga, dirección, recuperación y pool de cuatro proyectiles mágicos |
+| `world/GuardianView.ts` | Sector frontal y círculo de área con las mismas medidas que el daño |
+| `world/SanctuaryView.ts` | Guía del altar, onda y luces reutilizables, transición de iluminación |
 | `enemies/types.ts` | Tipos de enemigo y estados |
 | `enemies/spiritCombat.ts` | Tiempos compartidos del Espíritu, amenaza de disparo y contacto barrido |
+| `enemies/guardianCombat.ts` | Tiempos y alcance compartidos del jefe, contacto y duración de restauración |
 | `input` | Acciones abstractas y adaptadores de dispositivo |
 | `camera/FollowCamera.ts` | Seguimiento, órbita, colisión y encuadre del objetivo |
 | `progression` | Datos versionados, validación y almacenamiento local |
@@ -79,6 +82,13 @@ con pared o jugador. La altura del obstáculo, la orientación del escudo y la
 ventana de invulnerabilidad de la rodada se conservan. El HUD avisa de un disparo
 entrante hasta que pasa, se esquiva a un lado, se bloquea o choca.
 
+El Guardián alterna sector frontal bloqueable y área circular no bloqueable.
+Simulación, poses y señales usan `guardianAttack`. El daño se aplica una vez en
+el instante de impacto y respeta cobertura. Salir de la arena cancela la
+preparación; reentrar exige un aviso completo. Las recuperaciones de 1,9 y 2,4 s
+permiten responder con el combo. La cámara amplía el encuadre para el jefe,
+con o sin fijación. Ver `docs/GUARDIAN_ENCOUNTER.md`.
+
 La fijación prioriza la dirección de cámara y excluye líneas de visión
 obstruidas. LB/RB recorren los objetivos de izquierda a derecha; una obstrucción
 de más de 600 ms libera el objetivo. La órbita manual suspende el recentrado
@@ -96,6 +106,11 @@ La última interacción inicia tres segundos de restauración y la victoria.
 Tras vencer al Espíritu, `ruinsSwitchReady` deriva del guardado existente y
 enciende el haz del interruptor. Se apaga al activarlo; cargar una partida con
 el Espíritu derrotado conserva la guía. La reja sigue requiriendo interacción.
+
+`altarReady` deriva del progreso del jefe. `restorationProgress` devuelve el
+avance de los tres segundos de ceremonia o uno para partidas completadas.
+Vista y HUD lo consumen sin imponer victoria. La ceremonia termina en el modo
+`won`; una partida nueva restaura iluminación y oculta los efectos anteriores.
 
 `SaveStore` valida versión, tipos e invariantes entre llave/cofre/reja/puerta,
 checkpoints y victoria. Los datos corruptos se rechazan con aviso. No se guardan
