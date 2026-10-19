@@ -36,7 +36,7 @@
 | 18 Reinicio del jefe | Salud completa después de morir Ruen |
 | 19–20 Altar y victoria | Rechazo antes del jefe, ausencia de victoria por mera muerte/proximidad y restauración tras interactuar |
 | 21 Persistencia | Roundtrip, esquemas dañados, fallos de almacenamiento y nueva simulación; recarga en Chromium |
-| 22 Teclado/ratón | Prueba real de navegador de controles y menús, más recorrido íntegro en simulación |
+| 22 Teclado/ratón | Controles y menús en navegador; recorrido íntegro en simulación y Chromium, con muerte y recargas |
 | 23 Xbox | API y mapping estándar con mando simulado; pendiente hardware físico |
 
 La prueba de recorrido completo usa comandos de movimiento, ataques y
@@ -55,6 +55,10 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
       provisionales y simplifican las ilustraciones.
 - [ ] Validación de un GLB real de personaje y sus clips al disponer de ellos.
 - [x] Publicación en GitHub Pages, confirmada por su ejecución de despliegue.
+- [x] Recorrido completo automatizado en Chromium desde Nueva partida hasta
+      restaurar el altar, con muerte deliberada y recargas entre checkpoints.
+- [x] Guía transitable al cofre y salida, continuación sin almacenamiento local
+      durante la sesión y pausa/reanudación de la ceremonia.
 - [ ] Restauración de una nueva tarea cloud.
 
 Consultar `VALIDATION.md` para el resultado de las ejecuciones reales.

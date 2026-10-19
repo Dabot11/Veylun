@@ -21,14 +21,26 @@ export function parseSave(text: string | null): SaveDataV1 | null {
 }
 export class SaveStore {
   warning = '';
-  constructor(private storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>) {}
+  private session: SaveDataV1 | null | undefined;
+  constructor(private storage?: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>) {}
   read(): SaveDataV1 | null {
+    if (this.session !== undefined) return this.session ? structuredClone(this.session) : null;
     try {
+      if (!this.storage) throw Error('Storage unavailable');
       const raw = this.storage.getItem(SAVE_KEY); const parsed = parseSave(raw);
       if (raw && !parsed) this.warning = 'El guardado no es compatible o está dañado. Puedes comenzar otra partida.';
-      return parsed;
-    } catch { this.warning = 'El navegador no permite leer el guardado local.'; return null; }
+      this.session = parsed;
+      return parsed ? structuredClone(parsed) : null;
+    } catch { this.warning = 'Guardado local no disponible. El progreso se perderá al cerrar o recargar.'; return null; }
   }
-  write(save: SaveDataV1): void { try { this.storage.setItem(SAVE_KEY, JSON.stringify(save)); this.warning=''; } catch { this.warning = 'No se pudo guardar. La partida continúa en memoria.'; } }
-  clear(): void { try { this.storage.removeItem(SAVE_KEY); this.warning=''; } catch { this.warning = 'No se pudo borrar el guardado del navegador.'; } }
+  write(save: SaveDataV1): void {
+    this.session = structuredClone(save);
+    try { if (!this.storage) throw Error('Storage unavailable'); this.storage.setItem(SAVE_KEY, JSON.stringify(save)); this.warning=''; }
+    catch { this.warning = 'No se pudo guardar. Puedes continuar en esta sesión; el avance puede perderse al cerrar o recargar.'; }
+  }
+  clear(): void {
+    this.session = null;
+    try { if (!this.storage) throw Error('Storage unavailable'); this.storage.removeItem(SAVE_KEY); this.warning=''; }
+    catch { this.warning = 'No se pudo borrar el guardado del navegador.'; }
+  }
 }

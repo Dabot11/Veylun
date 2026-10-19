@@ -36,6 +36,7 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `input` | Acciones abstractas y adaptadores de dispositivo |
 | `camera/FollowCamera.ts` | Seguimiento, órbita, colisión y encuadre del objetivo |
 | `progression` | Datos versionados, validación y almacenamiento local |
+| `progression/guidance.ts` | Indicaciones por etapa y ruta de la luz alrededor del recinto del cofre |
 | `assets/characters.ts` | Modelos originales y animaciones procedurales |
 | `assets/VisualOverrides.ts`, `ModelLoader.ts` | Sustitución opcional por GLB y clips |
 | `assets/geometry.ts`, `surfaceTexture.ts` | Mallas, materiales y texturas originales |
@@ -111,11 +112,23 @@ el Espíritu derrotado conserva la guía. La reja sigue requiriendo interacción
 avance de los tres segundos de ceremonia o uno para partidas completadas.
 Vista y HUD lo consumen sin imponer victoria. La ceremonia termina en el modo
 `won`; una partida nueva restaura iluminación y oculta los efectos anteriores.
+`respawn` conserva los modos de restauración y victoria; el menú de pausa omite
+el checkpoint durante la ceremonia. `zoneAt` resuelve la zona real al cargar y
+reaparecer. El HUD limpia sus avisos temporales cuando cambia la aventura.
+
+`objectivePosition` identifica el destino final. `guidancePosition` obtiene el
+siguiente punto transitable alrededor del recinto de las ruinas; un grafo pequeño
+de esquinas comprueba segmentos con `firstSolidHit` y margen de 0,36 m.
+`WorldView` sitúa la luz sobre esa ruta. No cambia colisiones ni mueve al jugador.
 
 `SaveStore` valida versión, tipos e invariantes entre llave/cofre/reja/puerta,
 checkpoints y victoria. Los datos corruptos se rechazan con aviso. No se guardan
 coordenadas arbitrarias ni salud parcial del jefe: continuar usa checkpoint y
 restaura los enemigos aún vivos. Autosave periódico y en eventos importantes.
+Una copia aislada en memoria mantiene el progreso de la sesión aun si la lectura,
+escritura o eliminación del almacenamiento falla. Los avisos distinguen esta
+continuidad de la persistencia después de cerrar/recargar. `Application` solo
+guarda al abandonar la página si el jugador ha iniciado una aventura.
 
 ## Arte, recursos y rendimiento
 

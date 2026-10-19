@@ -101,6 +101,7 @@ export class WorldView {
     for(let i=0;i<13;i++)g.cylinder('grate-bar',this.grate,[i*.46-2.76,1.7,0],3.4,.08,.08,'#566d60',6);
     g.box('grate-top',this.grate,[0,3.4,0],[6,.14,.15],'#566d60');
     const chest=g.node('key-chest',undefined,[10,groundHeight(10,61),61]);
+    chest.rotation.y=Math.PI; // Face the grate so the lid opens away from approaching Ruen.
     g.box('chest-body',chest,[0,.32,0],[1.1,.6,.7],'#765338');
     for(const side of [-1,1])g.box('chest-band',chest,[side*.36,.34,.37],[.10,.6,.04],'#c6a66a');
     this.lid=g.node('chest-lid',chest,[0,.64,-.35]);g.box('chest-lid-wood',this.lid,[0,.08,.35],[1.12,.18,.74],'#956d42');g.gem('chest-lock',chest,[0,.42,.39],.13);
@@ -170,8 +171,9 @@ export class WorldView {
     this.altar.rotation.y=t*.35;this.altar.scaling.set(.58*(1+sim.restorationProgress*.25),.58*1.35*(1+sim.restorationProgress*.25),.58*.55*(1+sim.restorationProgress*.25));this.altar.material=this.g.mat(sim.save.bossDefeated?'#88ffe2':'#468b83',sim.save.bossDefeated?1:.15);
     this.telegraphs.forEach((m,i)=>{const e=sim.enemies[i]!;m.setEnabled(e.kind==='sprout'&&e.hp>0&&(e.state==='windup'||e.state==='attack'));m.position.set(e.x,groundHeight(e.x,e.z)+.08,e.z);m.visibility=e.state==='windup'?.4+Math.sin(t*12)*.2:.85;});
     const target=sim.target;this.targetRing.setEnabled(!!target);if(target)this.targetRing.position.set(target.x,groundHeight(target.x,target.z)+.09,target.z);
-    const goal=sim.objectivePosition(),dx=goal.x-sim.player.x,dz=goal.z-sim.player.z,len=Math.hypot(dx,dz);
-    this.destination.position.set(sim.player.x+dx/Math.max(1,len)*Math.min(4,len),sim.player.y+1.3+Math.sin(t*2)*.1,sim.player.z+dz/Math.max(1,len)*Math.min(4,len));this.destination.rotation.y=t;this.destination.setEnabled(len>4&&sim.mode==='playing');
+    const goal=sim.guidancePosition(),dx=goal.x-sim.player.x,dz=goal.z-sim.player.z,len=Math.hypot(dx,dz);
+    const objective=sim.objectivePosition(),remaining=Math.hypot(objective.x-sim.player.x,objective.z-sim.player.z);
+    this.destination.position.set(sim.player.x+dx/Math.max(.001,len)*Math.min(4,len),sim.player.y+1.3+Math.sin(t*2)*.1,sim.player.z+dz/Math.max(.001,len)*Math.min(4,len));this.destination.rotation.y=t;this.destination.setEnabled(remaining>2.2&&sim.mode==='playing');
     this.motes.forEach((m,i)=>m.position.set(sim.player.x+Math.sin(i*2.4+t*.08)*9,1.5+Math.sin(i+t*.3)*1.1,sim.player.z+Math.cos(i*2.4+t*.05)*12));
   }
 }

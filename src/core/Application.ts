@@ -15,15 +15,17 @@ import { FollowCamera } from '../camera/FollowCamera';
 import { InputManager } from '../input/InputManager';
 import { AudioManager } from '../audio/AudioManager';
 import { UI, type Screen } from '../ui/UI';
+import { zoneAt } from '../world/level';
 export class Application {
  readonly engine:Engine;readonly scene:Scene;sim:Simulation;readonly world:WorldView;readonly camera:FollowCamera;readonly input:InputManager;readonly ui:UI;
  private audio=new AudioManager();private store:SaveStore;private loop=new FixedStepLoop();private shadows:ShadowGenerator;private previous=performance.now();private menuReturn:Screen='start';private pendingReturn:Screen='start';private frame=0;private needsRender=true;
+ private adventureStarted=false;
  constructor(readonly canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{stencil:true});this.engine.setHardwareScalingLevel(1/Math.min(devicePixelRatio||1,1.5));
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.62,.77,.73,1);this.scene.fogMode=Scene.FOGMODE_EXP2;this.scene.fogDensity=.017;this.scene.fogColor=new Color3(.62,.77,.66);
   const ambient=new HemisphericLight('forest-sky',new Vector3(0,1,0),this.scene);ambient.intensity=.78;ambient.groundColor=new Color3(.25,.32,.18);
   const sun=new DirectionalLight('warm-sun',new Vector3(.6,-1,.5),this.scene);sun.position.set(-20,40,-15);sun.intensity=.9;sun.diffuse=new Color3(1,.91,.68);
-  let storage:Storage;try{storage=localStorage;}catch{const memory=new Map<string,string>();storage={getItem:(k:string)=>memory.get(k)??null,setItem:(k:string,v:string)=>{memory.set(k,v);},removeItem:(k:string)=>{memory.delete(k);}} as Storage;}
+  let storage:Storage|undefined;try{storage=localStorage;}catch{/* SaveStore retains the session and shows the storage warning. */}
   this.store=new SaveStore(storage);const save=this.store.read();this.sim=new Simulation(save??freshSave());
   this.world=new WorldView(this.scene,this.sim);this.camera=new FollowCamera(this.scene);this.camera.reset(this.sim);
   this.shadows=new ShadowGenerator(1024,sun);this.shadows.usePercentageCloserFiltering=true;this.shadows.bias=.002;this.shadows.normalBias=.02;this.shadows.darkness=.22;
@@ -39,15 +41,18 @@ export class Application {
  }
  private resize=():void=>{this.engine.resize();this.needsRender=true;};
  private visibility=():void=>{if(document.hidden&&this.ui.screen==='none'){this.pause();this.persist();}this.previous=performance.now();this.loop.reset();};
- private persist=():void=>{if(this.ui.screen!=='start')this.store.write(this.sim.save);};
+ private persist=():void=>{if(this.adventureStarted)this.store.write(this.sim.save);};
  private lock=():void=>{if(this.ui.screen==='none'){this.input.lock();this.audio.unlock();}};
- private pause():void{this.ui.show('pause');document.exitPointerLock?.();this.input.clear();this.loop.reset();}
+ private pause():void{this.ui.show('pause',false,this.sim.save);document.exitPointerLock?.();this.input.clear();this.loop.reset();}
  private resume():void{this.ui.show('none');this.input.clear();this.loop.reset();this.previous=performance.now();this.input.lock();}
  private startGame(load:boolean):void{
   this.sim=new Simulation(load?(this.store.read()??freshSave()):freshSave());
-  this.ui.combat.reset();this.world.combatEffects.reset();
+  this.adventureStarted=true;this.ui.reset();this.world.combatEffects.reset();
   this.world.enemyRigs.forEach(r=>r.root.setEnabled(true));this.camera.reset(this.sim);this.loop.reset();this.input.clear();
-  this.ui.show(this.sim.mode==='won'?'victory':'none',false,this.sim.save);this.store.write(this.sim.save);this.ui.zone('Claro del despertar',this.sim.age);
+  this.previous=performance.now();
+  this.ui.show(this.sim.mode==='won'?'victory':'none',false,this.sim.save);this.store.write(this.sim.save);
+  this.ui.update(this.sim,this.input);this.ui.zone(zoneAt(this.sim.player.z).name,this.sim.age);
+  if(load&&this.sim.mode!=='won')this.ui.toast('Continúas desde el último recuerdo. Tu progreso se conserva.',this.sim.age);
   if(this.sim.mode!=='won')this.input.lock();
  }
  private action=(action:string):void=>{
@@ -75,7 +80,7 @@ export class Application {
     });
     for(const e of this.sim.events){
       if(e.type==='save')this.store.write(this.sim.save);
-      else if(e.type==='respawn'){this.camera.reset(this.sim);this.input.clear();this.ui.combat.reset();this.world.combatEffects.reset();}
+      else if(e.type==='respawn'){this.camera.reset(this.sim);this.input.clear();this.ui.reset();this.world.combatEffects.reset();this.ui.zone(zoneAt(this.sim.player.z).name,this.sim.age);this.ui.toast('Regresaste al último recuerdo. Salud restaurada y progreso conservado.',this.sim.age);}
       else if(e.type==='zone')this.ui.zone(e.text??'',this.sim.age);
       else{this.audio.play(e.type,e.strong);this.ui.combat.feedback(e,this.sim);this.world.combatEffects.emit(e);if(e.text)this.ui.toast(e.text,this.sim.age);}
     }

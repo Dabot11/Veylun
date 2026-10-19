@@ -9,6 +9,9 @@ export const zones: { id: ZoneId; name: string; z: number }[] = [
   { id: 'guardian', name: 'Cámara del Guardián', z: 113 },
 ];
 export const checkpoints: Record<CheckpointId, V2> = { start: { x: 0, z: 0 }, 'after-sprouts': { x: 0, z: 42 }, 'before-guardian': { x: 0, z: 85 } };
+export function zoneAt(z: number): typeof zones[number] {
+  return zones[z > 96 ? 4 : z > 77 ? 3 : z > 44 ? 2 : z > 17 ? 1 : 0]!;
+}
 export const interactables = { 'ruins-switch': { x: -4, z: 60 }, 'key-chest': { x: 10, z: 61 }, 'sanctuary-door': { x: 0, z: 88 }, 'restoration-altar': { x: 0, z: 126 } };
 export function groundHeight(x: number, z: number): number {
   return 0.12 * Math.sin(z * 0.13) * Math.min(1, Math.abs(x) / 5) + (z > 79 && z < 87 ? (z - 79) / 8 * 0.6 : z >= 87 ? 0.6 : 0);

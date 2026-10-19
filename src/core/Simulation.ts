@@ -1,5 +1,6 @@
 import { angleDelta, angleTo, clamp, distance, type V2 } from './math';
-import { checkpoints, groundHeight, interactables, moveWithCollisions, clearMeleePath, firstSolidHit, zones } from '../world/level';
+import { checkpoints, groundHeight, interactables, moveWithCollisions, clearMeleePath, firstSolidHit, zones, zoneAt } from '../world/level';
+import { ruinsWaypoint } from '../progression/guidance';
 import { freshSave } from '../progression/save';
 import type { SaveDataV1, ZoneId } from '../progression/types';
 import type { OrdinaryEnemyId, EnemyType, EnemyState } from '../enemies/types';
@@ -32,6 +33,7 @@ export class Simulation {
   constructor(save = freshSave()) {
     this.save = structuredClone(save);
     this.player = this.makePlayer();
+    this.zone = zoneAt(this.player.z).id;
     this.enemies = [this.enemy('sprout-1','sprout',-2,28,3),this.enemy('sprout-2','sprout',3,34,3),this.enemy('spirit-1','spirit',-2,56,2),this.enemy('guardian','guardian',0,114,12)];
     for (const e of this.enemies) if (e.kind === 'guardian' ? save.bossDefeated : save.defeatedOrdinaryEnemies.includes(e.id as OrdinaryEnemyId)) { e.hp = 0; e.state = 'dead'; e.timer = 3; }
     if (save.completed) this.mode = 'won';
@@ -290,12 +292,14 @@ export class Simulation {
   private updateProgress():void{
     const both=this.save.defeatedOrdinaryEnemies.includes('sprout-1')&&this.save.defeatedOrdinaryEnemies.includes('sprout-2');
     if(both&&this.save.checkpoint==='start')this.checkpoint('after-sprouts');
-    const index=this.player.z>96?4:this.player.z>77?3:this.player.z>44?2:this.player.z>17?1:0;
-    const zone=zones[index]!;if(zone.id!==this.zone){this.zone=zone.id;this.emit('zone',zone.name);}
+    const zone=zoneAt(this.player.z),index=zones.indexOf(zone);
+    if(zone.id!==this.zone){this.zone=zone.id;this.emit('zone',zone.name);}
     if(index>zones.findIndex(z=>z.id===this.save.reachedZone)){this.save.reachedZone=zone.id;this.persist();}
   }
   respawn():void{
+    if(this.mode==='restoring'||this.mode==='won')return;
     this.player=this.makePlayer();this.targetId=null;this.lostTargetTime=0;this.sproutAttackCooldown=0;this.projectiles=[];this.mode='playing';this.modeTime=0;
+    this.zone=zoneAt(this.player.z).id;
     for(const e of this.enemies)if(e.hp>0){e.x=e.home.x;e.z=e.home.z;e.y=groundHeight(e.x,e.z)+(e.kind==='spirit'?.7:0);e.hp=e.maxHp;e.state='idle';e.timer=0;e.attackIndex=0;e.hit=false;e.hurt=0;e.stagger=0;}
     this.emit('respawn');this.persist();
   }
@@ -306,7 +310,7 @@ export class Simulation {
     if(this.save.hasKey)return 'Abre la puerta del santuario';
     if(this.save.grateOpened)return 'Abre el cofre y recoge la llave';
     if(this.save.defeatedOrdinaryEnemies.includes('spirit-1'))return 'Activa el interruptor de las ruinas';
-    if(this.save.checkpoint!=='start')return 'Encuentra la llave del santuario';
+    if(this.save.checkpoint!=='start')return 'Derrota al Espíritu errante';
     if(this.player.z>16)return 'Derrota a las criaturas del sendero';
     return 'Explora el bosque';
   }
@@ -317,5 +321,10 @@ export class Simulation {
     if(this.save.grateOpened)return interactables['key-chest'];
     if(this.save.defeatedOrdinaryEnemies.includes('spirit-1'))return interactables['ruins-switch'];
     return this.enemies.find(e=>e.hp>0)??interactables['restoration-altar'];
+  }
+  guidancePosition():V2{
+    const goal=this.objectivePosition();
+    return this.save.grateOpened&&this.player.z>48&&this.player.z<73
+      ?ruinsWaypoint(this.player,goal,this.save):goal;
   }
 }

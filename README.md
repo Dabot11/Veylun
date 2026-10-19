@@ -46,6 +46,8 @@ los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 El brillo turquesa que acompaña a Ruen señala el objetivo siguiente. Los aros
 ámbar anuncian ataques. El Guardián alterna golpe frontal (bloqueable) y golpe
 al suelo (esquivar, alejarse o saltar). Aprovecha su recuperación para atacar.
+En las ruinas, la luz rodea el recinto para conducir a Ruen por la reja abierta
+y señalar la salida cuando recoge la llave. El HUD explica el siguiente paso.
 
 En el primer encuentro, una flecha indica la dirección de la embestida.
 Los Brotes alternan sus ataques y se detienen al chocar contra el escudo.
@@ -93,8 +95,13 @@ pero requieren teclado/ratón; no se adivinan asignaciones.
 
 `localStorage`, clave `veylun.save.v1`, esquema validado. Se guarda después
 de eventos importantes y periódicamente durante la partida. Continuar aparece
-si hay datos válidos. Si el almacenamiento falla, se avisa y se sigue en memoria.
+si hay datos válidos. Si el almacenamiento falla, se avisa y se sigue en memoria:
+puedes volver al menú y continuar en la misma sesión, pero cerrar o recargar
+puede perder ese avance. También se avisa si el navegador bloquea por completo
+el acceso a `localStorage`.
 La pausa permite volver al checkpoint y reiniciar con confirmación.
+Durante la restauración puedes pausar y reanudar; el retorno al checkpoint
+no está disponible para evitar interrumpir el cierre de la aventura.
 
 Al morir se conservan llave, cofre, interruptor, reja, puerta y enemigos
 ordinarios derrotados. Ruen recupera diez unidades de salud; la pelea del
@@ -126,7 +133,14 @@ con la IA del Brote activa. Otras dos recorren el encuentro del Espíritu y
 activan el interruptor usando teclado y Xbox simulado. Dos más completan el
 combate del Guardián hasta restaurar el altar, y otra comprueba la carga de una
 victoria y el reinicio visual de nueva aventura. Las pruebas de desarrollo usan
-encuentros preparados para comprobar daño real desde la entrada del navegador:
+encuentros preparados para comprobar daño real desde la entrada del navegador.
+
+La prueba de recorrido de `journey.spec.ts` empieza desde Nueva partida y usa
+solo entradas normales para completar la aventura, con una muerte deliberada
+y recargas entre checkpoints. Dos regresiones adicionales revisan el progreso
+de sesión sin almacenamiento y la pausa durante la restauración.
+
+Para ejecutar las pruebas:
 
 ```sh
 npm run build
@@ -156,3 +170,4 @@ Documentación: `GAME_DESIGN.md`, `ART_DIRECTION.md`, `ASSET_MANIFEST.md`,
 El pulido del primer encuentro se describe en `docs/COMBAT_POLISH.md`.
 El combate a distancia y la guía al interruptor están en `docs/SPIRIT_ENCOUNTER.md`.
 El jefe y la restauración se describen en `docs/GUARDIAN_ENCOUNTER.md`.
+La orientación y continuidad están documentadas en `docs/JOURNEY_POLISH.md`.
