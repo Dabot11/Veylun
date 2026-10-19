@@ -1,1 +1,0 @@
-export{t as PBRMaterialLoadingAdapter}from"./ModelLoader-DNj0xw_y.js";
