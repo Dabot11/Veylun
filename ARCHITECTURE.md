@@ -21,6 +21,7 @@ admite pointer lock y arrastre. Las entradas de teclado de menú se dejan al DOM
 | `core/Simulation.ts` | Estado autoritativo, movimiento, FSM, combate y coordinación |
 | `core/math.ts`, `FixedStepLoop.ts` | Matemática pura y tiempo de simulación |
 | `player/combat.ts` | Ventanas del combo, volumen/orientación de espada y escudo |
+| `player/attackAnimation.ts` | Preparación, barrido frontal y recuperación sincronizados con esas ventanas |
 | `world/level.ts` | Zonas, altura de suelo y colliders compartidos |
 | `world/WorldView.ts` | Bosque, arquitectura, interacciones y feedback visual |
 | `enemies/types.ts` | Tipos de enemigo y estados |
@@ -46,7 +47,13 @@ el último checkpoint.
 
 FSM de Ruen: quince estados de animación, con tiempos acotados. Ataques
 mantienen un conjunto de enemigos ya golpeados por ventana. El alcance incluye
-radio enemigo, diferencia vertical y cono frontal. Escudo 110°; rodada breve
+radio enemigo, diferencia vertical, cono frontal y obstrucciones sólidas entre
+Ruen y el enemigo. La dirección se resuelve al iniciar cada golpe, priorizando
+el objetivo fijado y después el movimiento. Un buffer de 150 ms conserva
+pulsaciones recientes durante la recuperación; solo se encola el siguiente
+golpe y recibir daño cancela el combo. La animación usa los mismos tiempos que
+la detección de daño, con la espada delante durante la ventana activa.
+Escudo 110°; rodada breve
 con invulnerabilidad parcial y recuperación. Enemigos separados en FSM de
 patrulla/persecución, preparación, ataque, recuperación y muerte. La muerte
 elimina ataques; proyectiles ya emitidos tienen vida independiente y acotada.

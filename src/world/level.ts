@@ -36,6 +36,30 @@ export function solid(o: Obstacle, save: SaveDataV1): boolean {
   if(o.kind==='seal')return !(save.defeatedOrdinaryEnemies.includes('sprout-1')&&save.defeatedOrdinaryEnemies.includes('sprout-2'));
   return !(o.kind === 'gate' && save.doorUnlocked) && !(o.kind === 'grate' && save.grateOpened);
 }
+/** Segment/box intersection keeps melee damage on the visible side of solids. */
+export function clearMeleePath(from: V2 & { y: number }, to: V2 & { y: number }, save: SaveDataV1): boolean {
+  return !obstacles.some(o => {
+    if (!solid(o, save)) return false;
+    const floor = groundHeight(o.x, o.z);
+    const axes = [
+      [from.x, to.x - from.x, o.x - o.w / 2, o.x + o.w / 2],
+      [from.y, to.y - from.y, floor, floor + o.height],
+      [from.z, to.z - from.z, o.z - o.d / 2, o.z + o.d / 2],
+    ] as const;
+    let enter = 0, exit = 1;
+    for (const [origin, delta, min, max] of axes) {
+      if (Math.abs(delta) < 1e-8) {
+        if (origin < min || origin > max) return false;
+      } else {
+        const a = (min - origin) / delta, b = (max - origin) / delta;
+        enter = Math.max(enter, Math.min(a, b));
+        exit = Math.min(exit, Math.max(a, b));
+        if (enter > exit) return false;
+      }
+    }
+    return true;
+  });
+}
 /** Axis-separated swept substeps avoid tunneling during rolls and charges. */
 export function moveWithCollisions(pos: V2, dx: number, dz: number, radius: number, y: number, save: SaveDataV1): V2 {
   let x = pos.x, z = pos.z;

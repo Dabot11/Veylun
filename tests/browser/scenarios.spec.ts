@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
-import type { Simulation } from '../../src/core/Simulation';
-import type { FollowCamera } from '../../src/camera/FollowCamera';
-declare global { interface Window { __veylun: { sim: Simulation; camera: FollowCamera } } }
+import './harness';
 test.use({baseURL:'http://127.0.0.1:5174',viewport:{width:960,height:640}});
 test.setTimeout(120000);
 test('rendered gameplay responds to controls and victory requires the altar interaction',async({page})=>{

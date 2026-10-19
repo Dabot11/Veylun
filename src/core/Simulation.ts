@@ -1,5 +1,5 @@
 import { angleDelta, angleTo, clamp, distance, facing, type V2 } from './math';
-import { checkpoints, groundHeight, interactables, moveWithCollisions, zones, obstacles, solid } from '../world/level';
+import { checkpoints, groundHeight, interactables, moveWithCollisions, clearMeleePath, zones, obstacles, solid } from '../world/level';
 import { freshSave } from '../progression/save';
 import type { SaveDataV1, ZoneId } from '../progression/types';
 import type { OrdinaryEnemyId, EnemyType, EnemyState } from '../enemies/types';
@@ -8,7 +8,7 @@ import type { PlayerState } from '../player/types';
 import { attacks, shieldBlocks, swordHits } from '../player/combat';
 import { gameConfig as config } from '../config/gameConfig';
 export interface Commands { x: number; z: number; jump?: boolean; dodge?: boolean; attack?: boolean; shield?: boolean; interact?: boolean; target?: boolean; cycle?: number }
-export interface Player extends V2 { y: number; vx: number; vz: number; vy: number; yaw: number; health: number; grounded: boolean; state: PlayerState; stateTime: number; invulnerable: number; rollCooldown: number; combo: number; attackTime: number; queued: boolean; shield: boolean; coyote: number; jumpBuffer: number; rollX: number; rollZ: number; hitIds: Set<string> }
+export interface Player extends V2 { y: number; vx: number; vz: number; vy: number; yaw: number; health: number; grounded: boolean; state: PlayerState; stateTime: number; invulnerable: number; rollCooldown: number; combo: number; attackTime: number; attackBuffer: number; queued: boolean; shield: boolean; coyote: number; jumpBuffer: number; rollX: number; rollZ: number; hitIds: Set<string> }
 export interface Enemy extends V2 { id: string; kind: EnemyType; y: number; yaw: number; radius: number; hp: number; maxHp: number; state: EnemyState; timer: number; age: number; home: V2; attackIndex: number; hit: boolean; hurt: number; aim: V2 }
 export interface Projectile extends V2 { id: number; y: number; vx: number; vz: number; life: number }
 export interface GameEvent { type: string; text?: string; x?: number; z?: number }
@@ -34,7 +34,7 @@ export class Simulation {
   }
   private makePlayer(): Player {
     const p = checkpoints[this.save.checkpoint];
-    return { ...p, y: groundHeight(p.x,p.z), vx: 0, vz: 0, vy: 0, yaw: 0, health: 10, grounded: true, state: 'idle', stateTime: 0, invulnerable: 0, rollCooldown: 0, combo: 0, attackTime: -1, queued: false, shield: false, coyote: .1, jumpBuffer: 0, rollX: 0, rollZ: 1, hitIds: new Set() };
+    return { ...p, y: groundHeight(p.x,p.z), vx: 0, vz: 0, vy: 0, yaw: 0, health: 10, grounded: true, state: 'idle', stateTime: 0, invulnerable: 0, rollCooldown: 0, combo: 0, attackTime: -1, attackBuffer: 0, queued: false, shield: false, coyote: .1, jumpBuffer: 0, rollX: 0, rollZ: 1, hitIds: new Set() };
   }
   private enemy(id: string, kind: EnemyType, x: number, z: number, hp: number): Enemy {
     return {id,kind,x,z,y:groundHeight(x,z),yaw:Math.PI,radius:kind==='guardian'?1.15:kind==='sprout'?.55:.35,hp,maxHp:hp,state:'idle',timer:0,age:0,home:{x,z},attackIndex:0,hit:false,hurt:0,aim:{x,z}};
@@ -67,28 +67,30 @@ export class Simulation {
     if(this.targetId && (!this.target || distance(this.target,p)>17))this.targetId=null;
     p.invulnerable=Math.max(0,p.invulnerable-dt);p.rollCooldown=Math.max(0,p.rollCooldown-dt);p.stateTime+=dt;
     p.coyote=p.grounded?.1:Math.max(0,p.coyote-dt);p.jumpBuffer=input.jump?.12:Math.max(0,p.jumpBuffer-dt);
+    p.attackBuffer=input.attack?config.combat.attackBuffer:Math.max(0,p.attackBuffer-dt);
     if(p.state==='interact' && p.stateTime>.5)p.state='idle';
     if(p.state==='hurt' && p.stateTime>.3)p.state='idle';
     if(p.state==='land' && p.stateTime>.12)p.state='idle';
     if(p.state==='roll' && p.stateTime>=.45){p.state='idle';p.stateTime=0;}
-    const canAct=p.state!=='roll'&&p.state!=='hurt';
-    if(input.dodge && canAct && p.rollCooldown===0 && p.grounded){
-      p.state='roll';p.stateTime=0;p.rollCooldown=.8;p.attackTime=-1;p.queued=false;p.combo=0;
+    if(input.dodge && p.state!=='roll' && p.state!=='hurt' && p.rollCooldown===0 && p.grounded){
+      p.state='roll';p.stateTime=0;p.rollCooldown=.8;p.attackTime=-1;p.attackBuffer=0;p.queued=false;p.combo=0;p.jumpBuffer=0;
       const m=Math.hypot(input.x,input.z);p.rollX=m>.1?input.x/m:Math.sin(p.yaw);p.rollZ=m>.1?input.z/m:Math.cos(p.yaw);this.emit('dodge');
     }
+    const canAct=p.state!=='roll'&&p.state!=='hurt'&&p.state!=='interact';
     p.shield=!!input.shield&&p.state!=='roll'&&p.state!=='hurt'&&p.attackTime<0;
-    if(input.attack&&canAct&&p.state!=='roll'&&!p.shield){
-      if(p.attackTime<0)this.beginAttack(1);else if(p.combo<3 && p.attackTime>.08)p.queued=true;
+    if(p.attackBuffer>0&&canAct&&!p.shield){
+      if(p.attackTime<0)this.beginAttack(1,input);
+      else if(p.combo<3){p.queued=true;p.attackBuffer=0;}
     }
     if(p.jumpBuffer>0 && p.coyote>0 && canAct && p.attackTime<0){p.vy=Math.sqrt(-2*config.player.gravity*config.player.jumpHeight);p.grounded=false;p.coyote=0;p.jumpBuffer=0;p.state='jump';p.stateTime=0;}
     if(p.attackTime>=0){
       p.attackTime+=dt;const a=attacks[p.combo-1]!;
       if(p.attackTime>=a.windup&&p.attackTime<a.activeEnd){
-        for(const e of this.enemies)if(e.hp>0&&!p.hitIds.has(e.id)&&swordHits(p,p.yaw,p.y,e)){
+        for(const e of this.enemies)if(e.hp>0&&!p.hitIds.has(e.id)&&swordHits(p,p.yaw,p.y,e)&&clearMeleePath({...p,y:p.y+.8},{...e,y:e.y+.6},this.save)){
           p.hitIds.add(e.id);this.damageEnemy(e,a.damage);
         }
       }
-      if(p.attackTime>=a.duration){if(p.queued&&p.combo<3)this.beginAttack(p.combo+1);else{p.attackTime=-1;p.combo=0;p.queued=false;p.state='idle';}}
+      if(p.attackTime>=a.duration){if(p.queued&&p.combo<3)this.beginAttack(p.combo+1,input);else{p.attackTime=-1;p.combo=0;p.queued=false;p.state='idle';}}
     }
     const magnitude=Math.min(1,Math.hypot(input.x,input.z));
     const speed=p.shield?1.6:p.attackTime>=0?.6:config.player.runSpeed;
@@ -112,7 +114,14 @@ export class Simulation {
     if(input.interact)this.interact();
     this.updateProgress();
   }
-  private beginAttack(combo:number):void{const p=this.player;p.combo=combo;p.attackTime=0;p.queued=false;p.hitIds.clear();p.state=`attack${combo}` as PlayerState;p.stateTime=0;this.emit('sword');}
+  private beginAttack(combo:number,input:Commands):void{
+    const p=this.player;
+    // Resolve the strike direction before its hit window, including a turn and
+    // attack received on the same frame. A locked target takes precedence.
+    if(this.target)p.yaw=angleTo(p,this.target);
+    else if(Math.hypot(input.x,input.z)>.1)p.yaw=Math.atan2(input.x,input.z);
+    p.combo=combo;p.attackTime=0;p.attackBuffer=0;p.queued=false;p.hitIds.clear();p.state=`attack${combo}` as PlayerState;p.stateTime=0;this.emit('sword');
+  }
   damageEnemy(e:Enemy,amount:number):void{
     if(e.hp<=0)return;
     e.hp=Math.max(0,e.hp-amount);e.hurt=.2;this.emit('hit',undefined,e);
@@ -128,7 +137,7 @@ export class Simulation {
     const p=this.player;
     if(this.mode!=='playing'||p.invulnerable>0||(p.state==='roll'&&p.stateTime<.25))return 'ignored';
     if(blockable&&p.shield&&shieldBlocks(p,p.yaw,source)){this.emit('shield',undefined,p);return 'blocked';}
-    p.health=Math.max(0,p.health-amount);p.invulnerable=.7;p.state='hurt';p.stateTime=0;p.attackTime=-1;p.combo=0;p.shield=false;this.emit('hurt',undefined,p);
+    p.health=Math.max(0,p.health-amount);p.invulnerable=.7;p.state='hurt';p.stateTime=0;p.attackTime=-1;p.attackBuffer=0;p.queued=false;p.combo=0;p.shield=false;this.emit('hurt',undefined,p);
     if(p.health===0){p.state='death';this.mode='dead';this.modeTime=0;this.save.deaths++;this.emit('death');this.persist();}
     return 'hurt';
   }

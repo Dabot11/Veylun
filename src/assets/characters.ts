@@ -3,6 +3,7 @@ import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { Geometry } from './geometry';
 import type { Player, Enemy } from '../core/Simulation';
+import { attackPose } from '../player/attackAnimation';
 export interface CharacterRig { root:TransformNode; parts:Record<string,TransformNode>; update(state:Player|Enemy,time:number):void }
 function mergeRigidParts(root:TransformNode,parts:Record<string,TransformNode>):void{
  const groups=new Map<TransformNode,Map<string,Mesh[]>>();
@@ -76,7 +77,7 @@ export function createRuen(g:Geometry):CharacterRig{
   if(p.state==='jump'||p.state==='fall'){parts['leg1']!.rotation.x=-.65;parts['leg-1']!.rotation.x=.4;parts['arm1']!.rotation.x=-.5;}
   if(p.state==='land'){hips.position.y-=.10;parts['leg1']!.rotation.x=-.2;}
   if(p.state==='roll'){root.rotation.x=p.stateTime/.45*Math.PI*2;}
-  if(p.attackTime>=0){const progress=Math.min(1,p.attackTime/(p.combo===3?.63:.5));parts['arm1']!.rotation.x=-1.2+Math.sin(progress*Math.PI)*2.8;parts['arm1']!.rotation.z=-.7+Math.sin(progress*Math.PI)*1.5;hips.rotation.y=Math.sin(progress*Math.PI)*.4;}else hips.rotation.y=0;
+  if(p.attackTime>=0){const pose=attackPose(p.combo,p.attackTime);parts['arm1']!.rotation.set(pose.x,pose.y,pose.z);hips.rotation.y=pose.torso;}else hips.rotation.y=0;
   if(p.shield){parts['arm-1']!.rotation.x=-1.1;parts['arm-1']!.rotation.y=-.25;shield.rotation.x=.7;}
   if(p.state==='hurt')root.rotation.z=Math.sin(time*35)*.12;
   if(p.state==='death'){root.rotation.z=Math.min(1,p.stateTime)*1.5;root.position.y+=.1;}

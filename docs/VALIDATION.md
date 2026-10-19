@@ -7,25 +7,28 @@ npm 11.9.0 y Chromium del sistema con renderizado de software.
 |---|---|
 | Instalación npm y repetición con `npm ci` | Correctas, lockfile utilizado |
 | TypeScript estricto y compilación Vite | Correctos; build estático en `dist/` |
-| `npm test` | 35 pruebas aprobadas en 4 archivos |
-| Playwright, `bootstrap.spec.ts`, build estático | 4 pruebas aprobadas, 2,4 minutos |
-| Playwright, `scenarios.spec.ts`, desarrollo | 1 prueba aprobada, 44,9 segundos |
+| `npm test` | 46 pruebas aprobadas en 5 archivos |
+| Playwright, `bootstrap.spec.ts`, build estático | 4 pruebas aprobadas de inicio, controles, guardado y mando |
+| Playwright, `scenarios.spec.ts`, desarrollo | 1 prueba aprobada de controles, jefe y altar |
+| Playwright, `combat.spec.ts`, desarrollo | 3 pruebas aprobadas, 46,6 segundos; daño real con teclado, ratón y Xbox simulado |
 | Errores de página/consola vigilados por las pruebas | Ninguno en las ejecuciones aprobadas |
-| Revisión visual | Inicio, bosque, HUD, cámara del Guardián y victoria revisados |
+| Revisión visual | Inicio, bosque, HUD, cámara del Guardián, victoria y espada frontal durante un impacto revisados |
 | Referencias | 24 PNG inspeccionados; originales conservados y hashes verificados |
 | Build servido estáticamente bajo `/Veylun/` | Chromium: WebGL, nueva partida y cinco corazones; sin errores de página ni HTTP |
-| Publicación en GitHub Pages | Ejecución 39189859339: Success; URL directa bloqueada por la red cloud |
+| Primera publicación en GitHub Pages | Ejecución 39189859339: Success; URL directa bloqueada por la red cloud |
 
 ## Qué se comprobó
 
-Las 35 pruebas de lógica cubren timestep, carga de modelos, cámara,
+Las 46 pruebas de lógica cubren timestep, carga de modelos, cámara,
 movimiento y colisiones, salto, combo, escudo, esquiva, objetivos,
 los tres tipos de enemigo, progresión, muerte, checkpoints, altar y guardado.
 Una prueba recorre el nivel completo mediante comandos normales de movimiento,
 ataque e interacción hasta restaurar el altar, sin conceder objetos, daño
 ni salud. Las pruebas aisladas sí crean estados específicos para comprobar
 cada regla. El cargador de modelos se prueba con una jerarquía sintética;
-no se recibió ni probó un GLB definitivo de personaje.
+no se recibió ni probó un GLB definitivo de personaje. Las once regresiones
+nuevas comprueban la corrección de combate, incluidas las transformaciones
+reales de la espada durante los tres golpes; ver `COMBAT_FIXES.md`.
 
 Las cuatro pruebas de navegador sobre producción verifican inicio, controles,
 cámara, pausa, ajustes, HUD adaptable, guardado corrupto, recarga de progreso,
@@ -39,6 +42,11 @@ altar: no hay victoria antes del jefe ni por derrotarlo; la interacción inicia
 la restauración y muestra la victoria. Las capturas de esta prueba muestran
 ese estado preparado, no una partida completa jugada en el navegador. La
 instrumentación `?test=1` solo está disponible en desarrollo.
+
+Las tres pruebas nuevas de combate generan pulsaciones reales de teclado y
+ratón, o flancos de un mando simulado. Con un enemigo situado a alcance,
+comprueban que su salud baja 3 → 2 → 1 → 0 y que queda registrado como derrotado.
+No se concede daño desde la preparación del escenario.
 
 ## Límites y rendimiento
 
@@ -65,7 +73,7 @@ PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e
 
 Playwright inicia preview en 4173 y desarrollo en 5174. Si no hay Chromium
 del sistema, ejecutar `npx playwright install chromium` y omitir la variable.
-Las cinco pruebas se ejecutaron en dos invocaciones, una por archivo.
+Las ocho pruebas se distribuyen entre los tres archivos de navegador.
 
 Se guardaron `install_script` y `start_skill` actualizados en el borrador del
 entorno y la plataforma confirmó el guardado. Esto no publica la configuración.

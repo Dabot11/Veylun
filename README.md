@@ -63,7 +63,9 @@ al suelo (esquivar, alejarse o saltar). Aprovecha su recuperación para atacar.
 | Pausa | Escape | Menu |
 
 Encadena hasta tres golpes pulsando de nuevo durante el ataque. El tercero
-hace más daño. Escudo de frente, invulnerabilidad breve al rodar y después de
+hace más daño. Acércate al enemigo y usa Q / RT para mantenerlo fijado;
+también puedes dirigir el golpe con el movimiento. Escudo de frente,
+invulnerabilidad breve al rodar y después de
 recibir daño. No hay parry, ataques cargados ni doble salto.
 
 Para Xbox en macOS: empareja el mando en Ajustes del Sistema → Bluetooth,
@@ -103,8 +105,9 @@ Pruebas de lógica: `npm test`. Incluyen un recorrido completo con comandos de
 movimiento, ataques e interacción, sin conceder daño ni objetos en esa prueba.
 Las pruebas aisladas sí crean estados concretos para verificar cada regla.
 
-Pruebas de navegador: cuatro sobre el build y una de controles/altar en
-desarrollo con un estado avanzado preparado:
+Pruebas de navegador: cuatro sobre el build, una de controles/altar y tres de
+combate con teclado, ratón y Xbox simulado. Las pruebas de desarrollo usan
+encuentros preparados para comprobar daño real desde la entrada del navegador:
 
 ```sh
 npm run build
