@@ -1,5 +1,31 @@
 # Validación ejecutada
 
+## Carga automática y reposo de Ruen
+
+22 de octubre de 2026. **123 pruebas unitarias en 12 archivos y 26 de
+navegador aprobadas**, estas últimas en una ejecución de 18.6 minutos sin
+reintentos. Typecheck y build correctos. Chromium con renderizado de software,
+servidores locales de desarrollo y producción; no es una medición de FPS.
+
+La ruta normal carga Meshy automáticamente y conserva la pose base estática
+en reposo. Se comprobó que la pose local vuelve exactamente a sus valores
+iniciales después de correr y permanece estable. Las transiciones duran
+0.2 s. El visor también carga automáticamente, con reproducción pausada.
+
+La suite incluye 17 regresiones del MVP, tres casos del visor con fixture
+sintético y seis de integración de Ruen: cuatro cargan el master real; los
+otros verifican fallo de descarga y opt-out sin descargar el GLB. Incluye
+producción sin hooks de depuración, locomoción, pausa, colisiones, acciones
+provisionales, combate, aventura completa, muerte, checkpoints y guardado.
+
+El master conserva su SHA-256. La pose base no es una animación Idle; salto,
+esquiva, defensa y combate mantienen el rig provisional. Xbox físico y
+rendimiento en el Mac de David quedan pendientes. Se mantiene el aviso de
+chunk glTF mayor de 500 kB. Publicación de esta revisión pendiente.
+
+[Evidencia y capturas](evidence/ruen-meshy/README.md) ·
+[Log completo de esta revisión](evidence/ruen-meshy/default-idle-browser.log).
+
 ## Master real de Meshy y prueba de locomoción
 
 22 de octubre de 2026. Typecheck y build correctos; **119 pruebas unitarias en

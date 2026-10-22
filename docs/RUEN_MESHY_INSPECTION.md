@@ -1,7 +1,9 @@
 # Ruen / Meshy: visor y prueba de locomoción
 
-Estado al 22 de octubre de 2026: **master real cargado; Walking/Running
-revisados en el visor y prueba jugable validada con 24 tests de navegador**.
+Nueva revisión: **carga automática y reposo estático con 123 pruebas unitarias
+y 26 de navegador aprobadas; publicación pendiente**.
+La revisión publicada `6a80022` mantiene sus resultados de 119 pruebas unitarias
+y 24 de navegador como historial del paso previo.
 Rama: `feat/ruen-meshy-inspector`. Visor previo: `9d64cf5`; base del MVP:
 `1928f65` en `work`. Esto no aprueba el arte final ni completa las animaciones.
 
@@ -22,7 +24,8 @@ superara el límite de transferencia de 32 MiB. El archivo ya está en:
 
 En GitHub Pages: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
 y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-El código publicado corresponde a `6a80022`; para ejecutarlo localmente:
+El código publicado sigue siendo `6a80022`, sin el nuevo comportamiento por
+defecto. Para probar la revisión actual localmente:
 
 ```sh
 cd /workspace/Veylun
@@ -33,14 +36,14 @@ Agrega uno de estos parámetros a la dirección que imprime Vite:
 
 | Ruta | Comportamiento |
 | --- | --- |
-| `/?inspect=ruen` | Visor aislado, sin simulación ni acceso al guardado. |
-| `/?ruen=meshy` | Prueba jugable de Walking/Running con fallback explícito. |
-| `/` | MVP normal con su representación provisional existente. |
+| `/` o `/?ruen=meshy` | Carga automática de Meshy; reposo estático y Walking/Running. |
+| `/?ruen=provisional` | Rig procedural anterior para todas las acciones. |
+| `/?inspect=ruen` | Visor aislado; carga automática del master, pausado. |
 
 Las rutas locales también funcionan con `npm run preview`. El visor permite
-**Cargar desde el repositorio** o **Abrir GLB desde tu equipo**; el selector
-local lee el archivo en memoria y no lo sube a un servicio. El botón de prueba
-del visor abre el modo jugable; **Salir de la prueba** vuelve al MVP normal.
+**Recargar modelo original** o abrir un GLB local; el selector lee el archivo
+en memoria y no lo sube a un servicio. El botón de prueba del visor abre el
+modo jugable. El visor no accede a la simulación ni al guardado.
 
 El visor carga pausado, selecciona Walking y reproduce un solo grupo a la vez.
 Incluye selector con nombres reales, reproducir/pausar, reinicio, velocidad
@@ -74,11 +77,13 @@ las extensiones se reportan como declaraciones del JSON, sin inferir plugins.
 
 ## Alcance del modo jugable
 
-Sólo **Walking y Running** se conectan a los estados `walk` y `run` en
-`?ruen=meshy`. El modo normal no activa el GLB. La UI identifica la prueba
-y muestra cuándo se utiliza Meshy o el Ruen provisional.
+La revisión actual carga Meshy automáticamente. Sólo **Walking y Running**
+se conectan a los estados `walk` y `run`. En reposo conserva el modelo real en
+su pose base exacta y estática, sin clip Idle, respiración ni offsets añadidos.
+La transición reposo↔locomoción dura 0.2 s. La UI muestra cuándo
+se utiliza Meshy o el Ruen provisional.
 
-`RuenLocomotionView` conserva el rig existente para reposo, salto, caída,
+`RuenLocomotionView` conserva el rig existente para salto, caída,
 aterrizaje, esquiva, ataques, defensa, daño, muerte, interacción y victoria.
 También conserva ese fallback para desplazamientos laterales/hacia atrás
 con objetivo fijado. Un error de carga conserva el modelo provisional.
@@ -108,8 +113,9 @@ Un bloqueo por colisión congela el ciclo; los menús pausan la animación.
 
 Las reglas de movimiento, salto, combate, daño, checkpoints y guardado siguen
 perteneciendo al MVP. El GLB no genera daño ni añade arco, hacha, escalada,
-parry o ataques cargados. Espada y escudo separados quedan para otra etapa,
-vinculados a `mixamorig:RightHand` y `mixamorig:LeftHand` tras revisar offsets.
+parry o ataques cargados. La siguiente etapa es crear un Idle propio, resolver
+salto/esquiva/defensa y vincular espada/escudo a `mixamorig:RightHand` y
+`mixamorig:LeftHand`, revisando offsets, antes de integrar combos.
 
 ## Revisión visual y límites
 
@@ -117,6 +123,8 @@ vinculados a `mixamorig:RightHand` y `mixamorig:LeftHand` tras revisar offsets.
 Walking/Running; pausa y exclusividad; vistas frontal, lateral y trasera.
 Manos, hombros, rodillas y capa se mantienen unidos y con poses coherentes
 en las muestras revisadas. La consola de esta inspección no registró errores.
+La pose base estática también se revisó de [frente](evidence/ruen-meshy/idle-front.png)
+y de [espaldas](evidence/ruen-meshy/idle-back.png); no es un clip Idle animado.
 
 El muestreo de piel detecta una separación de suela en Walking de
 0.028–0.039 unidades originales: unos 2.4–3.3 cm a la escala del juego.
@@ -134,13 +142,25 @@ del root motion antes de probar combate. No están conectados a daño.
 
 ## Pruebas y evidencia
 
+**Revisión actual:** typecheck y build correctos; **123 pruebas unitarias en
+12 archivos y 26 de navegador aprobadas**, estas últimas en una ejecución de
+18.6 minutos sin reintentos. Son 17 casos del MVP, tres del visor con fixture
+sintético y seis de integración: cuatro cargan el master (visor, reposo/locomoción,
+colisión y build de producción), uno aborta su descarga y otro verifica el
+opt-out sin descargarlo. La publicación de esta revisión sigue pendiente.
+Ver [log actual](evidence/ruen-meshy/default-idle-browser.log),
+[reposo jugable](evidence/ruen-meshy/gameplay-idle.png) y
+[reposo en el build de producción](evidence/ruen-meshy/production-default-idle.png).
+
+Los siguientes resultados históricos corresponden a `6a80022`:
+
 - La inspección actual del master real confirmó 20 clips, 80 joints, las tres
   texturas y cambios de pose de Walking/Running, con consola sin errores.
   Los otros 18 clips sólo están inventariados.
 - **Typecheck y build correctos; 119 pruebas unitarias en 12 archivos y
   24 pruebas de navegador aprobadas**. La suite de navegador pasó en una
   ejecución de 11.8 minutos sin reintentos.
-- Cuatro casos usan el master real: carga/locomoción en el visor, mezcla y
+- Cuatro casos de integración cubren carga/locomoción en el visor, mezcla y
   fallbacks jugables, bloqueo por colisión y recuperación ante error de carga.
   La misma suite cubre el MVP completo y tres casos del visor con fixture
   sintético; estos últimos no sustituyen la revisión del master real.
@@ -160,9 +180,9 @@ conservan la [auditoría del archivo](evidence/ruen-meshy/master-audit.json), el
 [consola del visor](evidence/ruen-meshy/inspector-console.json), el
 [muestreo de piel](evidence/ruen-meshy/locomotion-skin-samples.json) y el
 [log de la suite completa](evidence/ruen-meshy/full-browser.log).
-La captura jugable muestra Running; reposo y otras acciones usan el rig
-provisional. El fixture sintético separado en `tests/fixtures/inspection-glb.ts`
-no representa a Ruen.
+La captura jugable corresponde a Running en la revisión previa, que usaba el
+rig provisional en reposo y otras acciones. El fixture sintético separado en
+`tests/fixtures/inspection-glb.ts` no representa a Ruen.
 
 ## Optimización posterior y reversión
 
@@ -173,7 +193,7 @@ Evaluar KTX2/Basis y resolución metallic-roughness midiendo carga y memoria
 en el equipo objetivo. Conservar siempre el master y su hash; no reducir
 geometría en esta tarea.
 
-Para salir del experimento, elimina `?ruen=meshy` o `?inspect=ruen`; no hay
+Para usar el rig anterior en esta revisión, abre `?ruen=provisional`; no hay
 migraciones de guardado. La rama `work` conserva el MVP previo y `9d64cf5`
 el visor antes de integrar el master. Los commits del experimento se pueden
 revertir; cambiar el contenido publicado requiere desplegar de nuevo.

@@ -1,5 +1,6 @@
 import type { Scene } from '@babylonjs/core/scene';
 import type { AnimationGroup } from '@babylonjs/core/Animations/animationGroup';
+import { Quaternion, Vector3 } from '@babylonjs/core/Maths/math.vector';
 import type { Simulation, Player } from '../core/Simulation';
 import type { CharacterRig } from './characters';
 import { assetUrl } from './assetCatalog';
@@ -8,6 +9,54 @@ import { loadInspectionModel, type InspectionModel } from './inspectModel';
 type Locomotion = 'walk' | 'run';
 type LoadStatus = 'loading' | 'ready' | 'error';
 type Weights = Record<Locomotion, number>;
+type PoseValue = number | Vector3 | Quaternion;
+
+/** Local animated properties only: never skeleton bind matrices or the exterior root. */
+interface PoseChannel {
+  owner: Record<string, unknown>;
+  property: string;
+  rest: PoseValue;
+}
+
+function clonePoseValue(value: unknown): PoseValue {
+  if (typeof value === 'number') return value;
+  if (value instanceof Vector3 || value instanceof Quaternion) return value.clone();
+  throw new Error('La pose base contiene un canal de transformación no compatible.');
+}
+
+function captureRestPose(groups: AnimationGroup[]): PoseChannel[] {
+  const channels: PoseChannel[] = [];
+  const seen = new Map<object, Set<string>>();
+  for (const group of groups) for (const { target, animation } of group.targetedAnimations) {
+    const path = animation.targetPropertyPath;
+    const key = path.join('.');
+    const properties = seen.get(target) ?? new Set<string>();
+    if (properties.has(key)) continue;
+    properties.add(key); seen.set(target, properties);
+    let owner = target as Record<string, unknown>;
+    for (const part of path.slice(0, -1)) owner = owner[part] as Record<string, unknown>;
+    const property = path[path.length - 1]!;
+    channels.push({ owner, property, rest: clonePoseValue(owner[property]) });
+  }
+  return channels;
+}
+
+function applyPoseValue(channel: PoseChannel, from: PoseValue, progress: number): void {
+  const value = channel.owner[channel.property];
+  if (value instanceof Quaternion && from instanceof Quaternion && channel.rest instanceof Quaternion) {
+    if (progress === 1) value.copyFrom(channel.rest);
+    else Quaternion.SlerpToRef(from, channel.rest, progress, value);
+  } else if (value instanceof Vector3 && from instanceof Vector3 && channel.rest instanceof Vector3) {
+    if (progress === 1) value.copyFrom(channel.rest);
+    else Vector3.LerpToRef(from, channel.rest, progress, value);
+  } else if (typeof from === 'number' && typeof channel.rest === 'number') {
+    channel.owner[channel.property] = progress === 1 ? channel.rest : from + (channel.rest - from) * progress;
+  }
+}
+
+function fadeProgress(elapsed: number): number {
+  return elapsed >= ruenMeshyProfile.crossfadeSeconds - 1e-8 ? 1 : elapsed / ruenMeshyProfile.crossfadeSeconds;
+}
 
 export const ruenMeshyProfile = {
   path: 'assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb',
@@ -35,7 +84,7 @@ export interface RuenLocomotionDiagnostics {
   clips: { name: string; isPlaying: boolean; isStarted: boolean; weight: number; speedRatio: number; frame: number }[];
 }
 
-/** Opt-in visual test only. No input, damage, root motion or controller writes. */
+/** Visual adapter only. No input, damage, root motion or controller writes. */
 export class RuenLocomotionView {
   /** Exterior adjustment only; authored bone translation remains intact. */
   groundOffset = 0;
@@ -51,7 +100,10 @@ export class RuenLocomotionView {
   private speed = 0;
   private blendWeights: Weights = { walk: 0, run: 0 };
   private target: Locomotion | null = null;
-  private transition: { startRunWeight: number; elapsed: number } | undefined;
+  private transition: { startWeights: Weights; elapsed: number } | undefined;
+  private restPose: PoseChannel[] = [];
+  private resting = false;
+  private idleTransition: { from: PoseValue[]; elapsed: number } | undefined;
   private representation: 'meshy' | 'fallback' = 'fallback';
   private reason = 'loading';
 
@@ -103,6 +155,9 @@ export class RuenLocomotionView {
       // Keep the glTF conversion node and every joint beneath this exterior root.
       // It is deliberately NOT parented to the procedural rig's animated root.
       this.groups = { walk, run };
+      // The real file has no neutral Idle clip. Preserve its exact imported pose
+      // before starting either clip; do not substitute a combat animation.
+      this.restPose = captureRestPose([walk, run]);
       walk.weight = run.weight = 0;
       this.loaded = model; this.loadState = 'ready'; this.reason = 'awaiting-controller';
     } catch (error) {
@@ -144,8 +199,15 @@ export class RuenLocomotionView {
     this.loaded.root.position.set(p.x, p.y + this.groundOffset, p.z);
     this.loaded.root.rotation.set(0, p.yaw, 0);
     const kind = p.state === 'walk' || p.state === 'run' ? p.state : null;
-    if (!kind || !p.grounded || p.shield || p.attackTime >= 0 || p.health <= 0 || sim.mode !== 'playing') {
+    if ((!kind && p.state !== 'idle') || !p.grounded || p.shield || p.attackTime >= 0 || p.health <= 0 || sim.mode !== 'playing') {
       this.showFallback(`unsupported-state:${p.state}`); return;
+    }
+    for (const mesh of this.loaded.container.meshes) {
+      mesh.visibility = p.invulnerable > 0 && Math.sin(sim.age * 35) > 0 ? 0.4 : 1;
+    }
+    if (!kind) {
+      this.showIdle(dt, reset);
+      return;
     }
     // The clips are forward locomotion. Do not silently reuse them for lock-on
     // strafing/backpedaling; the existing rig remains the explicit test fallback.
@@ -160,13 +222,13 @@ export class RuenLocomotionView {
     const moving = playing && !reset && this.speed > 0.01;
     if (moving && this.transition) {
       this.transition.elapsed += dt;
-      const t = this.transition.elapsed >= ruenMeshyProfile.crossfadeSeconds - 1e-8 ? 1 :
-        this.transition.elapsed / ruenMeshyProfile.crossfadeSeconds;
+      const t = fadeProgress(this.transition.elapsed);
       const eased = t * t * (3 - 2 * t);
-      const destination = kind === 'run' ? 1 : 0;
-      this.blendWeights.run = this.transition.startRunWeight + (destination - this.transition.startRunWeight) * eased;
-      this.blendWeights.walk = 1 - this.blendWeights.run;
-      if (t === 1) { this.blendWeights = { walk: 1 - destination, run: destination }; this.transition = undefined; }
+      for (const key of ['walk', 'run'] as const) {
+        const start = this.transition.startWeights[key];
+        this.blendWeights[key] = start + ((key === kind ? 1 : 0) - start) * eased;
+      }
+      if (t === 1) { this.blendWeights = { walk: kind === 'walk' ? 1 : 0, run: kind === 'run' ? 1 : 0 }; this.transition = undefined; }
     }
     for (const key of ['walk', 'run'] as const) {
       const group = this.groups[key];
@@ -174,23 +236,54 @@ export class RuenLocomotionView {
       // Both ratios are dimensionless. Babylon advances wall time; the clock
       // ratio honors the controller's 100 ms cap on slow frames without a second dt.
       group.speedRatio = this.speed / ruenMeshyProfile.referenceSpeed[key] * playbackTimeScale;
-      if (group.weight === 0 && !this.transition) group.stop(true);
+      if (group.weight === 0 && (!this.transition || !group.isStarted)) group.stop(true);
       else if (moving) { if (!group.isPlaying) group.play(true); }
       else group.pause();
     }
-    for (const mesh of this.loaded.container.meshes) {
-      mesh.visibility = p.invulnerable > 0 && Math.sin(sim.age * 35) > 0 ? 0.4 : 1;
-    }
     this.reason = !playing ? 'paused' : reset ? 'controller-reset' : dt === 0 ? 'no-simulation-step' :
       !moving ? 'controller-stationary' : this.transition ? 'crossfade' : 'locomotion';
+  }
+
+  private showIdle(dt: number, reset: boolean): void {
+    if (!this.loaded || !this.groups) return;
+    if (reset || this.representation !== 'meshy') {
+      this.stopLocomotion();
+      this.idleTransition = undefined;
+      for (const channel of this.restPose) applyPoseValue(channel, channel.rest, 1);
+    } else if (!this.resting) {
+      // Snapshot the last rendered pose before stopping. stop(true) leaves local
+      // values intact; player.stopAll() would reset them and cause a visible snap.
+      const from = this.restPose.map(channel => clonePoseValue(channel.owner[channel.property]));
+      this.stopLocomotion();
+      this.idleTransition = { from, elapsed: 0 };
+    }
+    if (this.idleTransition) {
+      this.idleTransition.elapsed += dt;
+      const t = fadeProgress(this.idleTransition.elapsed);
+      const eased = t * t * (3 - 2 * t);
+      this.restPose.forEach((channel, index) => applyPoseValue(channel, this.idleTransition!.from[index]!, eased));
+      if (t === 1) this.idleTransition = undefined;
+    }
+    this.resting = true;
+    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true);
+    this.representation = 'meshy';
+    this.reason = this.idleTransition ? 'idle-transition' : 'idle-pose';
+  }
+
+  private stopLocomotion(): void {
+    if (this.groups) for (const group of Object.values(this.groups)) { group.stop(true); group.weight = 0; }
+    this.blendWeights = { walk: 0, run: 0 }; this.target = null; this.transition = undefined;
   }
 
   private select(kind: Locomotion): void {
     if (!this.groups) return;
     const incoming = this.groups[kind];
     if (!this.target) {
-      this.blendWeights = { walk: kind === 'walk' ? 1 : 0, run: kind === 'run' ? 1 : 0 };
-      incoming.weight = 1;
+      // With a visible rest pose, Babylon blends the remaining weight against
+      // the local values captured at animation start. No fabricated Idle group.
+      this.blendWeights = this.resting ? { walk: 0, run: 0 } : { walk: kind === 'walk' ? 1 : 0, run: kind === 'run' ? 1 : 0 };
+      if (this.resting) this.transition = { startWeights: { ...this.blendWeights }, elapsed: 0 };
+      incoming.weight = this.blendWeights[kind];
       incoming.start(true, 0); incoming.goToFrame(incoming.from, true);
     } else {
       if (!incoming.isStarted) {
@@ -200,8 +293,9 @@ export class RuenLocomotionView {
         incoming.start(true, 0);
         incoming.goToFrame(incoming.from + phase * (incoming.to - incoming.from), true);
       }
-      this.transition = { startRunWeight: this.blendWeights.run, elapsed: 0 };
+      this.transition = { startWeights: { ...this.blendWeights }, elapsed: 0 };
     }
+    this.resting = false; this.idleTransition = undefined;
     this.target = kind;
   }
 
@@ -210,6 +304,7 @@ export class RuenLocomotionView {
     this.loaded?.player.stopAll();
     this.fallback.root.setEnabled(true);
     this.blendWeights = { walk: 0, run: 0 }; this.target = null; this.transition = undefined;
+    this.resting = false; this.idleTransition = undefined;
     this.representation = 'fallback'; this.reason = reason;
   }
 

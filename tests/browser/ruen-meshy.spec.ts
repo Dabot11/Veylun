@@ -38,8 +38,8 @@ async function stick(page: Page, forward: number): Promise<void> {
   await page.evaluate(value => { (window as TestWindow).meshPad.axes[1] = -value; }, forward);
 }
 
-async function startTrial(page: Page): Promise<void> {
-  await page.goto('/?ruen=meshy&test=1');
+async function startTrial(page: Page, url = '/?test=1'): Promise<void> {
+  await page.goto(url);
   await expect(page.locator('body')).toHaveAttribute('data-engine', 'ready', { timeout: 60000 });
   await expect(page.locator('#ruen-model-status')).toHaveAttribute('data-status', 'ready', { timeout: 120000 });
   await page.getByRole('button', { name: 'Nueva partida', exact: true }).click();
@@ -62,9 +62,11 @@ async function state(page: Page) {
 test('real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector', async ({ page }, info) => {
   const errors = collectErrors(page);
   await page.setViewportSize({ width: 1280, height: 900 });
+  const modelRequests: string[] = [];
+  page.on('request', request => { if (/\.glb(?:\?|$)/.test(request.url())) modelRequests.push(request.url()); });
   await page.goto('/?inspect=ruen&test=1');
-  await page.locator('#asset-load-default').click();
   await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 120000 });
+  expect(modelRequests).toHaveLength(1);
   const report = await page.evaluate(() => (window as TestWindow).__assetInspector.model.report);
   expect(report.animationGroups).toHaveLength(20);
   expect(report.skeletons).toHaveLength(1);
@@ -96,11 +98,17 @@ test('real Meshy master loads its skin/materials and plays Walking and Running i
   expect(errors).toEqual([]);
 });
 
-test('Meshy trial blends real locomotion and explicitly preserves existing action fallbacks', async ({ page }, info) => {
+test('default Meshy keeps a provisional idle pose, blends locomotion and preserves action fallbacks', async ({ page }, info) => {
   const errors = collectErrors(page);
   await installPad(page);
   await startTrial(page);
-  await expect.poll(async () => (await state(page)).diagnostics?.representation).toBe('fallback');
+  await expect.poll(async () => (await state(page)).diagnostics?.representation).toBe('meshy');
+  await expect.poll(async () => (await state(page)).diagnostics?.reason).toMatch(/^idle-(pose|transition)$/);
+  expect(await page.evaluate(() => (window as TestWindow).__veylun.locomotion!.model!.container.animationGroups.some(group => /^idle$/i.test(group.name)))).toBe(false);
+  const localPose = () => page.evaluate(() => (window as TestWindow).__veylun.locomotion!.model!.container.transformNodes.map(node =>
+    [...node.position.asArray(), ...(node.rotationQuaternion?.asArray() ?? node.rotation.asArray())].map(value => Math.round(value * 1e6) / 1e6)));
+  await expect.poll(async () => (await state(page)).diagnostics?.reason).toBe('idle-pose');
+  const standingPose = await localPose();
   await stick(page, .45);
   await expect.poll(async () => (await state(page)).state).toBe('walk');
   await expect.poll(async () => (await state(page)).diagnostics?.weights.walk).toBeCloseTo(1);
@@ -152,6 +160,15 @@ test('Meshy trial blends real locomotion and explicitly preserves existing actio
   await stick(page, 0);
   await page.getByRole('button', { name: 'Continuar', exact: true }).click();
   await expect.poll(async () => (await state(page)).state).toBe('idle');
+  await expect.poll(async () => (await state(page)).diagnostics?.representation).toBe('meshy');
+  await expect.poll(async () => (await state(page)).diagnostics?.reason).toMatch(/^idle-(pose|transition)$/);
+  await expect.poll(() => page.evaluate(() => (window as TestWindow).__veylun.camera.camera.getScene().getTransformNodeByName('ruen-provisional')!.isEnabled())).toBe(false);
+  await expect.poll(async () => (await state(page)).diagnostics?.reason).toBe('idle-pose');
+  expect(await localPose()).toEqual(standingPose);
+  expect((await state(page)).diagnostics!.clips.every(clip => !clip.isPlaying)).toBe(true);
+  await page.waitForTimeout(250);
+  expect(await localPose()).toEqual(standingPose);
+  await page.screenshot({ path: info.outputPath('meshy-gameplay-idle.png') });
 
   for (const [key, pattern] of [['Space', /^(jump|fall)$/], ['ShiftLeft', /^roll$/], ['KeyJ', /^attack[123]$/], ['KeyK', /^shield$/]] as const) {
     await page.keyboard.down(key);
@@ -162,6 +179,8 @@ test('Meshy trial blends real locomotion and explicitly preserves existing actio
     await page.keyboard.up(key);
     await expect.poll(async () => (await state(page)).state, { timeout: 10000 }).toBe('idle');
     await expect.poll(async () => (await state(page)).grounded).toBe(true);
+    await expect.poll(async () => (await state(page)).diagnostics?.representation).toBe('meshy');
+    await expect.poll(async () => (await state(page)).diagnostics?.reason).toMatch(/^idle-(pose|transition)$/);
   }
   await info.attach('walking-running-blend-samples.json', { body: JSON.stringify(samples, null, 2), contentType: 'application/json' });
   await info.attach('gameplay-console.json', { body: JSON.stringify(errors, null, 2), contentType: 'application/json' });
@@ -170,7 +189,8 @@ test('Meshy trial blends real locomotion and explicitly preserves existing actio
 
 test('actual collision displacement freezes Meshy even while the controller requests movement', async ({ page }, info) => {
   const errors = collectErrors(page);
-  await startTrial(page);
+  // Existing opt-in URL remains a compatible alias after making Meshy the default.
+  await startTrial(page, '/?ruen=meshy&test=1');
   // Initial placement only; ordinary input and the existing z=-10 level boundary resolve collision.
   await page.evaluate(() => {
     const { sim, camera } = (window as TestWindow).__veylun;
@@ -208,7 +228,7 @@ test('a failed real model request retains the existing playable Ruen', async ({ 
   page.on('pageerror', error => unhandled.push(error.message));
   page.on('console', message => { if (['warning', 'error'].includes(message.type())) consoleMessages.push(message.text()); });
   await page.route(assetPattern, route => route.abort('failed'));
-  await page.goto('/?ruen=meshy&test=1');
+  await page.goto('/?test=1');
   await expect(page.locator('body')).toHaveAttribute('data-engine', 'ready', { timeout: 60000 });
   await expect(page.locator('#ruen-model-status')).toHaveAttribute('data-status', 'error', { timeout: 60000 });
   await page.getByRole('button', { name: 'Nueva partida', exact: true }).click();
@@ -226,4 +246,48 @@ test('a failed real model request retains the existing playable Ruen', async ({ 
   await expect(page.getByRole('heading', { name: 'Pausa' })).toBeVisible();
   await info.attach('intentional-load-failure.json', { body: JSON.stringify({ unhandled, consoleMessages }, null, 2), contentType: 'application/json' });
   expect(unhandled).toEqual([]);
+});
+
+test('explicit provisional opt-out keeps the old Ruen without requesting the Meshy master', async ({ page }, info) => {
+  const errors = collectErrors(page);
+  const modelRequests: string[] = [];
+  page.on('request', request => { if (/\.glb(?:\?|$)/.test(request.url())) modelRequests.push(request.url()); });
+  await page.goto('/?ruen=provisional&test=1');
+  await expect(page.locator('body')).toHaveAttribute('data-engine', 'ready', { timeout: 60000 });
+  expect(await page.evaluate(() => (window as TestWindow).__veylun.locomotion === undefined)).toBe(true);
+  await page.getByRole('button', { name: 'Nueva partida', exact: true }).click();
+  const initial = await state(page);
+  await page.keyboard.down('KeyW');
+  await expect.poll(async () => (await state(page)).z).toBeGreaterThan(initial.z + .2);
+  await page.keyboard.up('KeyW');
+  expect(await page.evaluate(() => (window as TestWindow).__veylun.camera.camera.getScene().getTransformNodeByName('ruen-provisional')!.isEnabled())).toBe(true);
+  expect(modelRequests).toEqual([]);
+  await info.attach('provisional-opt-out-console.json', { body: JSON.stringify(errors, null, 2), contentType: 'application/json' });
+  expect(errors).toEqual([]);
+});
+
+test('production defaults to Meshy at rest and honors the provisional opt-out without debug hooks', async ({ page }, info) => {
+  const errors = collectErrors(page);
+  const modelRequests: string[] = [];
+  page.on('request', request => { if (/\.glb(?:\?|$)/.test(request.url())) modelRequests.push(request.url()); });
+  await page.goto('http://127.0.0.1:4173/');
+  await expect(page.locator('body')).toHaveAttribute('data-engine', 'ready', { timeout: 60000 });
+  await expect(page.locator('#ruen-model-status')).toHaveAttribute('data-status', 'ready', { timeout: 120000 });
+  await expect(page.locator('#ruen-model-status')).toHaveAttribute('data-representation', 'meshy');
+  expect(modelRequests).toHaveLength(1);
+  expect(await page.evaluate(() => '__veylun' in window)).toBe(false);
+  await page.getByRole('button', { name: 'Nueva partida', exact: true }).click();
+  await expect(page.locator('#ruen-model-status')).toHaveAttribute('data-representation', 'meshy');
+  await page.screenshot({ path: info.outputPath('meshy-production-default-idle.png') });
+
+  await page.goto('http://127.0.0.1:4173/?ruen=provisional');
+  await expect(page.locator('body')).toHaveAttribute('data-engine', 'ready', { timeout: 60000 });
+  expect(await page.evaluate(() => '__veylun' in window)).toBe(false);
+  await page.getByRole('button', { name: 'Continuar aventura', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('heading', { name: 'Pausa' })).toBeVisible();
+  expect(modelRequests).toHaveLength(1);
+  await info.attach('production-default-requests.json', { body: JSON.stringify(modelRequests, null, 2), contentType: 'application/json' });
+  await info.attach('production-default-console.json', { body: JSON.stringify(errors, null, 2), contentType: 'application/json' });
+  expect(errors).toEqual([]);
 });

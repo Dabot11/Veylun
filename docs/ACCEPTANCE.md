@@ -3,7 +3,7 @@
 ## Implementado
 
 - [x] Nueva partida, continuar guardado válido y borrado con confirmación.
-- [x] Ruen visible con modelo 3D provisional y quince estados de animación.
+- [x] Rig provisional de Ruen con quince estados de animación, conservado como fallback.
 - [x] Cinco zonas conectadas y recorrido completo bosque → altar.
 - [x] Movimiento relativo a cámara, salto simple, gravedad, aterrizaje,
       aceleración, colisiones, coyote time y buffer de salto.
@@ -21,8 +21,12 @@
 - [x] TypeScript estricto y build estático con rutas relativas.
 - [x] Referencias clasificadas, manifest y documentación de estado real.
 - [x] Master real de Meshy conservado y 20 clips inventariados; Walking/Running
-      revisados en el visor y conectados a la prueba opcional `?ruen=meshy`.
+      revisados en el visor y conectados en la revisión publicada `6a80022`.
       Ver [evidencia y límites](RUEN_MESHY_INSPECTION.md).
+- [x] Pose base exacta del master revisada de frente y de espaldas para reposo estático.
+- [x] Meshy por defecto, alternativa `?ruen=provisional`, visor con carga
+      automática pausada y transición reposo↔locomoción de 0.2 s. Typecheck,
+      build, 123 pruebas unitarias y 26 de navegador aprobados.
 
 ## Cobertura de las 23 pruebas solicitadas
 
@@ -48,6 +52,8 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
 
 ## Pendiente de validar o mejorar
 
+- [ ] Publicar la revisión de carga automática y reposo estático, y confirmar
+      su despliegue en GitHub Actions.
 - [ ] Control Xbox físico en Chrome/macOS (conectar, desconectar, gatillos,
       deadzone, cambio de objetivo y completar el recorrido).
 - [ ] Rendimiento de 60 FPS en hardware de gama media; el entorno cloud usa
@@ -58,9 +64,12 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
       provisionales y simplifican las ilustraciones.
 - [ ] Revisión de los otros 18 clips Meshy, clips faltantes y ajuste final de
       contacto/deslizamiento de pies; sólo Walking/Running entran en gameplay.
+- [ ] Siguiente etapa: crear un Idle propio, salto/esquiva/defensa y equipar
+      espada/escudo en los huesos de las manos antes de integrar combos.
 - [x] Publicación de la [prueba Meshy](https://dabot11.github.io/Veylun/?ruen=meshy)
       y el [visor](https://dabot11.github.io/Veylun/?inspect=ruen) en GitHub Pages,
       confirmada por [Actions](https://github.com/Dabot11/Veylun/actions/runs/39832580525).
+      Corresponde al código `6a80022`, anterior a la nueva carga por defecto.
       El sitio remoto no se comprobó en navegador desde el entorno cloud.
 - [x] Recorrido completo automatizado en Chromium desde Nueva partida hasta
       restaurar el altar, con muerte deliberada y recargas entre checkpoints.

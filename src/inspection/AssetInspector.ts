@@ -33,6 +33,7 @@ export class AssetInspector {
  model:InspectionModel|undefined;
  private panel:HTMLElement;
  private disposed=false;
+ private started=false;
  private view:'front'|'side'|'back'='front';
  private file:HTMLInputElement;
  private loadButton:HTMLButtonElement;
@@ -83,10 +84,10 @@ export class AssetInspector {
    <a class="inspector-back" href="${import.meta.env.BASE_URL}">← Volver al MVP</a>
    <p class="inspector-kicker">VEYLUN · PRUEBA DE ASSET</p>
    <h1>Ruen / Meshy</h1>
-   <p class="inspector-intro">Carga el GLB original para revisar materiales, esqueleto y un clip a la vez.</p>
+   <p class="inspector-intro">El modelo original se carga automáticamente. Revisa sus materiales, esqueleto y un clip a la vez.</p>
    <label class="inspector-file">Abrir GLB desde tu equipo<input id="asset-file" type="file" accept=".glb,model/gltf-binary"></label>
-   <button id="asset-load-default" type="button">Cargar desde el repositorio</button>
-   <p id="asset-status" role="status">Sin modelo cargado. El archivo local se lee en este navegador.</p>
+   <button id="asset-load-default" type="button">Recargar modelo original</button>
+   <p id="asset-status" role="status">Preparando la carga del modelo…</p>
    <fieldset id="asset-controls" disabled>
     <legend>Animación</legend>
     <label>Clip<select id="asset-clip"><option>Sin clips</option></select></label>
@@ -104,8 +105,8 @@ export class AssetInspector {
    </fieldset>
    <details><summary>Inventario real del archivo</summary><pre id="asset-report">Sin datos: aún no se ha cargado un GLB.</pre><button id="asset-export" disabled type="button">Descargar informe JSON</button></details>
    <details><summary>Revisión visual pendiente</summary><p>Walking y Running: revisar manos, hombros, rodillas, capa desde atrás, orientación y contacto de pies. No hay Idle neutro, Block, Roll/Dodge ni salto normal identificados en la inspección aportada. Los clips de armas requieren revisar coreografía y root motion.</p></details>
-   <p class="inspector-note">Visor aislado: reproduce un solo clip. Walking y Running también se pueden probar en el MVP; el resto de estados conserva el Ruen provisional.</p>
-   <a class="inspector-back" href="${import.meta.env.BASE_URL}?ruen=meshy">Probar Walking / Running en el MVP →</a>`;
+   <p class="inspector-note">Visor aislado: reproduce un solo clip. El juego carga Ruen automáticamente para reposo, caminar y correr; las demás acciones conservan el modelo provisional. El reposo usa la pose base estática, no un clip Idle.</p>
+   <a class="inspector-back" href="${import.meta.env.BASE_URL}">Jugar con Ruen →</a>`;
   document.querySelector('#app')!.append(this.panel);
   this.file=this.element<HTMLInputElement>('asset-file');
   this.loadButton=this.element<HTMLButtonElement>('asset-load-default');
@@ -163,13 +164,13 @@ export class AssetInspector {
    this.controls.disabled=false;this.clips.disabled=this.play.disabled=this.element<HTMLButtonElement>('asset-restart').disabled=!first;
    this.element<HTMLButtonElement>('asset-export').disabled=false;
    this.frameModel();this.updatePlayback();
-   this.status.textContent=`Carga completada: ${model.report.animationGroups.length} clips. Reproducción pausada; sin integración al gameplay.`;
+   this.status.textContent=`Carga completada: ${model.report.animationGroups.length} clips. Reproducción pausada en este visor.`;
    this.status.dataset['state']='loaded';
   }catch(error){
    if(this.disposed)return;
    this.model?.dispose();this.model=undefined;
    const message=error instanceof Error?error.message:String(error);
-   this.status.textContent=`No se pudo cargar el GLB. Abre el archivo local o colócalo en public/${masterPath}. ${message}`;
+   this.status.textContent=`No se pudo cargar el modelo. Pulsa «Recargar modelo original» para reintentar o abre un GLB desde tu equipo. ${message}`;
    this.status.dataset['state']='error';this.report.textContent='Sin datos: el archivo no se ha cargado.';
    console.error('Inspección GLB: carga fallida.',error);
   }finally{if(!this.disposed){this.file.value='';this.file.disabled=this.loadButton.disabled=false;}}
@@ -196,7 +197,12 @@ export class AssetInspector {
  }
  private resize=():void=>this.engine.resize();
  private visibility=():void=>{if(document.hidden){this.model?.player.pause();this.updatePlayback();}};
- start():void{this.engine.runRenderLoop(()=>{if(!document.hidden)this.scene.render();});}
+ start():void{
+  if(this.started||this.disposed)return;
+  this.started=true;
+  this.engine.runRenderLoop(()=>{if(!document.hidden)this.scene.render();});
+  void this.load(assetUrl(masterPath));
+ }
  dispose():void{
   this.disposed=true;window.removeEventListener('resize',this.resize);document.removeEventListener('visibilitychange',this.visibility);
   this.engine.stopRenderLoop();this.model?.dispose();this.scene.dispose();this.engine.dispose();this.panel.remove();

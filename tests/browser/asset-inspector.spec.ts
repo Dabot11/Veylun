@@ -5,6 +5,7 @@ import { SAVE_KEY } from '../../src/progression/save';
 // These are loader/UI regressions against a synthetic fixture, never acceptance of Meshy art.
 test.setTimeout(90000);
 const inspectorUrl = 'http://127.0.0.1:5174/?inspect=ruen&test';
+const assetPattern = '**/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb';
 type InspectorWindow = Window & {
   __assetInspector?: {
     model?: {
@@ -28,20 +29,21 @@ async function playingClips(page: Page): Promise<string[]> {
     .filter(group => group.isPlaying).map(group => group.name) ?? []);
 }
 
-test('inspector stays isolated, loads a synthetic skin, and plays one clip at a time', async ({ page }, testInfo) => {
+test('inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   const modelRequests: string[] = [];
   page.on('request', request => { if (/\.glb(?:\?|$)/.test(request.url())) modelRequests.push(request.url()); });
+  // Exercise automatic URL loading while keeping this infrastructure test explicitly synthetic.
+  await page.route(assetPattern, route => route.fulfill({ contentType: 'model/gltf-binary', body: inspectionGlb() }));
   const untouchedSave = 'untouched-by-inspector';
   await page.addInitScript(({ key, value }) => localStorage.setItem(key, value), { key: SAVE_KEY, value: untouchedSave });
   await page.goto(inspectorUrl);
   await expect(page.locator('#asset-inspector')).toBeVisible();
-  await expect(page.locator('#asset-clip')).toBeDisabled();
-  expect(modelRequests).toEqual([]);
+  await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 45000 });
+  expect(modelRequests).toHaveLength(1);
   expect(await page.evaluate(() => '__veylun' in window)).toBe(false);
-  await uploadFixture(page);
   expect(await playingClips(page)).toEqual([]);
   await expect(page.locator('#asset-clip')).toHaveValue('Walking');
   await expect(page.locator('#asset-report')).toContainText('SyntheticSkinnedPanel');
@@ -94,7 +96,9 @@ test('bad local GLB reports failure and allows a later real loader retry with th
   const expectedConsoleErrors: string[] = [];
   page.on('pageerror', error => unhandled.push(error.message));
   page.on('console', message => { if (message.type() === 'error') expectedConsoleErrors.push(message.text()); });
+  await page.route(assetPattern, route => route.fulfill({ contentType: 'model/gltf-binary', body: inspectionGlb() }));
   await page.goto(inspectorUrl);
+  await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 45000 });
   await page.locator('#asset-file').setInputFiles({
     name: 'invalid.glb', mimeType: 'model/gltf-binary', buffer: Buffer.from('not a GLB'),
   });
@@ -110,20 +114,18 @@ test('bad local GLB reports failure and allows a later real loader retry with th
   expect(unhandled).toEqual([]);
 });
 
-test('production inspector loads the repository URL through Babylon with a synthetic response, without autoplay', async ({ page }, testInfo) => {
+test('production inspector automatically loads and reloads the repository URL without autoplay', async ({ page }, testInfo) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
   let requested = 0;
   // Only the transport URL is the real asset path; the response is explicitly NOT the Meshy master.
-  await page.route('**/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb', async route => {
+  await page.route(assetPattern, async route => {
     requested++;
     await route.fulfill({ contentType: 'model/gltf-binary', body: inspectionGlb() });
   });
   await page.goto('/?inspect=ruen');
   await expect(page.locator('#asset-inspector')).toBeVisible();
-  expect(requested).toBe(0);
-  await page.locator('#asset-load-default').click();
   await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 45000 });
   expect(requested).toBe(1);
   await expect(page.locator('#asset-report')).toContainText('SyntheticSkeleton');
@@ -138,6 +140,11 @@ test('production inspector loads the repository URL through Babylon with a synth
   await expect(page.locator('#asset-playback')).toHaveText('Running · Reproduciendo');
   await page.locator('#asset-play').click();
   await expect(page.locator('#asset-playback')).toHaveText('Running · Pausado');
+  await page.locator('#asset-load-default').click();
+  await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 45000 });
+  expect(requested).toBe(2);
+  await expect(page.locator('#asset-clip')).toHaveValue('Walking');
+  await expect(page.locator('#asset-playback')).toHaveText('Walking · Pausado');
   await testInfo.attach('production-synthetic-response-console-errors.json', { body: JSON.stringify(errors, null, 2), contentType: 'application/json' });
   expect(errors).toEqual([]);
 });

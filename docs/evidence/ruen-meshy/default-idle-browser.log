@@ -1,0 +1,54 @@
+
+> veylun@0.0.1 test:e2e
+> playwright test --workers=1 --output=/workspace/veylun-validation/ruen-default-idle/browser
+
+[WebServer] (node:12373) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:12386) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 26 tests using 1 worker
+
+(node:12410) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser/asset-inspector.spec.ts:32:1 › inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time (4.0s)
+  ✓   2 tests/browser/asset-inspector.spec.ts:94:1 › bad local GLB reports failure and allows a later real loader retry with the synthetic fixture (1.6s)
+  ✓   3 tests/browser/asset-inspector.spec.ts:117:1 › production inspector automatically loads and reloads the repository URL without autoplay (1.6s)
+  ✓   4 tests/browser/bootstrap.spec.ts:6:1 › new game, keyboard movement, jump, roll, camera, pause and responsive HUD (1.0m)
+  ✓   5 tests/browser/bootstrap.spec.ts:26:1 › corrupt saves are handled without crashing or enabling Continue (16.8s)
+  ✓   6 tests/browser/bootstrap.spec.ts:31:1 › saved checkpoint, key and boss completion persist; new game requires confirmation (42.9s)
+  ✓   7 tests/browser/bootstrap.spec.ts:40:1 › synthetic standard Xbox is detected, starts game, moves and pauses on a single edge (37.3s)
+  ✓   8 tests/browser/combat.spec.ts:13:3 › keyboard: three real attack presses hit and defeat a nearby enemy (15.4s)
+  ✓   9 tests/browser/combat.spec.ts:13:3 › mouse: three real attack presses hit and defeat a nearby enemy (11.9s)
+  ✓  10 tests/browser/combat.spec.ts:13:3 › gamepad: three real attack presses hit and defeat a nearby enemy (14.9s)
+  ✓  11 tests/browser/combat.spec.ts:70:1 › active Brote: lock, block the charge, then counterattack without losing health (22.9s)
+  ✓  12 tests/browser/guardian.spec.ts:15:1 › completed sanctuary reload hides defeated enemies and a new adventure resets the light (12.9s)
+  ✓  13 tests/browser/guardian.spec.ts:39:3 › keyboard: block, counter, escape the slam, defeat the Guardian and restore the altar (1.2m)
+  ✓  14 tests/browser/guardian.spec.ts:39:3 › gamepad: block, counter, escape the slam, defeat the Guardian and restore the altar (1.1m)
+Journey: Brotes cleared, checkpoint 1 earned
+Journey: Spirit cleared, switch and grate opened
+Journey: key acquired, enclosure exited, checkpoint 2 earned
+Journey: death and reload preserve progress, Guardian resets
+Journey: Guardian defeated, explicit altar activation still required
+Journey: victory, 78.7 simulated seconds, 1 deliberate death
+  ✓  15 tests/browser/journey.spec.ts:81:1 › new adventure to restoration with normal inputs, death, checkpoints and reloads (4.6m)
+  ✓  16 tests/browser/journey.spec.ts:125:1 › unavailable storage keeps session Continue and restart confirmation; new game clears old notices (40.0s)
+  ✓  17 tests/browser/journey.spec.ts:148:1 › controls before starting do not create a save; restoration can pause and resume safely (31.6s)
+  ✓  18 tests/browser/ruen-meshy.spec.ts:62:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector (25.3s)
+  ✓  19 tests/browser/ruen-meshy.spec.ts:101:1 › default Meshy keeps a provisional idle pose, blends locomotion and preserves action fallbacks (1.4m)
+  ✓  20 tests/browser/ruen-meshy.spec.ts:190:1 › actual collision displacement freezes Meshy even while the controller requests movement (51.7s)
+  ✓  21 tests/browser/ruen-meshy.spec.ts:225:1 › a failed real model request retains the existing playable Ruen (15.4s)
+  ✓  22 tests/browser/ruen-meshy.spec.ts:251:1 › explicit provisional opt-out keeps the old Ruen without requesting the Meshy master (8.8s)
+  ✓  23 tests/browser/ruen-meshy.spec.ts:269:1 › production defaults to Meshy at rest and honors the provisional opt-out without debug hooks (44.8s)
+  ✓  24 tests/browser/scenarios.spec.ts:6:1 › rendered gameplay responds to controls and victory requires the altar interaction (24.9s)
+  ✓  25 tests/browser/spirit.spec.ts:8:3 › keyboard: read the spell, block, approach, defeat the Spirit and activate its switch (1.1m)
+  ✓  26 tests/browser/spirit.spec.ts:8:3 › gamepad: read the spell, block, approach, defeat the Spirit and activate its switch (1.0m)
+
+  Slow test file: tests/browser/journey.spec.ts (5.8m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  26 passed (18.6m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

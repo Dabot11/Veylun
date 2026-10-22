@@ -3,6 +3,8 @@ import { NullEngine } from '@babylonjs/core/Engines/nullEngine';
 import { Scene } from '@babylonjs/core/scene';
 import { AssetContainer } from '@babylonjs/core/assetContainer';
 import { TransformNode } from '@babylonjs/core/Meshes/transformNode';
+import { Mesh } from '@babylonjs/core/Meshes/mesh';
+import { Quaternion, Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { Animation } from '@babylonjs/core/Animations/animation';
 import { AnimationGroup } from '@babylonjs/core/Animations/animationGroup';
 import { Simulation } from '../../src/core/Simulation';
@@ -23,12 +25,21 @@ function fixture(names = ['Walking', 'Running', 'Attack', 'Combat_Stance']) {
   const container = new AssetContainer(scene);
   const conversion = new TransformNode('gltf-conversion', scene); conversion.scaling.z = -1;
   const joint = new TransformNode('joint', scene); joint.parent = conversion;
+  joint.rotationQuaternion = Quaternion.RotationYawPitchRoll(0.1, 0.2, 0.3);
+  joint.scaling.set(0.9, 1.1, 1);
+  const mesh = new Mesh('skin', scene); mesh.parent = joint; container.meshes.push(mesh);
   container.transformNodes.push(conversion, joint);
   for (const name of names) {
     const group = new AnimationGroup(name, scene);
     const animation = new Animation(name, 'position.y', 60, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
     animation.setKeys([{ frame: 0, value: 0.5 }, { frame: name === 'Walking' ? 62 : 38, value: 0.6 }]);
-    group.addTargetedAnimation(animation, joint); container.animationGroups.push(group);
+    group.addTargetedAnimation(animation, joint);
+    const rotation = new Animation(`${name}-rotation`, 'rotationQuaternion', 60, Animation.ANIMATIONTYPE_QUATERNION, Animation.ANIMATIONLOOPMODE_CYCLE);
+    rotation.setKeys([{ frame: 0, value: Quaternion.RotationYawPitchRoll(0, 0.8, 0) }, { frame: 38, value: Quaternion.Identity() }]);
+    group.addTargetedAnimation(rotation, joint);
+    const scale = new Animation(`${name}-scale`, 'scaling', 60, Animation.ANIMATIONTYPE_VECTOR3, Animation.ANIMATIONLOOPMODE_CYCLE);
+    scale.setKeys([{ frame: 0, value: Vector3.One() }, { frame: 38, value: new Vector3(1.1, 0.8, 1.2) }]);
+    group.addTargetedAnimation(scale, joint); container.animationGroups.push(group);
   }
   container.removeAllFromScene();
   const model = instantiateInspectionModel(container, scene);
@@ -38,7 +49,7 @@ function fixture(names = ['Walking', 'Running', 'Attack', 'Combat_Stance']) {
   const advance = (seconds: number, z: number, x = 0) => {
     sim.age += seconds; sim.player.z += z; sim.player.x += x; view.update(sim, true);
   };
-  return { scene, fallback, container, conversion, joint, model, view, sim, advance };
+  return { scene, fallback, container, conversion, joint, mesh, model, view, sim, advance };
 }
 
 afterEach(() => {
@@ -59,6 +70,88 @@ describe('Meshy locomotion visual adapter', () => {
     expect(joint.parent).toBe(conversion); expect(fallback.root.rotation.x).toBe(1.4);
     expect(model.root.isEnabled()).toBe(false); expect(fallback.root.isEnabled()).toBe(true);
     expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
+  });
+
+  it('shows the exact imported rest pose in the initial menu without requiring an Idle clip', async () => {
+    const { view, model, sim, joint, mesh, fallback, conversion } = fixture();
+    const rest = { y: joint.position.y, rotation: joint.rotationQuaternion!.asArray(), scale: joint.scaling.asArray() };
+    const before = structuredClone(sim.player);
+    await view.load(); view.update(sim, false);
+    expect(view.diagnostics.reason).toBe('idle-pose'); expect(view.diagnostics.representation).toBe('meshy');
+    expect(model.root.isEnabled()).toBe(true); expect(fallback.root.isEnabled()).toBe(false);
+    expect(view.activeClip).toBeNull(); expect(view.weights).toEqual({ walk: 0, run: 0 });
+    expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
+    expect(joint.position.y).toBe(rest.y); expect(joint.rotationQuaternion!.asArray()).toEqual(rest.rotation);
+    expect(joint.scaling.asArray()).toEqual(rest.scale); expect(conversion.scaling.z).toBe(-1);
+    expect(sim.player).toEqual(before);
+    // Idle follows the same damage flash and clears any previously dimmed mesh.
+    sim.age = 0.02; sim.player.invulnerable = 1; view.update(sim, true); expect(mesh.visibility).toBe(0.4);
+    sim.player.invulnerable = 0; view.update(sim, true); expect(mesh.visibility).toBe(1);
+  });
+
+  it('returns a rendered running pose smoothly to exact rest, freezes in pause, and remains stable', async () => {
+    const { view, model, scene, sim, joint, advance } = fixture();
+    const restRotation = joint.rotationQuaternion!.clone(), restScale = joint.scaling.clone();
+    await view.load(); sim.player.state = 'run'; view.update(sim, true); scene._animate(0);
+    advance(0.1, 0.4); scene._animate(100);
+    const runningY = joint.position.y, runningRotation = joint.rotationQuaternion!.clone(), runningScale = joint.scaling.clone();
+    expect(runningY).toBeGreaterThan(0);
+    sim.player.state = 'idle'; view.update(sim, true);
+    expect(view.diagnostics.reason).toBe('idle-transition'); expect(joint.position.y).toBe(runningY);
+    expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
+    advance(0.1, 0);
+    expect(joint.position.y).toBeCloseTo(runningY / 2);
+    expect(joint.rotationQuaternion!.equalsWithEpsilon(Quaternion.Slerp(runningRotation, restRotation, 0.5))).toBe(true);
+    expect(joint.scaling.equalsWithEpsilon(Vector3.Lerp(runningScale, restScale, 0.5))).toBe(true);
+    const pausedY = joint.position.y;
+    sim.age += 0.1; view.update(sim, false); scene._animate(100);
+    expect(joint.position.y).toBe(pausedY); expect(view.diagnostics.reason).toBe('idle-transition');
+    view.update(sim, true); expect(joint.position.y).toBe(pausedY); // 120 Hz frame with no sim step
+    advance(0.1, 0); scene._animate(100);
+    expect(view.diagnostics.reason).toBe('idle-pose'); expect(joint.position.y).toBe(0);
+    expect(joint.rotationQuaternion!.asArray()).toEqual(restRotation.asArray());
+    expect(joint.scaling.asArray()).toEqual(restScale.asArray());
+    advance(0.25, 0); scene._animate(250);
+    expect(joint.position.y).toBe(0); expect(joint.rotationQuaternion!.asArray()).toEqual(restRotation.asArray());
+    expect(view.weights).toEqual({ walk: 0, run: 0 }); expect(view.activeClip).toBeNull();
+  });
+
+  it('fades from rest into only the requested gait and can interrupt an unfinished idle transition', async () => {
+    const { view, scene, container, sim, joint, advance } = fixture();
+    await view.load(); view.update(sim, true);
+    sim.player.state = 'walk'; advance(0.05, 0.06); scene._animate(0);
+    expect(view.weights.walk).toBeGreaterThan(0); expect(view.weights.walk).toBeLessThan(1); expect(view.weights.run).toBe(0);
+    expect(container.animationGroups.filter(group => group.isStarted).map(group => group.name)).toEqual(['Walking']);
+    expect(joint.position.y).toBeGreaterThan(0); expect(joint.position.y).toBeLessThan(0.5);
+    advance(0.1, 0.12); scene._animate(100); advance(0.05, 0.06); scene._animate(50);
+    expect(view.weights).toEqual({ walk: 1, run: 0 });
+    sim.player.state = 'idle'; advance(0.05, 0); scene._animate(50);
+    const intermediate = joint.position.y;
+    expect(intermediate).toBeGreaterThan(0); expect(view.diagnostics.reason).toBe('idle-transition');
+    sim.player.state = 'run'; view.update(sim, true); scene._animate(0);
+    expect(joint.position.y).toBeCloseTo(intermediate); expect(view.weights).toEqual({ walk: 0, run: 0 });
+    advance(0.1, 0.4); scene._animate(100); advance(0.1, 0.4); scene._animate(100);
+    expect(view.weights).toEqual({ walk: 0, run: 1 });
+    expect(container.animationGroups.filter(group => group.isStarted).map(group => group.name)).toEqual(['Running']);
+  });
+
+  it('clears previous locomotion poses on respawn, new game and returning from unsupported actions', async () => {
+    const { view, scene, model, sim, joint, advance } = fixture();
+    const restRotation = joint.rotationQuaternion!.asArray();
+    await view.load(); sim.player.state = 'run'; view.update(sim, true); scene._animate(0);
+    advance(0.1, 0.4); scene._animate(100); expect(joint.position.y).toBeGreaterThan(0);
+    sim.respawn(); view.update(sim, true);
+    expect(view.diagnostics.reason).toBe('idle-pose'); expect(joint.position.y).toBe(0);
+    expect(joint.rotationQuaternion!.asArray()).toEqual(restRotation);
+    sim.player.state = 'run'; advance(0.1, 0.4); scene._animate(100);
+    const replacement = new Simulation(); view.update(replacement, false);
+    expect(view.diagnostics.reason).toBe('idle-pose'); expect(joint.position.y).toBe(0);
+    expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
+    replacement.player.state = 'attack1'; view.update(replacement, true);
+    joint.position.y = 0.8; // An unsupported pose must not become the next rest pose.
+    replacement.player.state = 'idle'; view.update(replacement, true);
+    expect(view.diagnostics.reason).toBe('idle-pose'); expect(joint.position.y).toBe(0);
+    expect(joint.rotationQuaternion!.asArray()).toEqual(restRotation);
   });
 
   it('uses actual controller displacement, keeps 120Hz no-step renders running, and freezes at walls', async () => {
@@ -123,7 +216,7 @@ describe('Meshy locomotion visual adapter', () => {
   it('preserves the existing rig for every unvalidated state without changing simulation or its transforms', async () => {
     const { view, model, fallback, sim, advance } = fixture();
     await view.load(); sim.player.state = 'run'; view.update(sim, true); advance(0.1, 0.4);
-    for (const state of ['idle', 'jump', 'fall', 'land', 'roll', 'attack1', 'attack2', 'attack3', 'shield', 'hurt', 'death', 'interact', 'victory'] as const) {
+    for (const state of ['jump', 'fall', 'land', 'roll', 'attack1', 'attack2', 'attack3', 'shield', 'hurt', 'death', 'interact', 'victory'] as const) {
       sim.player.state = state; fallback.root.rotation.x = 1.3;
       const before = structuredClone(sim.player);
       view.update(sim, true);

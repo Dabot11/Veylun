@@ -38,14 +38,14 @@ export class Application {
   canvas.addEventListener('click',this.lock);
   this.scene.executeWhenReady(()=>{this.ui.ready();this.needsRender=true;document.body.dataset['engine']='ready';});
   void this.world.visualOverrides.load(this.scene,this.world.hero,this.world.enemyRigs);
-  if(new URLSearchParams(location.search).get('ruen')==='meshy')void this.enableMeshyTrial();
+  if(new URLSearchParams(location.search).get('ruen')!=='provisional')void this.enableRuenModel();
   if(import.meta.env.DEV&&new URLSearchParams(location.search).has('test')){
    const app=this;Object.assign(window,{__veylun:{get sim(){return app.sim;},get camera(){return app.camera;},get ui(){return app.ui;},get locomotion(){return app.ruenLocomotion;}}});
   }
  }
- private async enableMeshyTrial():Promise<void>{
+ private async enableRuenModel():Promise<void>{
   const panel=document.createElement('aside');panel.id='ruen-model-trial';
-  panel.innerHTML=`<strong>PRUEBA MESHY</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando modelo; Ruen provisional disponible.</span><small>Walking / Running · otros estados: Ruen provisional</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen">Abrir visor</a><a href="${import.meta.env.BASE_URL}">Salir de la prueba</a></nav>`;
+  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Reposo provisional · animaciones de acción en revisión</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen">Visor de animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
   document.querySelector('#app')!.append(panel);this.ruenStatus=panel.querySelector('#ruen-model-status')!;
   try{
    await import('../ui/ruenTrial.css');
@@ -58,8 +58,8 @@ export class Application {
    this.needsRender=true;this.updateRuenStatus();
   }catch(error){
    if(this.scene.isDisposed)return;
-   this.ruenStatus.dataset['status']='error';this.ruenStatus.textContent='No se pudo cargar Meshy. Continúa Ruen provisional.';
-   console.warn('Prueba Meshy: se conserva el modelo provisional.',error);
+   this.ruenStatus.dataset['status']='error';this.ruenStatus.textContent='No se pudo cargar Ruen. Se muestra el modelo provisional.';
+   console.warn('Ruen: se conserva el modelo provisional.',error);
   }
  }
  private updateRuenStatus():void{
@@ -67,7 +67,7 @@ export class Application {
   const d=this.ruenLocomotion.diagnostics;
   this.ruenStatus.dataset['status']=d.status;this.ruenStatus.dataset['representation']=d.representation;
   const states:Record<string,string>={idle:'reposo',jump:'salto',fall:'caída',land:'aterrizaje',roll:'esquiva',shield:'defensa',attack1:'ataque 1',attack2:'ataque 2',attack3:'ataque 3',hurt:'daño',death:'muerte',interact:'interacción',victory:'victoria'};
-  const label=d.status==='loading'?'Cargando modelo; Ruen provisional disponible.':d.status==='error'?'No se pudo cargar Meshy. Continúa Ruen provisional.':d.representation==='meshy'?`Meshy · ${this.sim.player.state==='walk'?'Walking':'Running'}`:`Ruen provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
+  const label=d.status==='loading'?'Cargando Ruen…':d.status==='error'?'No se pudo cargar Ruen. Se muestra el modelo provisional.':d.representation==='meshy'?`Ruen · ${this.sim.player.state==='idle'?'reposo provisional':this.sim.player.state==='walk'?'caminando':'corriendo'}`:`Modelo provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
   if(this.ruenStatus.textContent!==label)this.ruenStatus.textContent=label;
  }
  private resize=():void=>{this.engine.resize();this.needsRender=true;};
