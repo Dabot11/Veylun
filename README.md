@@ -64,6 +64,11 @@ el Idle propio, exclusivo del visor, y las siguientes etapas.
 [Ver Idle v1](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1):
 pulsar **Reproducir**; el modelo y el clip se cargan automáticamente.
 
+La nueva prueba `/?inspect=ruen&motion=idle-v1&equipment=azure` añade los GLB
+de espada y escudo al Idle del visor. Carga los tres modelos automáticamente
+y permite comparar con el Idle sin equipo. Pasó las pruebas locales; su
+publicación está pendiente. Consulta la [ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
+
 ## Recorrido
 
 1. Explora el Claro del despertar y sigue la luz turquesa hacia el sendero.

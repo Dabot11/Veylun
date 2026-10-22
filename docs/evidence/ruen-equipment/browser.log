@@ -1,0 +1,52 @@
+Veylun equipped Idle browser validation — 2026-10-22 UTC
+
+Chromium: /usr/bin/chromium
+Renderer option: --enable-unsafe-swiftshader
+Workers: 1
+Sources and final equipment fitting remained frozen throughout both runs.
+Per-test durations are unavailable from the line reporter. Only the emitted suite durations are recorded below.
+
+RUN 1
+Command: PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npx playwright test tests/browser/ruen-equipment-preview.spec.ts tests/browser/ruen-idle-preview.spec.ts tests/browser/asset-inspector.spec.ts --workers=1 --reporter=line --output=/workspace/veylun-validation/ruen-equipment/browser
+Result: 9 passed (6.1m), exit code 0
+
+PASS asset-inspector.spec.ts — inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time
+PASS asset-inspector.spec.ts — bad local GLB reports failure and allows a later real loader retry with the synthetic fixture
+PASS asset-inspector.spec.ts — production inspector automatically loads and reloads the repository URL without autoplay
+PASS ruen-equipment-preview.spec.ts — real equipment follows the hands through Idle, toggles cleanly, and releases on model replacement
+PASS ruen-equipment-preview.spec.ts — a failed sword leaves neutral Idle usable and retry replaces partial equipment without reloading Ruen
+PASS ruen-equipment-preview.spec.ts — production opens equipped Idle and comparison controls without development hooks
+PASS ruen-idle-preview.spec.ts — authored Idle previews on the real master with a closed breathing loop and stationary feet
+PASS ruen-idle-preview.spec.ts — an incompatible synthetic rig keeps its original clips available without adding a false Idle
+PASS ruen-idle-preview.spec.ts — production loads the real Idle preview and controls it without development hooks
+
+RUN 2
+Command: PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npx playwright test tests/browser/ruen-meshy.spec.ts -g 'real Meshy master loads' --workers=1 --reporter=line --output=/workspace/veylun-validation/ruen-equipment/browser-original-inspector
+Result: 1 passed (28.5s), exit code 0
+
+PASS ruen-meshy.spec.ts — real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector
+
+All 10 tests passed. Both browser processes and Playwright-owned servers exited.
+No application changes were made during either run.
+
+Equipment assertions passed against the original GLBs:
+- Three automatic model requests; 20 immutable master clips plus two authored preview groups.
+- Equipment mesh triangle and texture counts, real linked hand joints, and grip placement in hand space.
+- Paused samples at frames 0, 60 and 120: equipment follows breathing, closed loop, stationary feet.
+- Equipment comparison preserves frame, speed and playing/paused state.
+- Neutral arm/hand rotations match imported bone rest matrices; Walking/Running match original rotation keys at frame 0.
+- Original locomotion hides equipment; repeated changes restore the expected pose.
+- Replacing the hero disposes the old mounts, equipment roots, captured materials and textures.
+- A deliberate sword HTTP503 leaves a usable neutral Idle; retry disposes the partial load, retains the same hero and loads equipment once without duplicate groups/mounts.
+- Production has no development hooks; preview interactions preserve the existing save.
+
+Artifact directories:
+/workspace/veylun-validation/ruen-equipment/browser
+/workspace/veylun-validation/ruen-equipment/browser-original-inspector
+
+Actual equipped Idle captures:
+/workspace/veylun-validation/ruen-equipment/browser/ruen-equipment-preview-rea-52f1c-leases-on-model-replacement/ruen-equipped-idle-front.png
+/workspace/veylun-validation/ruen-equipment/browser/ruen-equipment-preview-rea-52f1c-leases-on-model-replacement/ruen-equipped-idle-side.png
+/workspace/veylun-validation/ruen-equipment/browser/ruen-equipment-preview-rea-52f1c-leases-on-model-replacement/ruen-equipped-idle-back.png
+
+This validation covers the inspector preview. It does not claim gameplay equipment, attack/block animation integration, or hardware frame-rate acceptance.

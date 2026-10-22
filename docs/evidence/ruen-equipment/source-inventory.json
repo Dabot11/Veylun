@@ -1,0 +1,69 @@
+{
+  "method": "Direct GLB binary parsing, actual vertex scan, glTF hierarchy transformation, Pillow image-header verification; sources opened read-only.",
+  "assets": [
+    {
+      "kind": "shield",
+      "file": "Meshy_AI_Aegis_of_the_Azure_St_1022222231_texture.glb",
+      "bytes": 29661132,
+      "sha256": "b639b29cd66260064cac6ea13f26764dd8c23e561b92da4440ce4e8b77ac7e23",
+      "sourceUnchangedAfterAudit": true,
+      "vertices": 365780,
+      "triangles": 688602,
+      "meshes": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "format": "JPEG",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "format": "JPEG",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "format": "JPEG",
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "skins": 0,
+      "animations": 0,
+      "extensionsUsed": [],
+      "extensionsRequired": []
+    },
+    {
+      "kind": "sword",
+      "file": "Meshy_AI_Azure_Oathblade_1022220336_texture.glb",
+      "bytes": 14817508,
+      "sha256": "111ea36ba748b0ff3d49651411cbb94bdd4bf4ca3f1728337be5d6b271e1e04d",
+      "sourceUnchangedAfterAudit": true,
+      "vertices": 118713,
+      "triangles": 218230,
+      "meshes": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "format": "JPEG",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "format": "JPEG",
+          "width": 2048,
+          "height": 2048
+        },
+        {
+          "format": "JPEG",
+          "width": 2048,
+          "height": 2048
+        }
+      ],
+      "skins": 0,
+      "animations": 0,
+      "extensionsUsed": [],
+      "extensionsRequired": []
+    }
+  ]
+}

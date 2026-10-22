@@ -13,6 +13,7 @@ import { CreateLines } from '@babylonjs/core/Meshes/Builders/linesBuilder';
 import '@babylonjs/core/Culling/ray';
 import { assetUrl } from '../assets/assetCatalog';
 import { loadInspectionModel, type InspectionModel } from '../assets/inspectModel';
+import type { RuenEquipmentPreview } from '../assets/RuenEquipmentPreview';
 
 const masterPath='assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb';
 const motionWarnings:Record<string,string>={
@@ -31,11 +32,15 @@ export class AssetInspector {
  readonly scene:Scene;
  readonly camera:ArcRotateCamera;
  model:InspectionModel|undefined;
+ equipment:RuenEquipmentPreview|undefined;
  private panel:HTMLElement;
  private disposed=false;
  private started=false;
  private readonly idlePreviewRequested=new URLSearchParams(location.search).get('motion')==='idle-v1';
+ private readonly equipmentRequested=this.idlePreviewRequested&&new URLSearchParams(location.search).get('equipment')==='azure';
  private idlePreviewName:string|undefined;
+ private equippedIdleName:string|undefined;
+ private reportData:Record<string,unknown>={};
  private idlePreviewError='';
  private view:'front'|'side'|'back'='front';
  private file:HTMLInputElement;
@@ -86,7 +91,7 @@ export class AssetInspector {
   this.panel.innerHTML=`
    <a class="inspector-back" href="${import.meta.env.BASE_URL}">← Volver al MVP</a>
    <p class="inspector-kicker">VEYLUN · PRUEBA DE ASSET</p>
-   <h1>${this.idlePreviewRequested?'Ruen / Idle · prototipo v1':'Ruen / Meshy'}</h1>
+   <h1>${this.equipmentRequested?'Ruen / Idle con equipo':this.idlePreviewRequested?'Ruen / Idle · prototipo v1':'Ruen / Meshy'}</h1>
    <p class="inspector-intro">El modelo original se carga automáticamente. Revisa sus materiales, esqueleto y un clip a la vez.</p>
    ${this.idlePreviewRequested?'<p class="inspector-note">Primera animación propia de Veylun: respiración suave en un ciclo de 4 segundos. Se añade sólo a este visor; el master original y el juego conservan su versión actual.</p>':''}
    <label class="inspector-file">Abrir GLB desde tu equipo<input id="asset-file" type="file" accept=".glb,model/gltf-binary"></label>
@@ -94,6 +99,7 @@ export class AssetInspector {
    <p id="asset-status" role="status">Preparando la carga del modelo…</p>
    <fieldset id="asset-controls" disabled>
     <legend>Animación</legend>
+    ${this.equipmentRequested?'<label class="inspector-equipment"><input id="asset-equipment-toggle" type="checkbox" disabled>Espada y escudo (Idle)</label><p id="asset-equipment-status" role="status" data-state="idle">Preparando equipo…</p><button id="asset-equipment-retry" type="button" hidden>Reintentar carga del equipo</button>':''}
     <label>Clip<select id="asset-clip"><option>Sin clips</option></select></label>
     <div class="inspector-row"><button id="asset-play" type="button">Reproducir</button><button id="asset-restart" type="button">Reiniciar clip</button></div>
     <label>Velocidad <output id="asset-speed-label">1×</output><input id="asset-speed" type="range" min="0.1" max="2" step="0.05" value="1"></label>
@@ -124,6 +130,10 @@ export class AssetInspector {
   this.file.onchange=()=>{const file=this.file.files?.[0];if(file)void this.load(file);};
   this.loadButton.onclick=()=>void this.load(assetUrl(masterPath));
   this.clips.onchange=()=>{this.model?.player.select(this.clips.value);this.updatePlayback();};
+  if(this.equipmentRequested){
+   this.element<HTMLInputElement>('asset-equipment-toggle').onchange=()=>this.toggleEquipment();
+   this.element('asset-equipment-retry').onclick=()=>void this.loadEquipment();
+  }
   this.play.onclick=()=>{const player=this.model?.player;if(!player)return;if(player.isPlaying)player.pause();else player.play();this.updatePlayback();};
   this.element('asset-restart').onclick=()=>{this.model?.player.select(this.clips.value);this.updatePlayback();};
   this.speed.oninput=()=>{this.model?.player.setSpeed(Number(this.speed.value));this.element('asset-speed-label').textContent=`${this.speed.value}×`;};
@@ -152,8 +162,10 @@ export class AssetInspector {
   if(this.file.disabled||this.disposed)return;
   this.file.disabled=this.loadButton.disabled=true;this.controls.disabled=true;
   this.element<HTMLButtonElement>('asset-export').disabled=true;
-  this.model?.dispose();this.model=undefined;
+  this.equipment?.dispose();this.equipment=undefined;this.model?.dispose();this.model=undefined;
   this.idlePreviewName=undefined;this.idlePreviewError='';
+  this.equippedIdleName=undefined;this.reportData={};
+  if(this.equipmentRequested){this.element<HTMLInputElement>('asset-equipment-toggle').disabled=true;this.element<HTMLInputElement>('asset-equipment-toggle').checked=false;this.element('asset-equipment-status').textContent='Preparando equipo…';this.element('asset-equipment-status').dataset['state']='idle';this.element('asset-equipment-retry').hidden=true;}
   this.clips.replaceChildren(new Option('Sin clips',''));this.report.textContent='Sin datos: carga en curso.';
   this.playback.textContent='Sin animación';this.warning.textContent='';
   this.status.textContent='Cargando geometría, materiales y animaciones…';this.status.dataset['state']='loading';
@@ -172,16 +184,28 @@ export class AssetInspector {
      // The player's shared group list also owns stop/reset/disposal of the new clip.
      model.container.animationGroups.push(idle);this.idlePreviewName=idle.name;
      authoredPreview={name:idle.name,author:'Veylun',stage:'prototype-v1',durationSeconds:4,notInMaster:true,gameplayIntegrated:false};
+     if(this.equipmentRequested){
+      const {createRuenEquippedIdlePreview}=await import('../assets/ruenEquippedIdlePreview');
+      if(this.disposed)return;
+      const armed=createRuenEquippedIdlePreview(model,this.scene,idle);
+      model.container.animationGroups.push(armed);this.equippedIdleName=armed.name;
+     }
     }catch(error){
-     this.idlePreviewError=error instanceof Error?error.message:String(error);
-     console.warn('Idle de prueba no disponible para este modelo.',error);
+     this.idlePreviewError=this.idlePreviewName?'':error instanceof Error?error.message:String(error);
+     console.warn('Prototipo de Idle no disponible para este modelo.',error);
     }
    }
-   this.report.textContent=JSON.stringify({source:source instanceof File?{name:source.name,bytes:source.size}:{path:masterPath},...model.report,...(authoredPreview?{authoredPreview}:{})},null,2);
+   this.reportData={source:source instanceof File?{name:source.name,bytes:source.size}:{path:masterPath},...model.report,...(authoredPreview?{authoredPreview}:{})};
+   this.refreshReport();
    this.clips.replaceChildren(...model.report.animationGroups.map(clip=>new Option(`${clip.name} · ${clip.durationSeconds.toFixed(3)} s`,clip.name)));
    if(this.idlePreviewName)this.clips.add(new Option('Idle neutro · prototipo v1 · 4.000 s',this.idlePreviewName),0);
    const first=this.idlePreviewName?{name:this.idlePreviewName}:model.report.animationGroups.find(c=>c.name==='Walking')??model.report.animationGroups[0];
    if(first){this.clips.value=first.name;model.player.select(first.name);model.player.pause();}
+   if(this.equipmentRequested){
+    if(this.equippedIdleName)await this.loadEquipment();
+    else{this.element('asset-equipment-status').textContent='Este modelo no es compatible con la pose equipada de Ruen.';this.element('asset-equipment-status').dataset['state']='error';}
+    if(this.disposed)return;
+   }
    this.controls.disabled=false;this.clips.disabled=this.play.disabled=this.element<HTMLButtonElement>('asset-restart').disabled=!first;
    this.element<HTMLButtonElement>('asset-export').disabled=false;
    this.frameModel();this.updatePlayback();
@@ -189,12 +213,60 @@ export class AssetInspector {
    this.status.dataset['state']='loaded';
   }catch(error){
    if(this.disposed)return;
-   this.model?.dispose();this.model=undefined;
+   this.disposeEquipment();this.model?.dispose();this.model=undefined;
    const message=error instanceof Error?error.message:String(error);
    this.status.textContent=`No se pudo cargar el modelo. Pulsa «Recargar modelo original» para reintentar o abre un GLB desde tu equipo. ${message}`;
    this.status.dataset['state']='error';this.report.textContent='Sin datos: el archivo no se ha cargado.';
    console.error('Inspección GLB: carga fallida.',error);
   }finally{if(!this.disposed){this.file.value='';this.file.disabled=this.loadButton.disabled=false;}}
+ }
+ private disposeEquipment():void{this.equipment?.dispose();this.equipment=undefined;}
+ private async loadEquipment():Promise<void>{
+  const model=this.model;
+  if(!model||!this.equippedIdleName||this.disposed)return;
+  const status=this.element('asset-equipment-status'),retry=this.element<HTMLButtonElement>('asset-equipment-retry');
+  const toggle=this.element<HTMLInputElement>('asset-equipment-toggle');
+  this.controls.disabled=true;this.file.disabled=this.loadButton.disabled=true;
+  toggle.disabled=true;toggle.checked=false;retry.hidden=true;
+  model.player.pause();this.equipment?.dispose();this.equipment=undefined;
+  status.dataset['state']='loading';status.textContent='Cargando la espada y el escudo…';
+  try{
+   const {RuenEquipmentPreview}=await import('../assets/RuenEquipmentPreview');
+   if(this.disposed||this.model!==model)return;
+   const equipment=new RuenEquipmentPreview(this.scene,model);this.equipment=equipment;
+   equipment.setEnabled(false);await equipment.load();
+   if(this.disposed||this.model!==model){equipment.dispose();return;}
+   const ready=equipment.diagnostics.status==='ready';
+   status.dataset['state']=equipment.diagnostics.status;
+   toggle.disabled=!ready;retry.hidden=ready;
+   status.textContent=ready?'Azure Oathblade y Aegis of the Azure. Desmarca para comparar con el Idle sin equipo.':'No se pudo cargar todo el equipo. Puedes usar el Idle sin equipo y reintentar la carga.';
+   let armedOption=Array.from(this.clips.options).find(option=>option.value===this.equippedIdleName);
+   if(ready&&!armedOption){armedOption=new Option('Idle con espada y escudo · prototipo v1 · 4.000 s',this.equippedIdleName);this.clips.add(armedOption,0);}
+   if(armedOption)armedOption.disabled=!ready;
+   const selected=ready?this.equippedIdleName:this.idlePreviewName;
+   if(selected){this.clips.value=selected;model.player.select(selected);model.player.pause();}
+  }catch(error){
+   if(this.disposed||this.model!==model)return;
+   this.equipment?.setEnabled(false);status.dataset['state']='error';retry.hidden=false;
+   status.textContent='No se pudo cargar el equipo. Reintenta la carga.';
+   console.warn('Equipo de prueba no disponible.',error);
+  }finally{
+   if(!this.disposed&&this.model===model){this.controls.disabled=false;this.file.disabled=this.loadButton.disabled=false;this.updatePlayback();this.refreshReport();}
+  }
+ }
+ private toggleEquipment():void{
+  const player=this.model?.player;
+  if(!player||this.equipment?.diagnostics.status!=='ready')return;
+  const selected=this.element<HTMLInputElement>('asset-equipment-toggle').checked?this.equippedIdleName:this.idlePreviewName;
+  if(!selected)return;
+  const wasPlaying=player.isPlaying;
+  const wasIdle=player.currentName===this.idlePreviewName||player.currentName===this.equippedIdleName;
+  const frame=wasIdle?player.current?.getCurrentFrame()??0:0;
+  player.select(selected);player.current?.goToFrame(frame);if(!wasPlaying)player.pause();
+  this.clips.value=selected;this.updatePlayback();
+ }
+ private refreshReport():void{
+  this.report.textContent=JSON.stringify({...this.reportData,...(this.equipment?{equipmentPreview:{...this.equipment.report,clip:this.equippedIdleName,notInMaster:true,gameplayIntegrated:false}}:{})},null,2);
  }
  private frameModel():void{
   if(!this.model)return;
@@ -212,9 +284,15 @@ export class AssetInspector {
  }
  private updatePlayback():void{
   const player=this.model?.player;if(!player)return;
+  if(this.equipmentRequested){
+   const equipped=!!this.equippedIdleName&&player.currentName===this.equippedIdleName&&this.equipment?.diagnostics.status==='ready';
+   this.equipment?.setEnabled(equipped);this.element<HTMLInputElement>('asset-equipment-toggle').checked=equipped;
+   if(this.equipment)this.refreshReport();
+  }
   this.play.textContent=player.isPlaying?'Pausar':'Reproducir';
   this.playback.textContent=player.currentName?`${player.currentName} · ${player.isPlaying?'Reproduciendo':'Pausado'}`:'El archivo no contiene clips.';
   this.warning.textContent=player.currentName===this.idlePreviewName?'Idle neutro creado para Veylun · prototipo v1. No forma parte del archivo original ni está integrado en el juego. Revisa respiración, hombros, manos y capa desde las tres vistas.':motionWarnings[player.currentName??'']??(player.currentName==='Walking'||player.currentName==='Running'?'Prueba de locomoción en el visor. El avance del juego seguirá perteneciendo al controlador.':'Sólo inspección. Sin asignación automática a estados del juego.');
+  if(this.equippedIdleName&&player.currentName===this.equippedIdleName)this.warning.textContent='Idle con espada y escudo · prototipo v1. Revisa la postura y el agarre desde las tres vistas. Esta versión se muestra sólo en el visor.';
  }
  private resize=():void=>this.engine.resize();
  private visibility=():void=>{if(document.hidden){this.model?.player.pause();this.updatePlayback();}};
@@ -226,7 +304,7 @@ export class AssetInspector {
  }
  dispose():void{
   this.disposed=true;window.removeEventListener('resize',this.resize);document.removeEventListener('visibilitychange',this.visibility);
-  this.engine.stopRenderLoop();this.model?.dispose();this.scene.dispose();this.engine.dispose();this.panel.remove();
+  this.engine.stopRenderLoop();this.equipment?.dispose();this.model?.dispose();this.scene.dispose();this.engine.dispose();this.panel.remove();
   delete document.body.dataset['mode'];
   if(import.meta.env.DEV)delete (window as Window&{__assetInspector?:AssetInspector}).__assetInspector;
  }

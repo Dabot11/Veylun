@@ -1,5 +1,31 @@
 # Validación ejecutada
 
+## Idle con equipo: validación local
+
+22 de octubre de 2026. Se inventariaron los GLB reales de espada y escudo:
+44,478,640 bytes y 906,832 triángulos en conjunto. Los originales conservan
+sus SHA-256 y se identificaron el mango de la espada y el asa posterior del
+escudo a partir de la geometría. El montaje se revisó en navegador de frente,
+lado y espalda; la calibración terminó sin errores de aplicación. Se conserva
+una [captura real en tres cuartos](images/ruen-equipped-idle.png). Esta revisión
+visual no mide rendimiento ni sustituye la aprobación artística del usuario.
+
+La ruta `?inspect=ruen&motion=idle-v1&equipment=azure` añade una variante
+equipada sólo al visor. Tras el ajuste final de montaje aprobaron **142 pruebas
+unitarias en 15 archivos**, typecheck y build. Aprobaron **10 casos únicos de
+navegador** en dos ejecuciones sin reintentos ni cambios de aplicación: nueve
+en 6.1 minutos y uno en 28.5 segundos. La primera incluye tres casos del equipo,
+tres del Idle neutro y tres del visor sintético; la segunda revisa el master
+real en el visor original. Incluyen desarrollo y build de producción locales.
+La publicación está pendiente; estos resultados no prueban el sitio remoto.
+
+El equipo sigue las manos en los frames 0, 60 y 120, con loop cerrado y pies
+inmóviles. Se comprobaron comparación con el Idle neutro, restauración de
+poses originales, fallo/reintento sin recargar Ruen, liberación de recursos,
+guardado intacto y ausencia de hooks en producción. No se repitió la suite
+larga de aventura porque esta variante sólo cambia el visor.
+[Inventario y alcance](RUEN_EQUIPMENT_PREVIEW.md) · [Evidencia visual](evidence/ruen-equipment/README.md).
+
 ## Primer Idle propio: prototipo del visor
 
 22 de octubre de 2026. Typecheck/build correctos y **130 pruebas unitarias en
