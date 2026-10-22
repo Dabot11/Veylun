@@ -1,5 +1,60 @@
 # Validación ejecutada
 
+## Carga automática y reposo de Ruen
+
+22 de octubre de 2026. **123 pruebas unitarias en 12 archivos y 26 de
+navegador aprobadas**, estas últimas en una ejecución de 18.6 minutos sin
+reintentos. Typecheck y build correctos. Chromium con renderizado de software,
+servidores locales de desarrollo y producción; no es una medición de FPS.
+
+La ruta normal carga Meshy automáticamente y conserva la pose base estática
+en reposo. Se comprobó que la pose local vuelve exactamente a sus valores
+iniciales después de correr y permanece estable. Las transiciones duran
+0.2 s. El visor también carga automáticamente, con reproducción pausada.
+
+La suite incluye 17 regresiones del MVP, tres casos del visor con fixture
+sintético y seis de integración de Ruen: cuatro cargan el master real; los
+otros verifican fallo de descarga y opt-out sin descargar el GLB. Incluye
+producción sin hooks de depuración, locomoción, pausa, colisiones, acciones
+provisionales, combate, aventura completa, muerte, checkpoints y guardado.
+
+El master conserva su SHA-256. La pose base no es una animación Idle; salto,
+esquiva, defensa y combate mantienen el rig provisional. Xbox físico y
+rendimiento en el Mac de David quedan pendientes. Se mantiene el aviso de
+chunk glTF mayor de 500 kB. Publicación de esta revisión pendiente.
+
+[Evidencia y capturas](evidence/ruen-meshy/README.md) ·
+[Log completo de esta revisión](evidence/ruen-meshy/default-idle-browser.log).
+
+## Master real de Meshy y prueba de locomoción
+
+22 de octubre de 2026. Typecheck y build correctos; **119 pruebas unitarias en
+12 archivos y 24 pruebas de navegador aprobadas**. La suite de navegador pasó
+en una ejecución de 11.8 minutos sin reintentos. Incluye el recorrido completo
+del MVP, tres pruebas del visor con fixture sintético y cuatro con el GLB real.
+Vite emitió un aviso de chunk del cargador glTF superior a 500 kB, sin fallo.
+
+El master real conserva su hash. Se inventariaron 20 clips; sólo Walking y
+Running se revisaron visualmente en tres vistas y se conectaron a la prueba
+jugable `?ruen=meshy`, con el rig provisional para las demás acciones. No hay
+aprobación final del arte ni del resto de clips. Xbox físico y FPS en el Mac
+de David siguen sin probarse.
+
+El build del código `6a80022d1eb3988da303e5de4e48a35aaa80c9f4` se publicó en
+GitHub Pages como `ab38a2c85c4e1ac2e2fedc806fc0eae17ec8ec5f`.
+[Actions 39832580525](https://github.com/Dabot11/Veylun/actions/runs/39832580525)
+y su job **Deploy to GitHub Pages** finalizaron con **Success**.
+Enlaces públicos: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
+y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
+La verificación pública se limita a Actions: la restricción de red del entorno
+impidió comprobar el sitio remoto en navegador. Los tests anteriores se
+ejecutaron contra los servidores locales del proyecto.
+
+El [informe de inspección](RUEN_MESHY_INSPECTION.md) y la
+[evidencia del master real](evidence/ruen-meshy/README.md) contienen resultados
+y límites. Las secciones siguientes conservan el historial de validación
+anterior a la incorporación de este GLB.
+
 ## Revisión artística de Ruen y del claro
 
 19 de octubre de 2026. Mismo entorno cloud descrito abajo. Cambios de geometría,

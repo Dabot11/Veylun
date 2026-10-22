@@ -1,0 +1,50 @@
+
+> veylun@0.0.1 test:e2e
+> playwright test --workers=1 --output=/workspace/veylun-validation/ruen-meshy-real/full-browser
+
+[WebServer] (node:8285) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8298) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 24 tests using 1 worker
+
+(node:8322) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/browser/asset-inspector.spec.ts:31:1 › inspector stays isolated, loads a synthetic skin, and plays one clip at a time (3.4s)
+  ✓   2 tests/browser/asset-inspector.spec.ts:92:1 › bad local GLB reports failure and allows a later real loader retry with the synthetic fixture (1.1s)
+  ✓   3 tests/browser/asset-inspector.spec.ts:113:1 › production inspector loads the repository URL through Babylon with a synthetic response, without autoplay (1.4s)
+  ✓   4 tests/browser/bootstrap.spec.ts:6:1 › new game, keyboard movement, jump, roll, camera, pause and responsive HUD (21.3s)
+  ✓   5 tests/browser/bootstrap.spec.ts:26:1 › corrupt saves are handled without crashing or enabling Continue (4.3s)
+  ✓   6 tests/browser/bootstrap.spec.ts:31:1 › saved checkpoint, key and boss completion persist; new game requires confirmation (12.1s)
+  ✓   7 tests/browser/bootstrap.spec.ts:40:1 › synthetic standard Xbox is detected, starts game, moves and pauses on a single edge (14.9s)
+  ✓   8 tests/browser/combat.spec.ts:13:3 › keyboard: three real attack presses hit and defeat a nearby enemy (13.9s)
+  ✓   9 tests/browser/combat.spec.ts:13:3 › mouse: three real attack presses hit and defeat a nearby enemy (11.6s)
+  ✓  10 tests/browser/combat.spec.ts:13:3 › gamepad: three real attack presses hit and defeat a nearby enemy (13.3s)
+  ✓  11 tests/browser/combat.spec.ts:70:1 › active Brote: lock, block the charge, then counterattack without losing health (17.1s)
+  ✓  12 tests/browser/guardian.spec.ts:15:1 › completed sanctuary reload hides defeated enemies and a new adventure resets the light (6.7s)
+  ✓  13 tests/browser/guardian.spec.ts:39:3 › keyboard: block, counter, escape the slam, defeat the Guardian and restore the altar (42.8s)
+  ✓  14 tests/browser/guardian.spec.ts:39:3 › gamepad: block, counter, escape the slam, defeat the Guardian and restore the altar (42.2s)
+Journey: Brotes cleared, checkpoint 1 earned
+Journey: Spirit cleared, switch and grate opened
+Journey: key acquired, enclosure exited, checkpoint 2 earned
+Journey: death and reload preserve progress, Guardian resets
+Journey: Guardian defeated, explicit altar activation still required
+Journey: victory, 76.9 simulated seconds, 1 deliberate death
+  ✓  15 tests/browser/journey.spec.ts:81:1 › new adventure to restoration with normal inputs, death, checkpoints and reloads (3.5m)
+  ✓  16 tests/browser/journey.spec.ts:125:1 › unavailable storage keeps session Continue and restart confirmation; new game clears old notices (9.9s)
+  ✓  17 tests/browser/journey.spec.ts:148:1 › controls before starting do not create a save; restoration can pause and resume safely (11.5s)
+  ✓  18 tests/browser/ruen-meshy.spec.ts:62:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector (26.2s)
+  ✓  19 tests/browser/ruen-meshy.spec.ts:99:1 › Meshy trial blends real locomotion and explicitly preserves existing action fallbacks (1.2m)
+  ✓  20 tests/browser/ruen-meshy.spec.ts:171:1 › actual collision displacement freezes Meshy even while the controller requests movement (52.6s)
+  ✓  21 tests/browser/ruen-meshy.spec.ts:205:1 › a failed real model request retains the existing playable Ruen (15.6s)
+  ✓  22 tests/browser/scenarios.spec.ts:6:1 › rendered gameplay responds to controls and victory requires the altar interaction (23.4s)
+  ✓  23 tests/browser/spirit.spec.ts:8:3 › keyboard: read the spell, block, approach, defeat the Spirit and activate its switch (39.6s)
+  ✓  24 tests/browser/spirit.spec.ts:8:3 › gamepad: read the spell, block, approach, defeat the Spirit and activate its switch (37.9s)
+
+  24 passed (11.8m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

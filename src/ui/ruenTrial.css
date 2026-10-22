@@ -1,0 +1,9 @@
+#ruen-model-trial{position:absolute;z-index:4;top:12px;left:50%;transform:translateX(-50%);max-width:calc(100% - 28px);width:340px;padding:10px 14px;background:#142f2eea;border:1px solid #8ec6b866;border-radius:4px;font:11px/1.5 Arial,sans-serif;color:#dcebe3;pointer-events:none}
+#ruen-model-trial strong{display:block;font-size:9px;letter-spacing:1.5px;color:#a8d9ca}
+#ruen-model-status{display:block;margin:3px 0}
+#ruen-model-status[data-status=error]{color:#ffd8ab}
+#ruen-model-trial small{display:block;font-size:10px;color:#b3c7bf}
+#ruen-model-trial nav{display:flex;gap:18px;margin-top:5px;pointer-events:auto}
+#ruen-model-trial a{color:#d9eac2;text-underline-offset:3px}
+body[data-screen=none] #ruen-model-trial{top:auto;bottom:12px}
+@media(max-width:760px){#ruen-model-trial{left:14px;top:8px;width:calc(100% - 28px);transform:none;padding:7px 10px}body[data-screen=none] #ruen-model-trial{bottom:auto;top:48px;width:240px}#ruen-model-trial small{max-width:240px}#ruen-model-trial nav{gap:12px}}

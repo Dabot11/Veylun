@@ -35,6 +35,31 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
+## Visor de Ruen / Meshy
+
+Disponible en GitHub Pages: [probar Ruen caminando/corriendo](https://dabot11.github.io/Veylun/?ruen=meshy)
+o [abrir el visor](https://dabot11.github.io/Veylun/?inspect=ruen).
+Se publicó el código `6a80022` de la rama `feat/ruen-meshy-inspector`;
+consulta el [registro de despliegue](docs/DEPLOYMENT.md).
+La nueva revisión descrita abajo pasó las pruebas locales; **su publicación está pendiente**.
+
+El master real de Meshy está en
+`public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`,
+descargado intacto del release `ruen-modelo-prueba` y verificado por SHA-256.
+Con Vite iniciado, `/?inspect=ruen` carga el master automáticamente y queda
+pausado. **Recargar modelo original** permite volver a cargarlo; también puedes
+abrir un GLB local. El visor incluye selector de clip, reproducir/pausar,
+velocidad, tres vistas e inventario JSON, sin simulación ni acceso al guardado.
+
+En esta revisión, `/` carga Meshy automáticamente; `/?ruen=meshy` es un alias
+y `/?ruen=provisional` permite volver al rig anterior. Ruen permanece visible
+en reposo con la pose base exacta del GLB, estática, sin clip Idle ni respiración
+añadida. Walking/Running son los únicos clips conectados; las otras acciones
+mantienen el rig provisional. La transición reposo↔locomoción dura 0.2 s.
+El master tiene 20 clips y el arte final sigue pendiente. Consulta el
+[informe de inspección](docs/RUEN_MESHY_INSPECTION.md) y la
+[galería del modelo real](docs/evidence/ruen-meshy/README.md).
+
 ## Recorrido
 
 1. Explora el Claro del despertar y sigue la luz turquesa hacia el sendero.
@@ -114,12 +139,12 @@ Se revisaron **24 referencias PNG de personajes**, seis por cada uno, más la
 imagen del santuario visible en el chat. Los originales están separados en
 `design/references/` y no se descargan con el juego.
 
-Los cuatro modelos son **3D procedurales provisionales**, con partes articuladas,
-materiales/texturas originales y animación por código. Conservan las siluetas,
-paletas y rasgos principales; simplifican notablemente el detalle de las
-ilustraciones. No hay modelos GLB definitivos ni una conversión automática de
-imágenes. `VisualOverrides` carga GLB y sus clips cuando se configura una ruta
-real en `assetCatalog.ts`, sin cambiar la simulación.
+Ruen usa el GLB real de Meshy mediante `RuenLocomotionView`: pose base estática
+en reposo, Walking/Running y fallback para las demás acciones. Los tres enemigos
+y el rig alternativo de Ruen siguen siendo **3D procedurales provisionales**;
+simplifican notablemente las ilustraciones. La carga por defecto de Meshy pasó
+las pruebas locales y espera publicación. El arte final sigue pendiente. `VisualOverrides` conserva la vía
+genérica de carga desde `assetCatalog.ts` para futuras sustituciones.
 
 La primera revisión de Ruen añade cabello de mechones afinados, capa con
 emblema dorsal, equipo más definido y articulación de codos y rodillas. El claro
@@ -144,6 +169,19 @@ La prueba de recorrido de `journey.spec.ts` empieza desde Nueva partida y usa
 solo entradas normales para completar la aventura, con una muerte deliberada
 y recargas entre checkpoints. Dos regresiones adicionales revisan el progreso
 de sesión sin almacenamiento y la pausa durante la restauración.
+
+La revisión Meshy publicada (`6a80022`) pasó **119 pruebas unitarias en 12 archivos
+y 24 pruebas de navegador**, estas últimas en una ejecución sin reintentos de 11.8 minutos.
+Incluyen tres casos del visor con fixture sintético y cuatro del master real:
+carga/locomoción, transiciones y fallbacks, colisión y error de carga. Typecheck
+y build correctos; Vite avisa de un chunk del cargador glTF superior a 500 kB.
+
+La revisión de carga automática y reposo estático pasó **123 pruebas unitarias
+en 12 archivos y 26 pruebas de navegador**, en una ejecución de 18.6 minutos
+sin reintentos; typecheck y build correctos. Incluye 17 casos del MVP, tres del
+visor con fixture sintético y seis de integración: cuatro cargan el master,
+uno comprueba descarga abortada y otro opt-out sin descarga. Ver el
+[log actual](docs/evidence/ruen-meshy/default-idle-browser.log).
 
 Para ejecutar las pruebas:
 
