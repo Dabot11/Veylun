@@ -1,5 +1,25 @@
 # Validación ejecutada
 
+## Primer Idle propio: prototipo del visor
+
+22 de octubre de 2026. Typecheck/build correctos y **130 pruebas unitarias en
+13 archivos aprobadas**. Se validaron **siete casos únicos de navegador**: cuatro aprobaron
+inicialmente y tres se repitieron con éxito después de cerrarse el servidor de
+desarrollo. No hubo cambios de código entre ejecuciones. Se comprobaron poses,
+loop, pies inmóviles, controles, separación del inventario original, rig
+incompatible y producción sin hooks. Capturas revisadas de frente, lado y espalda.
+
+La revisión cambia sólo el visor y conserva el master y el gameplay. No se
+repitió la suite larga de aventura; las pruebas de integración de este Idle
+dentro del juego y la aprobación artística permanecen pendientes.
+
+Fuente publicada `43fa18c4c5711cc8d861bec05018490190b2f4c3`; build
+`41eed5cdd45c234990a0825ddcb54de12f4b4d25`.
+[Actions 39853291990](https://github.com/Dabot11/Veylun/actions/runs/39853291990)
+confirmó **Success**. La verificación pública se limita a Actions; las pruebas
+de navegador usaron servidores locales.
+[Evidencia y registros](evidence/ruen-idle-v1/README.md).
+
 ## Carga automática y reposo de Ruen
 
 22 de octubre de 2026. **123 pruebas unitarias en 12 archivos y 26 de

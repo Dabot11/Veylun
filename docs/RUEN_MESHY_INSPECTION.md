@@ -4,7 +4,8 @@ Revisión vigente publicada: **carga automática y reposo estático con 123 prue
 unitarias y 26 de navegador aprobadas**.
 La revisión anterior `6a80022` mantiene sus resultados de 119 pruebas unitarias
 y 24 de navegador como historial del paso previo.
-Integrada en `main`; código publicado `2045061`. Visor previo: `9d64cf5`; base del MVP:
+Integración de gameplay `2045061` en `main`; el build vigente `43fa18c` añade
+[un Idle propio de prueba sólo al visor](RUEN_ANIMATION_WORKFLOW.md). Visor previo: `9d64cf5`; base del MVP:
 `1928f65` en `work`. Esto no aprueba el arte final ni completa las animaciones.
 
 ## Archivo real y conservación del master
@@ -24,7 +25,7 @@ superara el límite de transferencia de 32 MiB. El archivo ya está en:
 
 En GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
 y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-El código publicado `2045061` carga Meshy por defecto. El visor también carga
+La integración de `2045061`, conservada en el build actual, carga Meshy por defecto. El visor también carga
 el master automáticamente y queda en pausa. Para probarlo localmente:
 
 ```sh

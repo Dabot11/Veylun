@@ -32,4 +32,11 @@ aprobación artística final. El prototipo sigue fuera del gameplay. Xbox físic
 rendimiento en Mac y transiciones del Idle dentro del juego no se probaron.
 La suite completa del juego anterior conserva su registro propio; no se
 repite para este cambio aislado del visor. El aviso de chunk glTF >500 kB
-permanece. La publicación del prototipo está pendiente.
+permanece.
+
+El prototipo está [publicado](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1), fuente
+`43fa18c4c5711cc8d861bec05018490190b2f4c3`, build
+`41eed5cdd45c234990a0825ddcb54de12f4b4d25`.
+[Actions 39853291990](https://github.com/Dabot11/Veylun/actions/runs/39853291990) confirmó **Success**.
+Las pruebas de navegador fueron locales; la red del entorno restringe el
+dominio público y no se comprobó ese sitio en navegador.

@@ -7,7 +7,7 @@ El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
 ## Primer prototipo: Idle propio v1
 
-Estado: **prototipo exclusivo del visor, validado técnicamente; publicación pendiente**.
+Estado: **prototipo exclusivo del visor, validado técnicamente y publicado**.
 El juego publicado sigue usando la pose base estática al detenerse. Este trabajo
 no añade todavía una animación Idle al gameplay ni modifica los 20 clips del master.
 
@@ -28,7 +28,8 @@ versión se construyen por código sobre el rig existente.
 La ruta del prototipo en esta revisión es `?inspect=ruen&motion=idle-v1`.
 Carga automáticamente el modelo y el Idle propio **en pausa**; se reproduce
 desde el visor. Su identidad y metadatos se mantienen separados del inventario
-de los 20 clips originales. Esta ruta ya pasó las pruebas locales; su publicación está pendiente.
+de los 20 clips originales. [Abrir el prototipo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1) y pulsar **Reproducir**.
+Publicado desde `43fa18c`; [Actions](https://github.com/Dabot11/Veylun/actions/runs/39853291990) confirmó **Success**.
 
 ## Orden de trabajo
 
@@ -75,6 +76,7 @@ Para Idle v1 pasaron typecheck, build, **130 pruebas unitarias en 13 archivos y
 7 casos únicos de navegador**. Tres casos de navegador se repitieron tras
 cerrarse el servidor local; los siete terminaron aprobados. Las capturas y
 registros están en la [evidencia del prototipo](evidence/ruen-idle-v1/README.md).
-La publicación está pendiente. Los resultados anteriores del juego se conservan
+La publicación se confirmó mediante Actions; el dominio público no se pudo
+abrir desde la red de este entorno. Los resultados anteriores del juego se conservan
 en el [informe de Meshy](RUEN_MESHY_INSPECTION.md); no se presentan como pruebas
 de integración del nuevo Idle en gameplay.

@@ -8,7 +8,27 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Integración actual de Ruen / Meshy
+## Publicación vigente: prototipo de Idle propio
+
+El 22 de octubre de 2026 se integró el PR #2 y se publicó la fuente
+`43fa18c4c5711cc8d861bec05018490190b2f4c3` desde `main`. El árbol coincide
+con la revisión probada `c65e8a4932a3cad54ab2e54b44ddc403721509cd`.
+Commit de `gh-pages`: `41eed5cdd45c234990a0825ddcb54de12f4b4d25`.
+[Actions 39853291990](https://github.com/Dabot11/Veylun/actions/runs/39853291990) y sus jobs build/deploy
+terminaron con **Success**.
+
+[Idle propio v1](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1) abre el nuevo clip pausado;
+pulsar **Reproducir**. Es un prototipo sólo del visor. El juego mantiene la
+integración automática y el reposo estático de la revisión anterior. El master
+conserva su hash y sus 20 clips originales. Los cambios documentales posteriores
+no modifican el build publicado, cuya fuente es `43fa18c`.
+
+Typecheck/build y 130 pruebas unitarias correctos; siete casos únicos del visor
+aprobados (tres repetidos después de cerrarse el servidor local). Ver la
+[evidencia](evidence/ruen-idle-v1/README.md). Publicación verificada mediante
+Actions, sin acceso directo del navegador al dominio público desde este entorno.
+
+## Publicación anterior: integración de Ruen / Meshy
 
 El 22 de octubre de 2026 se integró el PR #1 en `main` y se publicó la fuente
 `2045061ea5edffa5e93164ffe446b8034cf715dc`, cuyo árbol coincide exactamente
@@ -33,7 +53,8 @@ navegador, incluidos desarrollo y producción.
 `main` contiene el código integrado. `gh-pages` contiene únicamente el build
 estático, `.nojekyll` y `deployment.json` con la revisión de origen. Vite genera
 rutas relativas compatibles con `/Veylun/`. Los cambios documentales
-posteriores no modifican el build publicado, cuya fuente es `2045061`.
+posteriores a esa revisión no modificaron su build, cuya fuente era `2045061`.
+La publicación vigente del prototipo se registra arriba.
 
 ### Publicación anterior
 

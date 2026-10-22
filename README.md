@@ -39,7 +39,7 @@ los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
 Disponible en GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
 o [abrir el visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-La versión publicada es `2045061` de `main`, con carga automática y reposo estático;
+La versión publicada es `43fa18c` de `main`, con carga automática y reposo estático en el juego;
 consulta el [registro de despliegue](docs/DEPLOYMENT.md).
 
 El master real de Meshy está en
@@ -60,7 +60,9 @@ El master tiene 20 clips y el arte final sigue pendiente. Consulta el
 [galería del modelo real](docs/evidence/ruen-meshy/README.md).
 
 La [guía de creación de animaciones](docs/RUEN_ANIMATION_WORKFLOW.md) describe
-el Idle propio en preparación, exclusivo del visor, y las siguientes etapas.
+el Idle propio, exclusivo del visor, y las siguientes etapas.
+[Ver Idle v1](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1):
+pulsar **Reproducir**; el modelo y el clip se cargan automáticamente.
 
 ## Recorrido
 
