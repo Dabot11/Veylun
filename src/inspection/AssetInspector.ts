@@ -34,6 +34,9 @@ export class AssetInspector {
  private panel:HTMLElement;
  private disposed=false;
  private started=false;
+ private readonly idlePreviewRequested=new URLSearchParams(location.search).get('motion')==='idle-v1';
+ private idlePreviewName:string|undefined;
+ private idlePreviewError='';
  private view:'front'|'side'|'back'='front';
  private file:HTMLInputElement;
  private loadButton:HTMLButtonElement;
@@ -83,8 +86,9 @@ export class AssetInspector {
   this.panel.innerHTML=`
    <a class="inspector-back" href="${import.meta.env.BASE_URL}">← Volver al MVP</a>
    <p class="inspector-kicker">VEYLUN · PRUEBA DE ASSET</p>
-   <h1>Ruen / Meshy</h1>
+   <h1>${this.idlePreviewRequested?'Ruen / Idle · prototipo v1':'Ruen / Meshy'}</h1>
    <p class="inspector-intro">El modelo original se carga automáticamente. Revisa sus materiales, esqueleto y un clip a la vez.</p>
+   ${this.idlePreviewRequested?'<p class="inspector-note">Primera animación propia de Veylun: respiración suave en un ciclo de 4 segundos. Se añade sólo a este visor; el master original y el juego conservan su versión actual.</p>':''}
    <label class="inspector-file">Abrir GLB desde tu equipo<input id="asset-file" type="file" accept=".glb,model/gltf-binary"></label>
    <button id="asset-load-default" type="button">Recargar modelo original</button>
    <p id="asset-status" role="status">Preparando la carga del modelo…</p>
@@ -149,6 +153,7 @@ export class AssetInspector {
   this.file.disabled=this.loadButton.disabled=true;this.controls.disabled=true;
   this.element<HTMLButtonElement>('asset-export').disabled=true;
   this.model?.dispose();this.model=undefined;
+  this.idlePreviewName=undefined;this.idlePreviewError='';
   this.clips.replaceChildren(new Option('Sin clips',''));this.report.textContent='Sin datos: carga en curso.';
   this.playback.textContent='Sin animación';this.warning.textContent='';
   this.status.textContent='Cargando geometría, materiales y animaciones…';this.status.dataset['state']='loading';
@@ -157,14 +162,30 @@ export class AssetInspector {
    const model=await loadInspectionModel(source,this.scene);
    if(this.disposed){model.dispose();return;}
    this.model=model;this.scale.value='1';this.yaw.value='0';this.speed.value='1';this.element('asset-speed-label').textContent='1×';
-   this.report.textContent=JSON.stringify({source:source instanceof File?{name:source.name,bytes:source.size}:{path:masterPath},...model.report},null,2);
+   let authoredPreview:Record<string,unknown>|undefined;
+   if(this.idlePreviewRequested){
+    try{
+     const {createRuenIdlePreview}=await import('../assets/ruenIdlePreview');
+     if(this.disposed){model.dispose();return;}
+     const idle=createRuenIdlePreview(model,this.scene);
+     // Keep the immutable file inventory separate from this authored preview.
+     // The player's shared group list also owns stop/reset/disposal of the new clip.
+     model.container.animationGroups.push(idle);this.idlePreviewName=idle.name;
+     authoredPreview={name:idle.name,author:'Veylun',stage:'prototype-v1',durationSeconds:4,notInMaster:true,gameplayIntegrated:false};
+    }catch(error){
+     this.idlePreviewError=error instanceof Error?error.message:String(error);
+     console.warn('Idle de prueba no disponible para este modelo.',error);
+    }
+   }
+   this.report.textContent=JSON.stringify({source:source instanceof File?{name:source.name,bytes:source.size}:{path:masterPath},...model.report,...(authoredPreview?{authoredPreview}:{})},null,2);
    this.clips.replaceChildren(...model.report.animationGroups.map(clip=>new Option(`${clip.name} · ${clip.durationSeconds.toFixed(3)} s`,clip.name)));
-   const first=model.report.animationGroups.find(c=>c.name==='Walking')??model.report.animationGroups[0];
+   if(this.idlePreviewName)this.clips.add(new Option('Idle neutro · prototipo v1 · 4.000 s',this.idlePreviewName),0);
+   const first=this.idlePreviewName?{name:this.idlePreviewName}:model.report.animationGroups.find(c=>c.name==='Walking')??model.report.animationGroups[0];
    if(first){this.clips.value=first.name;model.player.select(first.name);model.player.pause();}
    this.controls.disabled=false;this.clips.disabled=this.play.disabled=this.element<HTMLButtonElement>('asset-restart').disabled=!first;
    this.element<HTMLButtonElement>('asset-export').disabled=false;
    this.frameModel();this.updatePlayback();
-   this.status.textContent=`Carga completada: ${model.report.animationGroups.length} clips. Reproducción pausada en este visor.`;
+   this.status.textContent=`Carga completada: ${model.report.animationGroups.length} clips originales${this.idlePreviewName?' + Idle propio de prueba':''}. Reproducción pausada en este visor.${this.idlePreviewError?' Prototipo Idle no disponible para este modelo.':''}`;
    this.status.dataset['state']='loaded';
   }catch(error){
    if(this.disposed)return;
@@ -193,7 +214,7 @@ export class AssetInspector {
   const player=this.model?.player;if(!player)return;
   this.play.textContent=player.isPlaying?'Pausar':'Reproducir';
   this.playback.textContent=player.currentName?`${player.currentName} · ${player.isPlaying?'Reproduciendo':'Pausado'}`:'El archivo no contiene clips.';
-  this.warning.textContent=motionWarnings[player.currentName??'']??(player.currentName==='Walking'||player.currentName==='Running'?'Prueba de locomoción en el visor. El avance del juego seguirá perteneciendo al controlador.':'Sólo inspección. Sin asignación automática a estados del juego.');
+  this.warning.textContent=player.currentName===this.idlePreviewName?'Idle neutro creado para Veylun · prototipo v1. No forma parte del archivo original ni está integrado en el juego. Revisa respiración, hombros, manos y capa desde las tres vistas.':motionWarnings[player.currentName??'']??(player.currentName==='Walking'||player.currentName==='Running'?'Prueba de locomoción en el visor. El avance del juego seguirá perteneciendo al controlador.':'Sólo inspección. Sin asignación automática a estados del juego.');
  }
  private resize=():void=>this.engine.resize();
  private visibility=():void=>{if(document.hidden){this.model?.player.pause();this.updatePlayback();}};

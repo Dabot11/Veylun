@@ -1,0 +1,23 @@
+
+> veylun@0.0.1 test:e2e
+> playwright test tests/browser/ruen-idle-preview.spec.ts tests/browser/ruen-meshy.spec.ts --grep authored Idle|incompatible synthetic|real Meshy master --workers=1 --output=/workspace/veylun-validation/ruen-idle-v1/recheck
+
+[WebServer] (node:16810) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16823) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:16847) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/ruen-idle-preview.spec.ts:77:1 › authored Idle previews on the real master with a closed breathing loop and stationary feet (47.9s)
+  ✓  2 tests/browser/ruen-idle-preview.spec.ts:179:1 › an incompatible synthetic rig keeps its original clips available without adding a false Idle (1.8s)
+  ✓  3 tests/browser/ruen-meshy.spec.ts:62:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector (28.2s)
+
+  3 passed (1.3m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

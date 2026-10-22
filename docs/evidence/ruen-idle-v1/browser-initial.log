@@ -1,0 +1,107 @@
+
+> veylun@0.0.1 test:e2e
+> playwright test tests/browser/asset-inspector.spec.ts tests/browser/ruen-idle-preview.spec.ts tests/browser/ruen-meshy.spec.ts --grep inspector|bad local GLB|authored Idle|incompatible synthetic|production loads --workers=1 --output=/workspace/veylun-validation/ruen-idle-v1/browser
+
+[WebServer] (node:15997) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:16010) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 7 tests using 1 worker
+
+(node:16034) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/browser/asset-inspector.spec.ts:32:1 › inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time (4.0s)
+  ✓  2 tests/browser/asset-inspector.spec.ts:94:1 › bad local GLB reports failure and allows a later real loader retry with the synthetic fixture (1.8s)
+  ✓  3 tests/browser/asset-inspector.spec.ts:117:1 › production inspector automatically loads and reloads the repository URL without autoplay (1.6s)
+  ✘  4 tests/browser/ruen-idle-preview.spec.ts:77:1 › authored Idle previews on the real master with a closed breathing loop and stationary feet (2.0m)
+(node:16377) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  5 tests/browser/ruen-idle-preview.spec.ts:179:1 › an incompatible synthetic rig keeps its original clips available without adding a false Idle (244ms)
+(node:16513) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  6 tests/browser/ruen-idle-preview.spec.ts:200:1 › production loads the real Idle preview and controls it without development hooks (15.0s)
+  ✘  7 tests/browser/ruen-meshy.spec.ts:62:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector (176ms)
+
+
+  1) tests/browser/ruen-idle-preview.spec.ts:77:1 › authored Idle previews on the real master with a closed breathing loop and stationary feet 
+
+    Error: expect(locator).toHaveAttribute(expected) failed
+
+    Locator: locator('#asset-status')
+    Expected: "loaded"
+    Timeout: 120000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveAttribute" locator('#asset-status') with timeout 120000ms
+      - waiting for locator('#asset-status')
+        4 × locator resolved to <p role="status" id="asset-status" data-state="loading">Cargando geometría, materiales y animaciones…</p>
+          - unexpected value "loading"
+
+
+      81 |   page.on('request', request => { if (/\.glb(?:\?|$)/.test(request.url())) requests.push(request.url()); });
+      82 |   await page.goto(previewUrl);
+    > 83 |   await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 120000 });
+         |                                               ^
+      84 |   expect(requests).toHaveLength(1);
+      85 |   await expect(page.locator('#asset-clip')).toHaveValue(idleName);
+      86 |   await expect(page.locator('#asset-clip option:checked')).toHaveText('Idle neutro · prototipo v1 · 4.000 s');
+        at /workspace/Veylun/tests/browser/ruen-idle-preview.spec.ts:83:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../veylun-validation/ruen-idle-v1/browser/ruen-idle-preview-authored-b5401-ng-loop-and-stationary-feet/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../veylun-validation/ruen-idle-v1/browser/ruen-idle-preview-authored-b5401-ng-loop-and-stationary-feet/error-context.md
+
+  2) tests/browser/ruen-idle-preview.spec.ts:179:1 › an incompatible synthetic rig keeps its original clips available without adding a false Idle 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/?inspect=ruen&motion=idle-v1&test=1
+    Call log:
+      - navigating to "http://127.0.0.1:5174/?inspect=ruen&motion=idle-v1&test=1", waiting until "load"
+
+
+      181 |   await preserveSave(page);
+      182 |   await page.route(assetPattern, route => route.fulfill({ contentType: 'model/gltf-binary', body: inspectionGlb() }));
+    > 183 |   await page.goto(previewUrl);
+          |              ^
+      184 |   await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 60000 });
+      185 |   await expect(page.locator('#asset-status')).toContainText('Prototipo Idle no disponible para este modelo.');
+      186 |   await expect(page.locator('#asset-clip')).toHaveValue('Walking');
+        at /workspace/Veylun/tests/browser/ruen-idle-preview.spec.ts:183:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../veylun-validation/ruen-idle-v1/browser/ruen-idle-preview-an-incom-47ec8-without-adding-a-false-Idle/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../veylun-validation/ruen-idle-v1/browser/ruen-idle-preview-an-incom-47ec8-without-adding-a-false-Idle/error-context.md
+
+  3) tests/browser/ruen-meshy.spec.ts:62:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector 
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:5174/?inspect=ruen&test=1
+    Call log:
+      - navigating to "http://127.0.0.1:5174/?inspect=ruen&test=1", waiting until "load"
+
+
+      65 |   const modelRequests: string[] = [];
+      66 |   page.on('request', request => { if (/\.glb(?:\?|$)/.test(request.url())) modelRequests.push(request.url()); });
+    > 67 |   await page.goto('/?inspect=ruen&test=1');
+         |              ^
+      68 |   await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 120000 });
+      69 |   expect(modelRequests).toHaveLength(1);
+      70 |   const report = await page.evaluate(() => (window as TestWindow).__assetInspector.model.report);
+        at /workspace/Veylun/tests/browser/ruen-meshy.spec.ts:67:14
+
+    Error Context: ../veylun-validation/ruen-idle-v1/browser/ruen-meshy-real-Meshy-mast-b2988-ependently-in-the-inspector/error-context.md
+
+  3 failed
+    tests/browser/ruen-idle-preview.spec.ts:77:1 › authored Idle previews on the real master with a closed breathing loop and stationary feet 
+    tests/browser/ruen-idle-preview.spec.ts:179:1 › an incompatible synthetic rig keeps its original clips available without adding a false Idle 
+    tests/browser/ruen-meshy.spec.ts:62:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector 
+  4 passed (2.4m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
