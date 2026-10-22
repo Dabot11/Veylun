@@ -35,6 +35,20 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
+## Visor de Ruen / Meshy
+
+Con Vite iniciado, abre `/?inspect=ruen` y elige **Abrir GLB desde tu equipo**.
+También puedes colocar el master en
+`public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`
+y pulsar **Cargar desde el repositorio**. El visor ofrece selector de clip,
+reproducir/pausar, velocidad, vistas frontal/lateral/trasera e inventario JSON.
+Es una escena aislada: no inicia la simulación ni accede al guardado.
+
+El GLB real no está incluido: el adjunto supera el límite de transferencia del
+entorno. La carga de Meshy y la integración de Walking/Running al gameplay
+siguen pendientes. Consulta `docs/RUEN_MESHY_INSPECTION.md` para las pruebas,
+faltantes y pasos de validación. El MVP mantiene su representación actual.
+
 ## Recorrido
 
 1. Explora el Claro del despertar y sigue la luz turquesa hacia el sendero.

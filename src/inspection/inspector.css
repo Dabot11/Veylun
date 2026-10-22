@@ -1,0 +1,27 @@
+body[data-mode=asset-inspector]{background:#111820;color:#e4e9ed}
+body[data-mode=asset-inspector] #app{display:grid;grid-template-columns:minmax(0,1fr) 365px}
+body[data-mode=asset-inspector] #renderCanvas{min-width:0;grid-column:1;grid-row:1}
+#asset-inspector{grid-column:2;grid-row:1;overflow-y:auto;padding:25px 23px;background:#141d25;border-left:1px solid #33404a;font:13px/1.6 Arial,sans-serif}
+#asset-inspector h1{font:30px/1.15 Georgia,serif;margin:12px 0 15px;letter-spacing:0}
+.inspector-back{color:#a5c8d3;text-decoration:none;font-size:12px}
+.inspector-kicker{font-size:10px;letter-spacing:2px;color:#8ea2b0;margin-top:28px}
+.inspector-intro{color:#c0ced7;margin-bottom:22px}
+#asset-inspector label{display:block;margin:12px 0;color:#cbd8df}
+#asset-inspector input,#asset-inspector select{width:100%;padding:8px;margin-top:6px;border:1px solid #425360;border-radius:4px;color:#e1edf3;background:#0e171e;font:12px Arial,sans-serif;min-height:36px}
+#asset-inspector input[type=range]{padding:0;accent-color:#8bd8c9}
+#asset-inspector button{min-height:36px;padding:8px 10px;border:1px solid #526571;border-radius:4px;background:#233743;color:#e1edf3;font:12px/1.4 Arial,sans-serif;letter-spacing:0;text-align:center}
+#asset-inspector button:hover{background:#314b58}
+#asset-inspector button:disabled,#asset-inspector fieldset:disabled{opacity:.5;cursor:default}
+#asset-load-default{width:100%}
+#asset-status{padding:12px;border-left:2px solid #86b6c1;background:#1c2a34;font-size:12px;overflow-wrap:anywhere}
+#asset-status[data-state=error]{border-color:#efad86;color:#ffd3b8}
+#asset-inspector fieldset{border:0;border-top:1px solid #35444e;padding:12px 0 0;margin:22px 0}
+#asset-inspector legend{padding-right:12px;font-size:14px}
+.inspector-row{display:flex;gap:7px;margin:12px 0}.inspector-row button{flex:1}
+#asset-playback{font-size:12px;color:#a9e1d8;margin-bottom:5px}
+#asset-clip-warning,.inspector-hint{font-size:11px;color:#b4c3cd}
+#asset-inspector output{float:right;color:#aadace}
+#asset-inspector details{font:12px/1.6 Arial,sans-serif;color:#b6c6d0;border-top:1px solid #35444e;padding-top:12px;margin-top:15px}
+#asset-report{font:10px/1.5 monospace;overflow:auto;max-height:280px;background:#0e171e;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere}
+.inspector-note{font-size:11px;line-height:1.7;color:#a5b7c1;border-top:1px solid #35444e;padding-top:15px}
+@media(max-width:760px){body[data-mode=asset-inspector] #app{grid-template-columns:1fr;grid-template-rows:45svh 55svh}body[data-mode=asset-inspector] #renderCanvas{height:45svh}#asset-inspector{grid-column:1;grid-row:2;border-left:0;border-top:1px solid #33404a;padding:18px 22px}.inspector-kicker{margin-top:15px}}

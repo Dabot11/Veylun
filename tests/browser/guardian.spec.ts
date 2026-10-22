@@ -26,13 +26,13 @@ test('completed sanctuary reload hides defeated enemies and a new adventure rese
   await page.getByRole('button', { name: 'Nueva aventura' }).click();
   await page.getByRole('button', { name: 'Borrar y comenzar' }).click();
   await expect(page.locator('#objective p')).toHaveText('Explora el bosque');
-  const reset = await page.evaluate(() => {
+  // State/UI reset synchronously; SanctuaryView applies fog/light on the next render.
+  await expect.poll(() => page.evaluate(() => {
     const scene = window.__veylun.camera.camera.getScene();
     return { progress: window.__veylun.sim.restorationProgress, hp: window.__veylun.sim.enemies[3]!.hp,
       guardian: scene.getTransformNodeByName('guardian')!.isEnabled(), fog: scene.fogColor.asArray(),
       light: scene.meshes.some(m => m.name === 'restoration-light' && m.isEnabled()) };
-  });
-  expect(reset).toEqual({ progress: 0, hp: 12, guardian: true, fog: [.62, .77, .66], light: false });
+  })).toEqual({ progress: 0, hp: 12, guardian: true, fog: [.62, .77, .66], light: false });
 });
 
 for (const device of ['keyboard', 'gamepad'] as const) {
