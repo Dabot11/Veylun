@@ -1,0 +1,1197 @@
+{
+  "source": "/workspace/Veylun/public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb",
+  "bytes": 43216948,
+  "sha256": "d662ef7c34a346379d15f6eb31069a60f35b2dd161911ed5d6df98232ad5db35",
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v4.5.51",
+    "version": "2.0"
+  },
+  "extensionsUsed": [],
+  "extensionsRequired": [],
+  "nodes": 82,
+  "sceneRoots": [
+    "target_character"
+  ],
+  "meshes": [
+    {
+      "name": "output_unwrapped",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2,
+            "JOINTS_0": 3,
+            "WEIGHTS_0": 4
+          },
+          "material": 0,
+          "mode": 4,
+          "vertices": 70995,
+          "indices": 155181,
+          "triangles": 51727,
+          "bounds": {
+            "min": [
+              -0.3978937864303589,
+              1.806590987918355e-10,
+              -0.2354182004928589
+            ],
+            "max": [
+              0.3978937864303589,
+              1.7000000476837158,
+              0.2354181706905365
+            ],
+            "size": [
+              0.7957875728607178,
+              1.7000000476837158,
+              0.4708363711833954
+            ]
+          },
+          "influencesPerVertex": 4,
+          "nonzeroInfluences": {
+            "min": 1,
+            "max": 4
+          },
+          "weightSumRange": [
+            0.9999998211860657,
+            1.0000001192092896
+          ],
+          "jointIndexRange": [
+            0,
+            78
+          ]
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "BakedMaterial",
+      "normalTexture": {
+        "index": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicRoughnessTexture": {
+          "index": 2
+        }
+      }
+    }
+  ],
+  "skins": [
+    {
+      "name": "SmartRigArmature",
+      "joints": 80,
+      "jointNames": [
+        "mixamorig:Hips",
+        "mixamorig:Spine",
+        "mixamorig:Spine1",
+        "mixamorig:Spine2",
+        "mixamorig:Neck",
+        "mixamorig:Head",
+        "mixamorig:HeadTop_End",
+        "headfront",
+        "mixamorig:LeftShoulder",
+        "mixamorig:LeftArm",
+        "mixamorig:LeftForeArm",
+        "mixamorig:LeftHand",
+        "mixamorig:LeftHandThumb1",
+        "mixamorig:LeftHandThumb2",
+        "mixamorig:LeftHandThumb3",
+        "mixamorig:LeftHandThumb4",
+        "mixamorig:LeftHandPinky1",
+        "mixamorig:LeftHandPinky2",
+        "mixamorig:LeftHandPinky3",
+        "mixamorig:LeftHandPinky4",
+        "mixamorig:LeftHandRing1",
+        "mixamorig:LeftHandRing2",
+        "mixamorig:LeftHandRing3",
+        "mixamorig:LeftHandRing4",
+        "mixamorig:LeftHandIndex1",
+        "mixamorig:LeftHandIndex2",
+        "mixamorig:LeftHandIndex3",
+        "mixamorig:LeftHandIndex4",
+        "mixamorig:LeftHandMiddle1",
+        "mixamorig:LeftHandMiddle2",
+        "mixamorig:LeftHandMiddle3",
+        "mixamorig:LeftHandMiddle4",
+        "mixamorig:RightShoulder",
+        "mixamorig:RightArm",
+        "mixamorig:RightForeArm",
+        "mixamorig:RightHand",
+        "mixamorig:RightHandThumb1",
+        "mixamorig:RightHandThumb2",
+        "mixamorig:RightHandThumb3",
+        "mixamorig:RightHandThumb4",
+        "mixamorig:RightHandPinky1",
+        "mixamorig:RightHandPinky2",
+        "mixamorig:RightHandPinky3",
+        "mixamorig:RightHandPinky4",
+        "mixamorig:RightHandIndex1",
+        "mixamorig:RightHandIndex2",
+        "mixamorig:RightHandIndex3",
+        "mixamorig:RightHandIndex4",
+        "mixamorig:RightHandRing1",
+        "mixamorig:RightHandRing2",
+        "mixamorig:RightHandRing3",
+        "mixamorig:RightHandRing4",
+        "mixamorig:RightHandMiddle1",
+        "mixamorig:RightHandMiddle2",
+        "mixamorig:RightHandMiddle3",
+        "mixamorig:RightHandMiddle4",
+        "Bone_032",
+        "Bone_031",
+        "Bone_030",
+        "Bone_029",
+        "Bone_028",
+        "Bone_037",
+        "Bone_036",
+        "Bone_035",
+        "Bone_034",
+        "Bone_033",
+        "Bone_041",
+        "Bone_040",
+        "Bone_039",
+        "Bone_038",
+        "mixamorig:LeftUpLeg",
+        "mixamorig:LeftLeg",
+        "mixamorig:LeftFoot",
+        "mixamorig:LeftToeBase",
+        "mixamorig:LeftToe_End",
+        "mixamorig:RightUpLeg",
+        "mixamorig:RightLeg",
+        "mixamorig:RightFoot",
+        "mixamorig:RightToeBase",
+        "mixamorig:RightToe_End"
+      ],
+      "baseJointWorldTimesInverseBindMaxError": 2.9543291568678853e-07
+    }
+  ],
+  "images": [
+    {
+      "name": "normal",
+      "mimeType": "image/png",
+      "width": 2048,
+      "height": 2048,
+      "bytes": 6365328,
+      "sha256": "2dad2767c06e09a42467f2bff9d913bc312f31f8f01cf2ded892822a9c9e4a59"
+    },
+    {
+      "name": "texture_0",
+      "mimeType": "image/png",
+      "width": 2048,
+      "height": 2048,
+      "bytes": 7200939,
+      "sha256": "082c5caace12cde6d23c5eb004fbd7d276b8a155f2cffe655dda26ba2f6d834d"
+    },
+    {
+      "name": "texture_0_metallic_roughness",
+      "mimeType": "image/png",
+      "width": 4096,
+      "height": 4096,
+      "bytes": 10340128,
+      "sha256": "605c6eb84e58c6bb010fbdb29e362fb741263374944f407bbb935e570f21509c"
+    }
+  ],
+  "textureBytes": 23906395,
+  "animations": [
+    {
+      "name": "Running",
+      "startSeconds": 0.0,
+      "endSeconds": 0.6333330273628235,
+      "durationSeconds": 0.6333330273628235,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.010731472633779049,
+          0.8971563577651978,
+          0.017313379794359207
+        ],
+        "last": [
+          0.010731492191553116,
+          0.8971564769744873,
+          0.0173133984208107
+        ],
+        "net": [
+          1.955777406692505e-08,
+          1.1920928955078125e-07,
+          1.862645149230957e-08
+        ],
+        "minimum": [
+          0.002251824364066124,
+          0.8837721943855286,
+          -0.018947718665003777
+        ],
+        "maximum": [
+          0.01934249885380268,
+          0.9431964755058289,
+          0.04026654735207558
+        ],
+        "range": [
+          0.017090674489736557,
+          0.05942428112030029,
+          0.059214264154434204
+        ],
+        "samples": 20
+      }
+    },
+    {
+      "name": "Walking",
+      "startSeconds": 0.0,
+      "endSeconds": 1.0333329439163208,
+      "durationSeconds": 1.0333329439163208,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.00840950757265091,
+          0.961852490901947,
+          0.014518962241709232
+        ],
+        "last": [
+          0.008409521542489529,
+          0.9618524312973022,
+          0.014518966898322105
+        ],
+        "net": [
+          1.3969838619232178e-08,
+          -5.960464477539063e-08,
+          4.6566128730773926e-09
+        ],
+        "minimum": [
+          -0.0005270185065455735,
+          0.902233362197876,
+          0.004796532914042473
+        ],
+        "maximum": [
+          0.052296049892902374,
+          0.9669780135154724,
+          0.04844926297664642
+        ],
+        "range": [
+          0.05282306671142578,
+          0.06474465131759644,
+          0.0436527281999588
+        ],
+        "samples": 32
+      }
+    },
+    {
+      "name": "Archery_Shot",
+      "startSeconds": 0.0,
+      "endSeconds": 5.0,
+      "durationSeconds": 5.0,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.007337550632655621,
+          0.8859487175941467,
+          0.006126935128122568
+        ],
+        "last": [
+          0.007337520364671946,
+          0.8859487175941467,
+          0.006126917898654938
+        ],
+        "net": [
+          -3.026798367500305e-08,
+          0.0,
+          -1.7229467630386353e-08
+        ],
+        "minimum": [
+          -0.014145012013614178,
+          0.8388627171516418,
+          -0.05798206850886345
+        ],
+        "maximum": [
+          0.02172367461025715,
+          0.8859487175941467,
+          0.02336656115949154
+        ],
+        "range": [
+          0.03586868569254875,
+          0.04708600044250488,
+          0.08134862780570984
+        ],
+        "samples": 151
+      }
+    },
+    {
+      "name": "Arise",
+      "startSeconds": 0.0,
+      "endSeconds": 1.8333330154418945,
+      "durationSeconds": 1.8333330154418945,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          -0.05819260701537132,
+          -0.8480325937271118,
+          -0.2576308250427246
+        ],
+        "last": [
+          0.023959442973136902,
+          0.5218365788459778,
+          -0.03138003870844841
+        ],
+        "net": [
+          0.08215205371379852,
+          1.3698692321777344,
+          0.2262507826089859
+        ],
+        "minimum": [
+          -0.15341636538505554,
+          -0.8781616687774658,
+          -0.2576308250427246
+        ],
+        "maximum": [
+          0.1383575052022934,
+          0.5496099591255188,
+          0.6927099823951721
+        ],
+        "range": [
+          0.29177385568618774,
+          1.4277715682983398,
+          0.9503408074378967
+        ],
+        "samples": 56
+      }
+    },
+    {
+      "name": "Attack",
+      "startSeconds": 0.0,
+      "endSeconds": 2.799999952316284,
+      "durationSeconds": 2.799999952316284,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          -0.013027548789978027,
+          0.7048430442810059,
+          -0.005268278997391462
+        ],
+        "last": [
+          -0.014315647073090076,
+          0.7045817375183105,
+          -0.005479204468429089
+        ],
+        "net": [
+          -0.001288098283112049,
+          -0.0002613067626953125,
+          -0.00021092547103762627
+        ],
+        "minimum": [
+          -0.15211625397205353,
+          0.5295476913452148,
+          -0.0610363595187664
+        ],
+        "maximum": [
+          0.10225868225097656,
+          0.8155008554458618,
+          0.39231133460998535
+        ],
+        "range": [
+          0.2543749213218689,
+          0.285953164100647,
+          0.45334768295288086
+        ],
+        "samples": 85
+      }
+    },
+    {
+      "name": "Axe_Breathe_and_Look_Around",
+      "startSeconds": 0.0,
+      "endSeconds": 11.266666412353516,
+      "durationSeconds": 11.266666412353516,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.000699994619935751,
+          0.7747145891189575,
+          0.004716985858976841
+        ],
+        "last": [
+          0.0008606842602603137,
+          0.7749401330947876,
+          0.004773435648530722
+        ],
+        "net": [
+          0.0001606896403245628,
+          0.00022554397583007812,
+          5.644978955388069e-05
+        ],
+        "minimum": [
+          -0.06081477925181389,
+          0.7518182396888733,
+          -0.021989192813634872
+        ],
+        "maximum": [
+          0.06094931811094284,
+          0.780117928981781,
+          0.04068368673324585
+        ],
+        "range": [
+          0.12176409363746643,
+          0.028299689292907715,
+          0.06267288327217102
+        ],
+        "samples": 339
+      }
+    },
+    {
+      "name": "Axe_Spin_Attack",
+      "startSeconds": 0.0,
+      "endSeconds": 2.5,
+      "durationSeconds": 2.5,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.0007371755200438201,
+          0.7847995162010193,
+          0.0047410279512405396
+        ],
+        "last": [
+          0.0007372010732069612,
+          0.784799337387085,
+          0.004741027485579252
+        ],
+        "net": [
+          2.5553163141012192e-08,
+          -1.7881393432617188e-07,
+          -4.656612873077393e-10
+        ],
+        "minimum": [
+          -0.005438089370727539,
+          0.7229772210121155,
+          -0.022260667756199837
+        ],
+        "maximum": [
+          0.15665224194526672,
+          0.9020892977714539,
+          0.289066344499588
+        ],
+        "range": [
+          0.16209033131599426,
+          0.17911207675933838,
+          0.3113270103931427
+        ],
+        "samples": 76
+      }
+    },
+    {
+      "name": "Back_Jump",
+      "startSeconds": 0.0,
+      "endSeconds": 0.9333329796791077,
+      "durationSeconds": 0.9333329796791077,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.007833665236830711,
+          0.8456171751022339,
+          0.0015644917730242014
+        ],
+        "last": [
+          0.009318903088569641,
+          0.8418012857437134,
+          -1.9907974004745483
+        ],
+        "net": [
+          0.0014852378517389297,
+          -0.003815889358520508,
+          -1.9923619031906128
+        ],
+        "minimum": [
+          -0.03622264042496681,
+          0.7669088840484619,
+          -1.9907974004745483
+        ],
+        "maximum": [
+          0.13515706360340118,
+          1.2868599891662598,
+          0.0015644917730242014
+        ],
+        "range": [
+          0.1713797003030777,
+          0.5199511051177979,
+          1.9923619031906128
+        ],
+        "samples": 29
+      }
+    },
+    {
+      "name": "BeHit_FlyUp",
+      "startSeconds": 0.0,
+      "endSeconds": 1.5,
+      "durationSeconds": 1.5,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          -0.009051063098013401,
+          1.0458812713623047,
+          -0.06863688677549362
+        ],
+        "last": [
+          -0.022168882191181183,
+          0.029445212334394455,
+          -0.11615372449159622
+        ],
+        "net": [
+          -0.013117819093167782,
+          -1.0164361000061035,
+          -0.0475168377161026
+        ],
+        "minimum": [
+          -0.024909522384405136,
+          0.029445212334394455,
+          -0.11746052652597427
+        ],
+        "maximum": [
+          -0.008318266831338406,
+          2.263474464416504,
+          -0.06863688677549362
+        ],
+        "range": [
+          0.016591254621744156,
+          2.2340292930603027,
+          0.04882363975048065
+        ],
+        "samples": 46
+      }
+    },
+    {
+      "name": "Climb_Attempt_and_Fall_1",
+      "startSeconds": 0.0,
+      "endSeconds": 0.800000011920929,
+      "durationSeconds": 0.800000011920929,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          -0.033771686255931854,
+          5.646734237670898,
+          -0.12817338109016418
+        ],
+        "last": [
+          -0.03564911335706711,
+          -0.32868510484695435,
+          -0.12064462155103683
+        ],
+        "net": [
+          -0.001877427101135254,
+          -5.975419521331787,
+          0.00752875953912735
+        ],
+        "minimum": [
+          -0.04732825979590416,
+          -0.32868510484695435,
+          -0.12817338109016418
+        ],
+        "maximum": [
+          -0.033771686255931854,
+          5.646734237670898,
+          -0.10751492530107498
+        ],
+        "range": [
+          0.013556573539972305,
+          5.975419521331787,
+          0.020658455789089203
+        ],
+        "samples": 25
+      }
+    },
+    {
+      "name": "Climb_Attempt_and_Fall_5",
+      "startSeconds": 0.0,
+      "endSeconds": 1.1666669845581055,
+      "durationSeconds": 1.1666669845581055,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.020514903590083122,
+          3.1556127071380615,
+          -0.12255960702896118
+        ],
+        "last": [
+          -0.022670840844511986,
+          -0.04870014265179634,
+          -0.20503154397010803
+        ],
+        "net": [
+          -0.04318574443459511,
+          -3.204312801361084,
+          -0.08247193694114685
+        ],
+        "minimum": [
+          -0.02969246916472912,
+          -0.05588732659816742,
+          -0.2087475061416626
+        ],
+        "maximum": [
+          0.020514903590083122,
+          3.1556127071380615,
+          -0.12255960702896118
+        ],
+        "range": [
+          0.05020737275481224,
+          3.2114999294281006,
+          0.08618789911270142
+        ],
+        "samples": 36
+      }
+    },
+    {
+      "name": "Climb_Left_with_Both_Limbs",
+      "startSeconds": 0.0,
+      "endSeconds": 1.1666669845581055,
+      "durationSeconds": 1.1666669845581055,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.0008148093475028872,
+          0.2665192484855652,
+          -0.05458156019449234
+        ],
+        "last": [
+          0.6355212330818176,
+          0.2665192484855652,
+          -0.054581549018621445
+        ],
+        "net": [
+          0.634706437587738,
+          0.0,
+          1.1175870895385742e-08
+        ],
+        "minimum": [
+          0.0008148093475028872,
+          0.26587557792663574,
+          -0.10666743665933609
+        ],
+        "maximum": [
+          0.6355212330818176,
+          0.4697642922401428,
+          0.06707938760519028
+        ],
+        "range": [
+          0.634706437587738,
+          0.20388871431350708,
+          0.17374682426452637
+        ],
+        "samples": 36
+      }
+    },
+    {
+      "name": "Collect_Object",
+      "startSeconds": 0.0,
+      "endSeconds": 6.0,
+      "durationSeconds": 6.0,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.008895776234567165,
+          0.9008675813674927,
+          -0.00018822883430402726
+        ],
+        "last": [
+          0.008895776234567165,
+          0.9008675813674927,
+          -0.00018822723359335214
+        ],
+        "net": [
+          0.0,
+          0.0,
+          1.6007106751203537e-09
+        ],
+        "minimum": [
+          0.005347553174942732,
+          0.4434521198272705,
+          -0.04246510937809944
+        ],
+        "maximum": [
+          0.07267647236585617,
+          0.9014440774917603,
+          0.02616227976977825
+        ],
+        "range": [
+          0.06732892245054245,
+          0.45799195766448975,
+          0.06862738728523254
+        ],
+        "samples": 181
+      }
+    },
+    {
+      "name": "Combat_Stance",
+      "startSeconds": 0.0,
+      "endSeconds": 1.6666669845581055,
+      "durationSeconds": 1.6666669845581055,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.36443713307380676,
+          0.791962742805481,
+          0.07372265309095383
+        ],
+        "last": [
+          0.3644371032714844,
+          0.791962742805481,
+          0.07372267544269562
+        ],
+        "net": [
+          -2.9802322387695312e-08,
+          0.0,
+          2.2351741790771484e-08
+        ],
+        "minimum": [
+          0.3513002097606659,
+          0.7767190933227539,
+          0.06655638664960861
+        ],
+        "maximum": [
+          0.3656806945800781,
+          0.8075224757194519,
+          0.07434658706188202
+        ],
+        "range": [
+          0.014380484819412231,
+          0.030803382396697998,
+          0.007790200412273407
+        ],
+        "samples": 51
+      }
+    },
+    {
+      "name": "RunFast",
+      "startSeconds": 0.0,
+      "endSeconds": 0.4666669964790344,
+      "durationSeconds": 0.4666669964790344,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.011852558702230453,
+          0.9245470762252808,
+          0.0696132555603981
+        ],
+        "last": [
+          0.011396370828151703,
+          0.9248538017272949,
+          0.07013589143753052
+        ],
+        "net": [
+          -0.0004561878740787506,
+          0.00030672550201416016,
+          0.0005226358771324158
+        ],
+        "minimum": [
+          0.005390372592955828,
+          0.9076224565505981,
+          0.06004974618554115
+        ],
+        "maximum": [
+          0.011852558702230453,
+          0.9248538017272949,
+          0.07755841314792633
+        ],
+        "range": [
+          0.006462186109274626,
+          0.017231345176696777,
+          0.017508666962385178
+        ],
+        "samples": 15
+      }
+    },
+    {
+      "name": "Sneaky_Walk",
+      "startSeconds": 0.0,
+      "endSeconds": 2.8333330154418945,
+      "durationSeconds": 2.8333330154418945,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.030590690672397614,
+          0.7485184073448181,
+          -0.009487360715866089
+        ],
+        "last": [
+          0.03438065946102142,
+          0.74875807762146,
+          1.077534794807434
+        ],
+        "net": [
+          0.00378996878862381,
+          0.0002396702766418457,
+          1.0870221853256226
+        ],
+        "minimum": [
+          -0.17745259404182434,
+          0.7446203231811523,
+          -0.009487360715866089
+        ],
+        "maximum": [
+          0.059417158365249634,
+          0.7694745063781738,
+          1.077534794807434
+        ],
+        "range": [
+          0.23686975240707397,
+          0.024854183197021484,
+          1.0870221853256226
+        ],
+        "samples": 86
+      }
+    },
+    {
+      "name": "Weapon_Combo",
+      "startSeconds": 0.0,
+      "endSeconds": 3.6666669845581055,
+      "durationSeconds": 3.6666669845581055,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.032308612018823624,
+          0.7943245768547058,
+          0.028215765953063965
+        ],
+        "last": [
+          0.03230905160307884,
+          0.7943242192268372,
+          1.2567543983459473
+        ],
+        "net": [
+          4.3958425521850586e-07,
+          -3.5762786865234375e-07,
+          1.2285386323928833
+        ],
+        "minimum": [
+          -0.11704632639884949,
+          0.7441418170928955,
+          0.028215765953063965
+        ],
+        "maximum": [
+          0.14087872207164764,
+          0.8757375478744507,
+          1.913433313369751
+        ],
+        "range": [
+          0.25792503356933594,
+          0.13159573078155518,
+          1.885217547416687
+        ],
+        "samples": 111
+      }
+    },
+    {
+      "name": "Weapon_Combo_1",
+      "startSeconds": 0.0,
+      "endSeconds": 3.5,
+      "durationSeconds": 3.5,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.03636382520198822,
+          0.7979810833930969,
+          9.723323455546051e-05
+        ],
+        "last": [
+          0.04044995456933975,
+          0.802198052406311,
+          2.0757579803466797
+        ],
+        "net": [
+          0.004086129367351532,
+          0.004216969013214111,
+          2.0756607055664062
+        ],
+        "minimum": [
+          0.03636382520198822,
+          0.436892569065094,
+          -0.023167241364717484
+        ],
+        "maximum": [
+          0.313848078250885,
+          1.1908921003341675,
+          2.080810785293579
+        ],
+        "range": [
+          0.2774842381477356,
+          0.7539995312690735,
+          2.103977918624878
+        ],
+        "samples": 106
+      }
+    },
+    {
+      "name": "Weapon_Combo_2",
+      "startSeconds": 0.0,
+      "endSeconds": 4.5,
+      "durationSeconds": 4.5,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          0.03451261669397354,
+          0.7975849509239197,
+          0.0036471581552177668
+        ],
+        "last": [
+          0.034824710339307785,
+          0.7981416583061218,
+          0.9932414889335632
+        ],
+        "net": [
+          0.0003120936453342438,
+          0.0005567073822021484,
+          0.9895943403244019
+        ],
+        "minimum": [
+          0.024216165766119957,
+          0.7908244729042053,
+          -0.04366611689329147
+        ],
+        "maximum": [
+          0.11598863452672958,
+          0.9098544120788574,
+          1.206206202507019
+        ],
+        "range": [
+          0.09177246689796448,
+          0.1190299391746521,
+          1.2498723268508911
+        ],
+        "samples": 136
+      }
+    },
+    {
+      "name": "dying_backwards",
+      "startSeconds": 0.0,
+      "endSeconds": 2.200000047683716,
+      "durationSeconds": 2.200000047683716,
+      "channels": 160,
+      "paths": [
+        "rotation",
+        "translation"
+      ],
+      "interpolation": [
+        "LINEAR"
+      ],
+      "hipTranslation": {
+        "first": [
+          -0.09405876696109772,
+          0.9033129215240479,
+          0.002504669828340411
+        ],
+        "last": [
+          -0.14226625859737396,
+          0.22351118922233582,
+          -0.7280760407447815
+        ],
+        "net": [
+          -0.048207491636276245,
+          -0.6798017024993896,
+          -0.7305806875228882
+        ],
+        "minimum": [
+          -0.14465133845806122,
+          0.22234991192817688,
+          -0.7679163813591003
+        ],
+        "maximum": [
+          -0.09103535860776901,
+          0.9035334587097168,
+          0.0031166723929345608
+        ],
+        "range": [
+          0.053615979850292206,
+          0.6811835765838623,
+          0.7710330486297607
+        ],
+        "samples": 67
+      }
+    }
+  ],
+  "rawBaseNodeOrientation": {
+    "mixamorig:Head": [
+      0.003320316431564253,
+      1.40597430359864,
+      0.003814228877948248
+    ],
+    "headfront": [
+      0.0033203175830885108,
+      1.4059743100544404,
+      0.11527112883462627
+    ],
+    "mixamorig:LeftFoot": [
+      0.19262354483987565,
+      0.1425003577434545,
+      0.022393235070694774
+    ],
+    "mixamorig:LeftToeBase": [
+      0.20968665069529419,
+      0.04164277754374271,
+      0.11976012459562088
+    ],
+    "mixamorig:RightFoot": [
+      -0.18596418365199274,
+      0.14261333847551166,
+      0.022286573525235113
+    ],
+    "mixamorig:RightToeBase": [
+      -0.2024182552956842,
+      0.04388910034356035,
+      0.11552610146591782
+    ],
+    "headFrontMinusHead": [
+      1.1515242578918894e-09,
+      6.455800338756035e-09,
+      0.11145689995667803
+    ],
+    "note": "Positions and vectors are raw glTF right-handed coordinates, not Babylon left-handed output. Forward direction is an inference from headfront marker; confirm visually before setting exterior yaw."
+  },
+  "storage": {
+    "jsonChunkBytes": 3110540,
+    "binaryChunkBytes": 40106380,
+    "accessors": 10348,
+    "referencedAccessors": 3227,
+    "unreferencedAccessors": 7121,
+    "bufferViews": 10351,
+    "referencedBufferViews": 3230,
+    "referencedBufferViewBytes": 32002875,
+    "unreferencedBinaryBytes": 8103505
+  },
+  "notes": [
+    "No master bytes modified.",
+    "Mesh bounds are raw base POSITION geometry, not a rendered animation envelope.",
+    "Hip motions are local raw glTF translation; hip parent target_character is identity, so local XYZ also equals raw glTF world XYZ before Babylon coordinate conversion.",
+    "Texture bytes are embedded PNG payloads, not GPU memory footprint.",
+    "No conclusions on render quality, contacts or cape deformation from this binary audit alone."
+  ]
+}

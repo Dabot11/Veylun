@@ -20,6 +20,9 @@
 - [x] Efectos de sonido sintetizados tras gesto, volumen ajustable.
 - [x] TypeScript estricto y build estático con rutas relativas.
 - [x] Referencias clasificadas, manifest y documentación de estado real.
+- [x] Master real de Meshy conservado y 20 clips inventariados; Walking/Running
+      revisados en el visor y conectados a la prueba opcional `?ruen=meshy`.
+      Ver [evidencia y límites](RUEN_MESHY_INSPECTION.md).
 
 ## Cobertura de las 23 pruebas solicitadas
 
@@ -53,8 +56,10 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
       un jugador que conoce el recorrido puede completarla antes.
 - [ ] Arte y animación definitivos: los cuatro modelos y el escenario son
       provisionales y simplifican las ilustraciones.
-- [ ] Validación de un GLB real de personaje y sus clips al disponer de ellos.
-- [x] Publicación en GitHub Pages, confirmada por su ejecución de despliegue.
+- [ ] Revisión de los otros 18 clips Meshy, clips faltantes y ajuste final de
+      contacto/deslizamiento de pies; sólo Walking/Running entran en gameplay.
+- [x] Publicación del MVP previo en GitHub Pages, confirmada por su despliegue.
+      La prueba Meshy de esta rama todavía no se ha publicado allí.
 - [x] Recorrido completo automatizado en Chromium desde Nueva partida hasta
       restaurar el altar, con muerte deliberada y recargas entre checkpoints.
 - [x] Guía transitable al cofre y salida, continuación sin almacenamiento local

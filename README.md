@@ -37,17 +37,23 @@ los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
 ## Visor de Ruen / Meshy
 
-Con Vite iniciado, abre `/?inspect=ruen` y elige **Abrir GLB desde tu equipo**.
-También puedes colocar el master en
-`public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`
-y pulsar **Cargar desde el repositorio**. El visor ofrece selector de clip,
-reproducir/pausar, velocidad, vistas frontal/lateral/trasera e inventario JSON.
-Es una escena aislada: no inicia la simulación ni accede al guardado.
+Esta prueba pertenece a la rama `feat/ruen-meshy-inspector`; todavía no se ha
+desplegado en el sitio de GitHub Pages enlazado arriba.
 
-El GLB real no está incluido: el adjunto supera el límite de transferencia del
-entorno. La carga de Meshy y la integración de Walking/Running al gameplay
-siguen pendientes. Consulta `docs/RUEN_MESHY_INSPECTION.md` para las pruebas,
-faltantes y pasos de validación. El MVP mantiene su representación actual.
+El master real de Meshy está en
+`public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`,
+descargado intacto del release `ruen-modelo-prueba` y verificado por SHA-256.
+Con Vite iniciado, abre `/?inspect=ruen` y pulsa **Cargar desde el repositorio**
+o elige un GLB local. El visor incluye selector de clip, reproducir/pausar,
+velocidad, tres vistas e inventario JSON, sin simulación ni acceso al guardado.
+
+`/?ruen=meshy` activa la prueba jugable de Walking/Running. Los estados sin
+animación validada conservan explícitamente el Ruen provisional; el MVP sin
+ese parámetro mantiene su representación actual. El master tiene 20 clips,
+pero sólo Walking y Running entran en esta prueba. No supone aprobación final
+del arte ni del conjunto de animaciones. Consulta el
+[informe de inspección](docs/RUEN_MESHY_INSPECTION.md) y la
+[galería del modelo real](docs/evidence/ruen-meshy/README.md).
 
 ## Recorrido
 
@@ -128,12 +134,13 @@ Se revisaron **24 referencias PNG de personajes**, seis por cada uno, más la
 imagen del santuario visible en el chat. Los originales están separados en
 `design/references/` y no se descargan con el juego.
 
-Los cuatro modelos son **3D procedurales provisionales**, con partes articuladas,
+Los cuatro modelos del modo normal son **3D procedurales provisionales**, con partes articuladas,
 materiales/texturas originales y animación por código. Conservan las siluetas,
 paletas y rasgos principales; simplifican notablemente el detalle de las
-ilustraciones. No hay modelos GLB definitivos ni una conversión automática de
-imágenes. `VisualOverrides` carga GLB y sus clips cuando se configura una ruta
-real en `assetCatalog.ts`, sin cambiar la simulación.
+ilustraciones. La prueba opcional de Ruen usa el GLB real de Meshy mediante
+`RuenLocomotionView`, limitado a Walking/Running con fallback para las demás
+acciones. El arte final sigue pendiente. `VisualOverrides` conserva la vía
+genérica de carga desde `assetCatalog.ts` para futuras sustituciones.
 
 La primera revisión de Ruen añade cabello de mechones afinados, capa con
 emblema dorsal, equipo más definido y articulación de codos y rodillas. El claro
@@ -158,6 +165,12 @@ La prueba de recorrido de `journey.spec.ts` empieza desde Nueva partida y usa
 solo entradas normales para completar la aventura, con una muerte deliberada
 y recargas entre checkpoints. Dos regresiones adicionales revisan el progreso
 de sesión sin almacenamiento y la pausa durante la restauración.
+
+La revisión Meshy pasó **119 pruebas unitarias en 12 archivos y 24 pruebas de
+navegador**, estas últimas en una ejecución sin reintentos de 11.8 minutos.
+Incluyen tres casos del visor con fixture sintético y cuatro del master real:
+carga/locomoción, transiciones y fallbacks, colisión y error de carga. Typecheck
+y build correctos; Vite avisa de un chunk del cargador glTF superior a 500 kB.
 
 Para ejecutar las pruebas:
 

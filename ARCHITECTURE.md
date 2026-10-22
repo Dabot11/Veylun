@@ -145,7 +145,17 @@ desconecta nodos al terminar.
 El catálogo marca modelos provisionales procedurales con `modelPath: null`.
 Si se configura un GLB, `VisualOverrides` lo carga debajo de la raíz visual,
 oculta las piezas procedurales y asigna clips lógicos. Fallos de carga conservan
-el provisional y registran aviso. No hay GLB de personajes real que validar aún.
+el provisional y registran aviso.
+
+La prueba `?ruen=meshy` usa el master real de Meshy mediante
+`RuenLocomotionView`: un contenedor exterior independiente sigue al controlador
+y conserva completa la jerarquía importada. Sólo Walking/Running se mezclan
+durante 0.2 s; su velocidad depende del desplazamiento real tras colisiones.
+Reposo, acciones sin clip validado y movimiento lateral/hacia atrás con objetivo
+fijado conservan el rig provisional. Los menús pausan los clips y un bloqueo por
+colisión los congela. Cámara, collider, daño, progresión y guardado siguen en la
+simulación existente. El visor `?inspect=ruen` permanece aislado de ella y del
+guardado. Ver [inspección y límites](docs/RUEN_MESHY_INSPECTION.md).
 
 La aplicación libera listeners, escena, motor y audio en HMR. En desarrollo,
 `?test=1` expone `window.__veylun` para inspección de QA. Esta ruta está eliminada

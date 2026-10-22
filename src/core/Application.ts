@@ -16,10 +16,13 @@ import { InputManager } from '../input/InputManager';
 import { AudioManager } from '../audio/AudioManager';
 import { UI, type Screen } from '../ui/UI';
 import { zoneAt } from '../world/level';
+import type { RuenLocomotionView } from '../assets/RuenLocomotionView';
 export class Application {
  readonly engine:Engine;readonly scene:Scene;sim:Simulation;readonly world:WorldView;readonly camera:FollowCamera;readonly input:InputManager;readonly ui:UI;
  private audio=new AudioManager();private store:SaveStore;private loop=new FixedStepLoop();private shadows:ShadowGenerator;private previous=performance.now();private menuReturn:Screen='start';private pendingReturn:Screen='start';private frame=0;private needsRender=true;
  private adventureStarted=false;
+ private ruenLocomotion:RuenLocomotionView|undefined;
+ private ruenStatus:HTMLElement|undefined;
  constructor(readonly canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{stencil:true});this.engine.setHardwareScalingLevel(1/Math.min(devicePixelRatio||1,1.5));
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.62,.77,.73,1);this.scene.fogMode=Scene.FOGMODE_EXP2;this.scene.fogDensity=.017;this.scene.fogColor=new Color3(.62,.77,.66);
@@ -35,15 +38,43 @@ export class Application {
   canvas.addEventListener('click',this.lock);
   this.scene.executeWhenReady(()=>{this.ui.ready();this.needsRender=true;document.body.dataset['engine']='ready';});
   void this.world.visualOverrides.load(this.scene,this.world.hero,this.world.enemyRigs);
+  if(new URLSearchParams(location.search).get('ruen')==='meshy')void this.enableMeshyTrial();
   if(import.meta.env.DEV&&new URLSearchParams(location.search).has('test')){
-   const app=this;Object.assign(window,{__veylun:{get sim(){return app.sim;},get camera(){return app.camera;},get ui(){return app.ui;}}});
+   const app=this;Object.assign(window,{__veylun:{get sim(){return app.sim;},get camera(){return app.camera;},get ui(){return app.ui;},get locomotion(){return app.ruenLocomotion;}}});
   }
+ }
+ private async enableMeshyTrial():Promise<void>{
+  const panel=document.createElement('aside');panel.id='ruen-model-trial';
+  panel.innerHTML=`<strong>PRUEBA MESHY</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando modelo; Ruen provisional disponible.</span><small>Walking / Running · otros estados: Ruen provisional</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen">Abrir visor</a><a href="${import.meta.env.BASE_URL}">Salir de la prueba</a></nav>`;
+  document.querySelector('#app')!.append(panel);this.ruenStatus=panel.querySelector('#ruen-model-status')!;
+  try{
+   await import('../ui/ruenTrial.css');
+   const {RuenLocomotionView}=await import('../assets/RuenLocomotionView');
+   if(this.scene.isDisposed)return;
+   this.ruenLocomotion=new RuenLocomotionView(this.scene,this.world.hero);
+   await this.ruenLocomotion.load();
+   if(this.scene.isDisposed)return;
+   for(const mesh of this.ruenLocomotion.model?.container.meshes??[])this.shadows.addShadowCaster(mesh);
+   this.needsRender=true;this.updateRuenStatus();
+  }catch(error){
+   if(this.scene.isDisposed)return;
+   this.ruenStatus.dataset['status']='error';this.ruenStatus.textContent='No se pudo cargar Meshy. Continúa Ruen provisional.';
+   console.warn('Prueba Meshy: se conserva el modelo provisional.',error);
+  }
+ }
+ private updateRuenStatus():void{
+  if(!this.ruenStatus||!this.ruenLocomotion)return;
+  const d=this.ruenLocomotion.diagnostics;
+  this.ruenStatus.dataset['status']=d.status;this.ruenStatus.dataset['representation']=d.representation;
+  const states:Record<string,string>={idle:'reposo',jump:'salto',fall:'caída',land:'aterrizaje',roll:'esquiva',shield:'defensa',attack1:'ataque 1',attack2:'ataque 2',attack3:'ataque 3',hurt:'daño',death:'muerte',interact:'interacción',victory:'victoria'};
+  const label=d.status==='loading'?'Cargando modelo; Ruen provisional disponible.':d.status==='error'?'No se pudo cargar Meshy. Continúa Ruen provisional.':d.representation==='meshy'?`Meshy · ${this.sim.player.state==='walk'?'Walking':'Running'}`:`Ruen provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
+  if(this.ruenStatus.textContent!==label)this.ruenStatus.textContent=label;
  }
  private resize=():void=>{this.engine.resize();this.needsRender=true;};
  private visibility=():void=>{if(document.hidden&&this.ui.screen==='none'){this.pause();this.persist();}this.previous=performance.now();this.loop.reset();};
  private persist=():void=>{if(this.adventureStarted)this.store.write(this.sim.save);};
  private lock=():void=>{if(this.ui.screen==='none'){this.input.lock();this.audio.unlock();}};
- private pause():void{this.ui.show('pause',false,this.sim.save);document.exitPointerLock?.();this.input.clear();this.loop.reset();}
+ private pause():void{this.ui.show('pause',false,this.sim.save);document.exitPointerLock?.();this.input.clear();this.loop.reset();this.needsRender=true;}
  private resume():void{this.ui.show('none');this.input.clear();this.loop.reset();this.previous=performance.now();this.input.lock();}
  private startGame(load:boolean):void{
   this.sim=new Simulation(load?(this.store.read()??freshSave()):freshSave());
@@ -69,7 +100,7 @@ export class Application {
   else if(action==='settings-change'){const s=this.ui.settings;this.audio.volume=s.volume;this.camera.distance=s.distance;this.camera.sensitivity=s.sensitivity;this.camera.invert=s.invert;this.input.deadzone=s.deadzone;this.input.triggerThreshold=s.trigger;this.scene.shadowsEnabled=s.shadows;}
  };
  private render=():void=>{
-  const now=performance.now(),dt=Math.min(.1,(now-this.previous)/1000);this.previous=now;this.input.poll();
+  const now=performance.now(),frameSeconds=(now-this.previous)/1000,dt=Math.min(.1,frameSeconds);this.previous=now;this.input.poll();
   if(this.input.take('pause')){if(this.ui.screen==='none')this.pause();else if(this.ui.screen==='pause')this.resume();else if(this.ui.screen==='settings'||this.ui.screen==='controls')this.action('back');}
   if(this.ui.screen==='none'){
     const look=this.input.consumeLook(dt,this.camera.sensitivity,this.camera.invert);
@@ -93,8 +124,11 @@ export class Application {
   }else{
     this.ui.menuGamepad(this.input);this.input.pressed.clear();this.input.consumeLook(dt,1,false);
   }
-  if(this.ui.screen==='none'||this.needsRender||!this.scene.isReady()){this.world.update(this.sim,dt);this.scene.render();this.needsRender=false;}this.ui.warning(this.store.warning);
+  if(this.ui.screen==='none'||this.needsRender||!this.scene.isReady()){
+   this.world.update(this.sim,dt);this.ruenLocomotion?.update(this.sim,this.ui.screen==='none',frameSeconds>0?dt/frameSeconds:0);this.updateRuenStatus();
+   this.scene.render();this.needsRender=false;
+  }this.ui.warning(this.store.warning);
  };
  start():void{this.previous=performance.now();this.engine.runRenderLoop(this.render);}
- dispose():void{window.removeEventListener('resize',this.resize);document.removeEventListener('visibilitychange',this.visibility);window.removeEventListener('pagehide',this.persist);this.canvas.removeEventListener('click',this.lock);this.input.dispose();this.audio.dispose();this.engine.stopRenderLoop();this.scene.dispose();this.engine.dispose();}
+ dispose():void{window.removeEventListener('resize',this.resize);document.removeEventListener('visibilitychange',this.visibility);window.removeEventListener('pagehide',this.persist);this.canvas.removeEventListener('click',this.lock);this.input.dispose();this.audio.dispose();this.engine.stopRenderLoop();this.ruenLocomotion?.dispose();this.ruenStatus?.parentElement?.remove();this.scene.dispose();this.engine.dispose();}
 }

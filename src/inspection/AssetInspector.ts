@@ -104,7 +104,8 @@ export class AssetInspector {
    </fieldset>
    <details><summary>Inventario real del archivo</summary><pre id="asset-report">Sin datos: aún no se ha cargado un GLB.</pre><button id="asset-export" disabled type="button">Descargar informe JSON</button></details>
    <details><summary>Revisión visual pendiente</summary><p>Walking y Running: revisar manos, hombros, rodillas, capa desde atrás, orientación y contacto de pies. No hay Idle neutro, Block, Roll/Dodge ni salto normal identificados en la inspección aportada. Los clips de armas requieren revisar coreografía y root motion.</p></details>
-   <p class="inspector-note">Modo aislado. Ningún clip está conectado al gameplay. El MVP conserva su representación provisional y sus animaciones actuales.</p>`;
+   <p class="inspector-note">Visor aislado: reproduce un solo clip. Walking y Running también se pueden probar en el MVP; el resto de estados conserva el Ruen provisional.</p>
+   <a class="inspector-back" href="${import.meta.env.BASE_URL}?ruen=meshy">Probar Walking / Running en el MVP →</a>`;
   document.querySelector('#app')!.append(this.panel);
   this.file=this.element<HTMLInputElement>('asset-file');
   this.loadButton=this.element<HTMLButtonElement>('asset-load-default');

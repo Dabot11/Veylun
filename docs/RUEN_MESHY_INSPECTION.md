@@ -1,188 +1,171 @@
-# Ruen / Meshy: primera prueba aislada
+# Ruen / Meshy: visor y prueba de locomoción
 
-Estado al 22 de octubre de 2026: **visor implementado; validación del master e
-integración al gameplay pendientes**. Rama: `feat/ruen-meshy-inspector`.
-Base sin cambios de esta tarea: `1928f65` en la rama `work`.
+Estado al 22 de octubre de 2026: **master real cargado; Walking/Running
+revisados en el visor y prueba jugable validada con 24 tests de navegador**.
+Rama: `feat/ruen-meshy-inspector`. Visor previo: `9d64cf5`; base del MVP:
+`1928f65` en `work`. Esto no aprueba el arte final ni completa las animaciones.
 
-## Acceso al archivo y alcance comprobable
+## Archivo real y conservación del master
 
-El adjunto `Meshy_AI_Crimson_Gemwarden_All_Animations.glb` no pudo descargarse:
-el transferidor devolvió `file exceeds the executor transfer limit of 32 MiB`.
-No se encontró un GLB/GLTF del protagonista en el repositorio ni en el archivo
-MVP disponible. No se ha importado, inspeccionado visualmente ni modificado
-el master. Las medidas de la siguiente sección proceden del encargo y no son
-resultados de esta ejecución.
+Origen: [release ruen-modelo-prueba](https://github.com/Dabot11/Veylun/releases/tag/ruen-modelo-prueba).
+Se descargó directamente del release después de que el adjunto original
+superara el límite de transferencia de 32 MiB. El archivo ya está en:
 
-Se añadió una escena separada y reversible. La entrada normal del MVP sigue
-creando la misma `Application`; `?inspect=ruen` carga únicamente el visor.
-La simulación, controles Xbox/teclado, colisiones, cámara de seguimiento,
-salto, combate, checkpoints y guardado no se modificaron. El modo inspector
-no crea `Simulation`, `InputManager` ni `SaveStore`.
+`public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`
 
-## Abrir el modo de prueba
+- Tamaño comprobado: **43,216,948 bytes**.
+- SHA-256: `d662ef7c34a346379d15f6eb31069a60f35b2dd161911ed5d6df98232ad5db35`.
+- El hash coincide con el publicado en GitHub. El master no se ha optimizado,
+  reexportado ni reducido; se conserva su geometría, skin y animaciones.
+
+## Abrir las dos pruebas
 
 ```sh
 cd /workspace/Veylun
 npm run dev
 ```
 
-Abre la dirección de Vite agregando `?inspect=ruen` (habitualmente
-`http://localhost:5173/?inspect=ruen`). También funciona en el build de
-producción con `npm run preview` y el mismo parámetro.
+Agrega uno de estos parámetros a la dirección que imprime Vite:
 
-Opciones para cargar el archivo real:
+| Ruta | Comportamiento |
+| --- | --- |
+| `/?inspect=ruen` | Visor aislado, sin simulación ni acceso al guardado. |
+| `/?ruen=meshy` | Prueba jugable de Walking/Running con fallback explícito. |
+| `/` | MVP normal con su representación provisional existente. |
 
-1. **Abrir GLB desde tu equipo**: selecciona el master. Se lee como `File` en
-   el navegador; no hay carga a un servidor ni escritura sobre el original.
-2. Copia el master intacto a
-   `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`
-   y pulsa **Cargar desde el repositorio**. La ruta respeta `BASE_URL`.
+Estas rutas son de esta rama y también funcionan con `npm run preview`;
+la prueba todavía no está desplegada en GitHub Pages. El visor permite
+**Cargar desde el repositorio** o **Abrir GLB desde tu equipo**; el selector
+local lee el archivo en memoria y no lo sube a un servicio. El botón de prueba
+del visor abre el modo jugable; **Salir de la prueba** vuelve al MVP normal.
 
-No se intenta descargar un archivo ausente al entrar en el visor. Un fallo
-muestra el error y permite reintentar. No se crea un sustituto de Ruen.
+El visor carga pausado, selecciona Walking y reproduce un solo grupo a la vez.
+Incluye selector con nombres reales, reproducir/pausar, reinicio, velocidad
+0.1–2×, vistas frontal/lateral/trasera, órbita/zoom e inventario JSON exportable.
+La pestaña oculta pausa la reproducción. El frente +Z se confirmó visualmente.
 
-El archivo se carga pausado con Walking seleccionado si existe. El selector
-usa exclusivamente los nombres de `animationGroups` que devuelve Babylon;
-cambiarlo reproduce un único grupo. Hay reproducir/pausar, reinicio,
-velocidad 0.1–2×, vistas frontal/lateral/trasera y órbita/zoom con el ratón.
-La reproducción se pausa al ocultar la pestaña. Las vistas usan +Z como
-frente de referencia, hasta confirmar la orientación del asset real.
+## Inventario comprobado
 
-El inventario exportable recoge nombres reales de grupos, duración leída de
-sus frames/FPS, skeletons y bones, mallas, materiales, texturas y dimensiones.
-Las extensiones se leen de `extensionsUsed`/`extensionsRequired` del JSON;
-se identifican como declaraciones del archivo, no como extensiones cuya
-ejecución haya sido comprobada.
+| Elemento | Resultado del archivo real |
+| --- | --- |
+| Malla | `output_unwrapped`; 70,995 vértices y 51,727 triángulos |
+| Pose base | Altura 1.70 unidades; mínimo Y prácticamente cero |
+| Material | `BakedMaterial`, PBR, doble cara |
+| Skin | `SmartRigArmature`, 80 joints, máximo cuatro influencias |
+| Texturas | Color 2048², normal 2048², metallic-roughness 4096² |
+| Bytes de texturas | 23,906,395 |
+| Extensiones | Sin `extensionsUsed` ni `extensionsRequired` declaradas |
+| Clips | 20; 160 canales de traslación/rotación por clip |
 
-## Carga y jerarquía
+Nombres reales: Running, Walking, Archery_Shot, Arise, Attack,
+Axe_Breathe_and_Look_Around, Axe_Spin_Attack, Back_Jump, BeHit_FlyUp,
+Climb_Attempt_and_Fall_1, Climb_Attempt_and_Fall_5, Climb_Left_with_Both_Limbs,
+Collect_Object, Combat_Stance, RunFast, Sneaky_Walk, Weapon_Combo,
+Weapon_Combo_1, Weapon_Combo_2, dying_backwards.
 
-El cargador aislado utiliza `LoadAssetContainerAsync` de Babylon.js 9.31.0
-con `pluginOptions.gltf.animationStartMode = GLTFLoaderAnimationStartMode.NONE`.
-Detiene defensivamente los grupos importados. Antes de cambiar de clip,
-restaura los canales del anterior y lo detiene; no inicia todos los grupos.
+Walking dura **1.033333 s** y Running **0.633333 s**. La traslación neta de
+pelvis de ambos es prácticamente cero (error inferior a 1.2e-7 unidades).
+Se conservan el balanceo lateral y el movimiento vertical propios de los clips.
+El inventario del visor refleja los nombres y recursos que cargó Babylon;
+las extensiones se reportan como declaraciones del JSON, sin inferir plugins.
 
-Se conserva el nodo de conversión glTF, todos los roots importados, los
-transform nodes, joints, skins y materiales. Un nuevo contenedor exterior
-recibe escala uniforme y orientación opcionales. No se normalizan huesos,
-se reescribe geometría ni se edita la malla skinned. El visor usa iluminación
-neutra local con una reflexión PBR generada en memoria, sin entorno remoto.
+## Alcance del modo jugable
 
-## Datos del encargo, pendientes de confirmar
+Sólo **Walking y Running** se conectan a los estados `walk` y `run` en
+`?ruen=meshy`. El modo normal no activa el GLB. La UI identifica la prueba
+y muestra cuándo se utiliza Meshy o el Ruen provisional.
 
-- 43,216,948 bytes; 51,727 triángulos; 70,995 vértices exportados.
-- Una malla/material; skin SmartRigArmature de 80 joints, principalmente
-  `mixamorig:`; cuatro influencias por vértice; altura de pose base 1.70 unidades.
-- Color 2K, normal 2K, metallic-roughness 4K; 23.91 MB de texturas y datos
-  no referenciados adicionales en el master.
-- 20 clips esperados: Running, Walking, Archery_Shot, Arise, Attack,
-  Axe_Breathe_and_Look_Around, Axe_Spin_Attack, Back_Jump, BeHit_FlyUp,
-  Climb_Attempt_and_Fall_1, Climb_Attempt_and_Fall_5,
-  Climb_Left_with_Both_Limbs, Collect_Object, Combat_Stance, RunFast,
-  Sneaky_Walk, Weapon_Combo, Weapon_Combo_1, Weapon_Combo_2, dying_backwards.
+`RuenLocomotionView` conserva el rig existente para reposo, salto, caída,
+aterrizaje, esquiva, ataques, defensa, daño, muerte, interacción y victoria.
+También conserva ese fallback para desplazamientos laterales/hacia atrás
+con objetivo fijado. Un error de carga conserva el modelo provisional.
+No se reinterpretan Combat_Stance ni Axe_Breathe_and_Look_Around como idle
+neutro o bloqueo: no hay Idle, Block, Roll/Dodge ni salto normal identificados.
 
-**Clips de Meshy verificados en este visor: ninguno. Clips de Meshy conectados
-al gameplay: ninguno.** Las pruebas sintéticas usan nombres Walking y Running
-para ejercitar el selector; no contienen las animaciones ni el arte de Meshy.
+El GLB tiene un contenedor exterior independiente del collider y del root
+animado del rig provisional. Su posición/yaw vienen del controlador; la cámara
+sigue `sim.player`, nunca la pelvis. La escala exterior uniforme es 1.45/1.70,
+con corrección de yaw 0 y offset vertical 0. Se preserva toda la jerarquía glTF,
+incluido el nodo de conversión de Babylon, y no se normalizan huesos.
 
-No hay Idle neutro, Block, Roll/Dodge ni salto normal identificados según la
-inspección aportada. `Combat_Stance` y `Axe_Breathe_and_Look_Around` no se
-asignan como idle/bloqueo. Mientras falta la validación, el juego utiliza
-explícitamente su rig y sus animaciones provisionales existentes.
+La carga usa Babylon.js 9.31.0, `LoadAssetContainerAsync` y
+`GLTFLoaderAnimationStartMode.NONE`. En gameplay sólo se mezclan Walking y
+Running durante 0.2 s, con fase alineada y pesos complementarios; después se
+detiene el clip saliente. Los otros 18 clips permanecen fuera del gameplay.
 
-## Validación que desbloquea la integración
+La velocidad del ciclo se calcula con desplazamiento horizontal real dividido
+por avance de `sim.age`, después de colisiones. No utiliza `vx/vz` deseados ni
+multiplica `speedRatio` por delta time otra vez. Las referencias iniciales son
+1.2 unidades/s para Walking y 4.0 para Running, estimadas desde la fase baja
+de los dedos del pie a la escala del juego; no son metadatos del autor.
+Un cociente entre tiempo admitido por el controlador y tiempo real del frame
+compensa su límite de 100 ms en frames lentos, sin cambiar la simulación.
+La muestra se reinicia al cambiar de simulación/jugador o detectar un teleport.
+Un bloqueo por colisión congela el ciclo; los menús pausan la animación.
 
-1. Abrir el master; registrar tamaño y SHA-256 sin alterarlo. Exportar el
-   inventario real y confirmar malla, texturas, skin, 80 joints y 20 clips.
-2. Reproducir **Walking** (1.033 s esperados) y **Running** (0.633 s esperados)
-   por separado. Revisar manos, hombros, rodillas, capa desde atrás, frente,
-   suelo/contacto de pies y ciclos. Registrar capturas frontal/lateral/trasera
-   y consola; confirmar traslación neta de pelvis prácticamente cero.
-3. Sólo tras esa validación, añadir un adaptador visual propio para locomoción,
-   separado del collider y del root del rig provisional. El root actual también
-   se inclina durante esquiva/daño: no sirve como ancla neutra del GLB.
-4. Actualizar posición/yaw exteriores desde el controlador. La cámara continúa
-   siguiendo `sim.player`, nunca la pelvis. Escalar uniformemente en otro
-   contenedor exterior; no fijar una corrección de frente sin verla.
-5. Obtener velocidad real del desplazamiento horizontal entre muestras,
-   dividido por el avance de `sim.age`. `player.vx/vz` conservan velocidad
-   deseada al chocar y no bastan. Reiniciar la muestra tras respawn/teleport o
-   nueva simulación. `speedRatio = velocidadReal / velocidadReferencia` es
-   adimensional: no volver a multiplicar por delta time.
-6. Mezclar únicamente Walking/Running con pesos complementarios. Mantener el
-   rig actual como fallback explícito para estados no validados, sin cambiar
-   ventanas de impacto, daño, defensa o física. Registrar las mallas cargadas
-   en las sombras del juego y liberar recursos al destruir la escena.
-7. Validar transición caminar/correr, pared sin avanzar, reposo, salto,
-   aterrizaje, esquiva, tres golpes, defensa, daño, muerte y checkpoint. El
-   fallo de carga debe dejar visible el fallback actual.
+Las reglas de movimiento, salto, combate, daño, checkpoints y guardado siguen
+perteneciendo al MVP. El GLB no genera daño ni añade arco, hacha, escalada,
+parry o ataques cargados. Espada y escudo separados quedan para otra etapa,
+vinculados a `mixamorig:RightHand` y `mixamorig:LeftHand` tras revisar offsets.
 
-Attack dura 2.8 s según el encargo; Weapon_Combo, Weapon_Combo_1 y
-Weapon_Combo_2 duran 3.667/3.5/4.5 s. Son secuencias completas, no los tres
-golpes del combo. Revisar coreografía y ventanas de impacto antes de
-conectarlas. Reproducir un clip no genera daño.
+## Revisión visual y límites
 
-Los tres Weapon_Combo desplazan Z 1.23/2.08/0.99 unidades y Back_Jump retrocede
-1.99 unidades según el encargo. El visor conserva el movimiento original sin
-collider; aún no se ha observado en el master real. Para futuras pruebas de combate se necesita gestionar root motion
-deliberadamente o crear una copia in-place, conservando vertical y rotación
-necesarias. No añadir mecánicas de arco, hacha o escalada, parry o cargados.
-Espada y escudo separados se vincularán más adelante a `mixamorig:RightHand`
-y `mixamorig:LeftHand`, con offsets ajustados después de revisar animaciones.
+**Verificado en el visor real:** carga PBR y tres texturas; reproducción de
+Walking/Running; pausa y exclusividad; vistas frontal, lateral y trasera.
+Manos, hombros, rodillas y capa se mantienen unidos y con poses coherentes
+en las muestras revisadas. La consola de esta inspección no registró errores.
 
-## Pruebas realizadas y pendientes
+El muestreo de piel detecta una separación de suela en Walking de
+0.028–0.039 unidades originales: unos 2.4–3.3 cm a la escala del juego.
+Running incluye fases aéreas. Contacto preciso, deslizamiento de pies y calidad
+final de deformación requieren más ajuste visual; no se eliminaron movimientos
+verticales de huesos para ocultar esas diferencias.
 
-- `npm run typecheck`: aprobado.
-- `npm test`: 110 pruebas aprobadas, incluidas cuatro nuevas pruebas del
-  cargador/reproductor (NONE, jerarquía/skin, exclusividad/restauración,
-  pausa/velocidad y descarte de carga tardía).
-- `npm run build`: aprobado; advertencia de tamaño de chunk glTF >500 kB.
-- `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e -- --workers=1`:
-  **20 pruebas aprobadas** en Chromium con renderizador software. Tres casos
-  nuevos usan el GLB sintético para comprobar carga local y por URL en el
-  build, selector, pausa inicial, un clip activo, velocidad, vistas, reintento,
-  orientación, consola y ausencia de cambios al guardado. Los otros 17 cubren
-  controles, combate, checkpoints y el recorrido hasta restaurar el altar.
-  El recorrido completo incluye muerte deliberada y recarga del guardado.
-- GLB real, materiales de Meshy, Walking/Running reales, articulaciones,
-  capa, orientación y pies: pendientes por falta de acceso al master.
+Attack dura 2.8 s; Weapon_Combo, Weapon_Combo_1 y Weapon_Combo_2 duran
+3.667/3.5/4.5 s y son secuencias completas, no los tres golpes del combo del MVP.
+Sus desplazamientos netos Z son 1.228539/2.075661/0.989594 unidades;
+Back_Jump retrocede 1.992362 y Sneaky_Walk avanza 1.087022. Combat_Stance
+tiene además un offset absoluto de pelvis X aproximado de 0.364 unidades.
+Estos clips requieren revisar coreografía, ventanas de impacto y tratamiento
+del root motion antes de probar combate. No están conectados a daño.
+
+## Pruebas y evidencia
+
+- La inspección actual del master real confirmó 20 clips, 80 joints, las tres
+  texturas y cambios de pose de Walking/Running, con consola sin errores.
+  Los otros 18 clips sólo están inventariados.
+- **Typecheck y build correctos; 119 pruebas unitarias en 12 archivos y
+  24 pruebas de navegador aprobadas**. La suite de navegador pasó en una
+  ejecución de 11.8 minutos sin reintentos.
+- Cuatro casos usan el master real: carga/locomoción en el visor, mezcla y
+  fallbacks jugables, bloqueo por colisión y recuperación ante error de carga.
+  La misma suite cubre el MVP completo y tres casos del visor con fixture
+  sintético; estos últimos no sustituyen la revisión del master real.
+- El build emite un aviso de chunk del cargador glTF superior a 500 kB,
+  sin fallo. La optimización del asset queda pendiente.
 - Xbox físico y FPS/rendimiento en el Mac de David: no probados.
 
-El fixture `tests/fixtures/inspection-glb.ts` es un panel skinned de dos
-joints con dos clips sintéticos y un material coral. Es evidencia del flujo
-de carga y UI, no del protagonista. Las capturas de prueba se guardan en
-`test-results/` y deben identificarse como sintéticas.
+La [galería de evidencia](evidence/ruen-meshy/README.md) incluye seis capturas
+del master real en el visor y una del modo jugable corriendo. También se
+conservan la [auditoría del archivo](evidence/ruen-meshy/master-audit.json), el
+[inventario cargado](evidence/ruen-meshy/browser-inventory.json), la
+[consola del visor](evidence/ruen-meshy/inspector-console.json), el
+[muestreo de piel](evidence/ruen-meshy/locomotion-skin-samples.json) y el
+[log de la suite completa](evidence/ruen-meshy/full-browser.log).
+La captura jugable muestra Running; reposo y otras acciones usan el rig
+provisional. El fixture sintético separado en `tests/fixtures/inspection-glb.ts`
+no representa a Ruen.
 
-La primera ejecución detectó una carrera en una prueba existente: la
-simulación y la UI reinician antes de que `SanctuaryView` actualice niebla y
-luces en el siguiente render. Se cambió únicamente esa aserción a
-`expect.poll`, conservando todos los valores esperados. Otra prueba fue
-interrumpida por recarga de Vite durante una edición; la ejecución completa
-posterior, sin ediciones concurrentes, pasó los 20 casos.
+## Optimización posterior y reversión
 
-Captura y logs conservados fuera de la carpeta temporal de Playwright:
+Hay 7,121 accessors sin referencia y 8,103,505 bytes BIN no referenciados.
+En otra etapa, crear una copia de distribución con nombre propio, eliminar
+sólo datos no referenciados, validar glTF y comparar clips/skin/apariencia.
+Evaluar KTX2/Basis y resolución metallic-roughness midiendo carga y memoria
+en el equipo objetivo. Conservar siempre el master y su hash; no reducir
+geometría en esta tarea.
 
-- `/workspace/veylun-validation/ruen-meshy-inspector/visor-fixture-sintetico.png`
-- `/workspace/veylun-validation/ruen-meshy-inspector/browser-tests.log`
-- `/workspace/veylun-validation/ruen-meshy-inspector/build.log`
-
-El log de navegador incluye el error esperado al cargar deliberadamente
-`invalid.glb`: `RangeError: Invalid typed array length: 20`. Los casos de
-carga válida sintética verificaron consola y excepciones sin errores.
-
-## Optimizar una copia de distribución después
-
-Conservar el master y su hash. Crear una copia con nombre distinto, inventariar
-buffers/accessors/texturas y eliminar únicamente datos no referenciados con
-una herramienta glTF; validar la copia y comparar clips, skeleton y apariencia.
-Medir tamaño, tiempo de carga y memoria de texturas en el equipo objetivo.
-Evaluar compresión KTX2/Basis de texturas y resolución metallic-roughness en
-esa copia, comprobando soporte de Babylon y comparación visual. No reducir
-geometría en esta tarea ni aprobar una optimización sólo por los bytes.
-
-## Reversión
-
-Para volver al juego, usa **Volver al MVP** o elimina `?inspect=ruen`; no hay
-migraciones de guardado. Para recuperar el código previo, cambia a la rama
-`work` después de conservar los cambios locales. El cambio queda aislado en
-`feat/ruen-meshy-inspector`; también se puede revertir su commit. No se ha
-publicado ni modificado el sitio de GitHub Pages.
+Para salir del experimento, elimina `?ruen=meshy` o `?inspect=ruen`; no hay
+migraciones de guardado. La rama `work` conserva el MVP previo y `9d64cf5`
+el visor antes de integrar el master. Los commits del experimento se pueden
+revertir. Este cambio no publica ni modifica el sitio de GitHub Pages.

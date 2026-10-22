@@ -1,5 +1,24 @@
 # Validación ejecutada
 
+## Master real de Meshy y prueba de locomoción
+
+22 de octubre de 2026. Typecheck y build correctos; **119 pruebas unitarias en
+12 archivos y 24 pruebas de navegador aprobadas**. La suite de navegador pasó
+en una ejecución de 11.8 minutos sin reintentos. Incluye el recorrido completo
+del MVP, tres pruebas del visor con fixture sintético y cuatro con el GLB real.
+Vite emitió un aviso de chunk del cargador glTF superior a 500 kB, sin fallo.
+
+El master real conserva su hash. Se inventariaron 20 clips; sólo Walking y
+Running se revisaron visualmente en tres vistas y se conectaron a la prueba
+jugable `?ruen=meshy`, con el rig provisional para las demás acciones. No hay
+aprobación final del arte ni del resto de clips. Xbox físico y FPS en el Mac
+de David siguen sin probarse. Esta revisión no despliega cambios a Pages.
+
+El [informe de inspección](RUEN_MESHY_INSPECTION.md) y la
+[evidencia del master real](evidence/ruen-meshy/README.md) contienen resultados
+y límites. Las secciones siguientes conservan el historial de validación
+anterior a la incorporación de este GLB.
+
 ## Revisión artística de Ruen y del claro
 
 19 de octubre de 2026. Mismo entorno cloud descrito abajo. Cambios de geometría,
