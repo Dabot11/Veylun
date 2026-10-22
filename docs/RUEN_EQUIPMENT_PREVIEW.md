@@ -1,6 +1,6 @@
 # Ruen: prueba de Idle con espada y escudo
 
-Estado: **montaje revisado visualmente y pruebas locales aprobadas; publicación pendiente**.
+Estado: **montaje revisado visualmente, pruebas locales aprobadas y versión publicada**.
 Esta variante sirve para revisar la postura de Ruen sosteniendo los modelos
 reales entregados. Se muestra sólo en el visor y no modifica el combate.
 
@@ -9,9 +9,10 @@ reales entregados. Se muestra sólo en el visor y no modifica el combate.
 Captura real del navegador, en tres cuartos. Se revisaron también las vistas
 frontal, lateral y trasera, con el modelo, rig y equipo originales.
 
-## Abrir la prueba local
+## Abrir la prueba
 
-Con `npm run dev`, abre `/?inspect=ruen&motion=idle-v1&equipment=azure`.
+[Abrir Idle con espada y escudo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1&equipment=azure).
+Para probarlo localmente con `npm run dev`, usa `/?inspect=ruen&motion=idle-v1&equipment=azure`.
 El modelo de Ruen, Azure Oathblade y Aegis of the Azure se cargan automáticamente.
 El visor selecciona **Idle con espada y escudo** en pausa. Pulsa **Reproducir**,
 usa las vistas frontal, lateral y trasera, o arrastra para revisar el agarre.
@@ -72,6 +73,11 @@ aprobaron typecheck, build, **142 pruebas unitarias en 15 archivos y 10 casos
 nueve en 6.1 minutos y uno en 28.5 segundos. Se usaron servidores locales de
 desarrollo y producción; no es una medición de FPS ni una comprobación del sitio remoto.
 [Capturas de las tres vistas e inventario](evidence/ruen-equipment/README.md).
+
+Publicado desde `15a6a6c`, tras integrar el [PR #3](https://github.com/Dabot11/Veylun/pull/3).
+[Actions 39868086193](https://github.com/Dabot11/Veylun/actions/runs/39868086193)
+confirmó **Success**. La verificación pública se hizo mediante Actions; el
+dominio del sitio no está accesible desde la red de este entorno.
 
 Queda aprobar el encaje visual, comprobar las transiciones jugables e integrar el
 equipo en locomoción, guardia y golpes antes de activarlo dentro del juego.

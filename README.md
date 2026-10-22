@@ -39,7 +39,7 @@ los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
 Disponible en GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
 o [abrir el visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-La versión publicada es `43fa18c` de `main`, con carga automática y reposo estático en el juego;
+La versión publicada es `15a6a6c` de `main`, con carga automática y reposo estático en el juego;
 consulta el [registro de despliegue](docs/DEPLOYMENT.md).
 
 El master real de Meshy está en
@@ -64,10 +64,10 @@ el Idle propio, exclusivo del visor, y las siguientes etapas.
 [Ver Idle v1](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1):
 pulsar **Reproducir**; el modelo y el clip se cargan automáticamente.
 
-La nueva prueba `/?inspect=ruen&motion=idle-v1&equipment=azure` añade los GLB
+La [prueba de Idle con equipo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1&equipment=azure) añade los GLB
 de espada y escudo al Idle del visor. Carga los tres modelos automáticamente
-y permite comparar con el Idle sin equipo. Pasó las pruebas locales; su
-publicación está pendiente. Consulta la [ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
+y permite comparar con el Idle sin equipo. Pasó las pruebas locales y está
+publicada. Consulta la [ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
 
 ## Recorrido
 

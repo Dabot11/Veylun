@@ -1,11 +1,13 @@
 # Ruen / Meshy: visor y prueba de locomoción
 
-Revisión vigente publicada: **carga automática y reposo estático con 123 pruebas
+La integración jugable de carga automática y reposo estático cuenta con **123 pruebas
 unitarias y 26 de navegador aprobadas**.
 La revisión anterior `6a80022` mantiene sus resultados de 119 pruebas unitarias
 y 24 de navegador como historial del paso previo.
-Integración de gameplay `2045061` en `main`; el build vigente `43fa18c` añade
-[un Idle propio de prueba sólo al visor](RUEN_ANIMATION_WORKFLOW.md). Visor previo: `9d64cf5`; base del MVP:
+Integración de gameplay `2045061` en `main`; el build vigente `15a6a6c` incluye
+el Idle neutro y [la variante con espada y escudo sólo en el visor](RUEN_EQUIPMENT_PREVIEW.md).
+Esta última pasó 142 pruebas unitarias y 10 casos únicos de navegador locales.
+Visor previo: `9d64cf5`; base del MVP:
 `1928f65` en `work`. Esto no aprueba el arte final ni completa las animaciones.
 
 ## Archivo real y conservación del master
@@ -41,7 +43,7 @@ Agrega uno de estos parámetros a la dirección que imprime Vite:
 | `/?ruen=provisional` | Rig procedural anterior para todas las acciones. |
 | `/?inspect=ruen` | Visor aislado; carga automática del master, pausado. |
 | `/?inspect=ruen&motion=idle-v1` | Idle neutro propio de cuatro segundos, exclusivo del visor. |
-| `/?inspect=ruen&motion=idle-v1&equipment=azure` | Idle con espada y escudo reales; pruebas locales aprobadas, publicación pendiente. |
+| `/?inspect=ruen&motion=idle-v1&equipment=azure` | Idle con espada y escudo reales; pruebas locales aprobadas y versión publicada. |
 
 Las rutas locales también funcionan con `npm run preview`. El visor permite
 **Recargar modelo original** o abrir un GLB local; el selector lee el archivo

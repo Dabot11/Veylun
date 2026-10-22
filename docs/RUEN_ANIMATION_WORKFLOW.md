@@ -35,7 +35,8 @@ Publicado desde `43fa18c`; [Actions](https://github.com/Dabot11/Veylun/actions/r
 
 La ruta `?inspect=ruen&motion=idle-v1&equipment=azure` prepara una segunda
 variante, `Ruen_Idle_Armed_v1`, para visualizar los dos modelos entregados.
-La variante pasó las pruebas locales; su publicación está pendiente. La espada se monta en
+La variante pasó las pruebas locales y está [publicada](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1&equipment=azure).
+La espada se monta en
 `mixamorig:RightHand` y el escudo en `mixamorig:LeftHand`; el ajuste utiliza
 el mango y el asa que ya existen en los GLB.
 

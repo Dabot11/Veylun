@@ -8,7 +8,31 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Publicación vigente: prototipo de Idle propio
+## Publicación vigente: Idle con espada y escudo
+
+El 22 de octubre de 2026 se integró el [PR #3](https://github.com/Dabot11/Veylun/pull/3)
+y se publicó la fuente `15a6a6c52d224303e79a01e24255ee74b31cc2e4` desde `main`.
+El árbol coincide exactamente con la revisión probada
+`bba241905e99869e2234a718f9c6c10096cb332c`.
+Commit de `gh-pages`: `844381b13cde0f13289091479ccb6bac913a4249`.
+[Actions 39868086193](https://github.com/Dabot11/Veylun/actions/runs/39868086193)
+terminó con **Success** para ese commit. `deployment.json` en `gh-pages`
+confirma la fuente `15a6a6c`.
+
+[Abrir el Idle equipado](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1&equipment=azure)
+carga Ruen, espada y escudo automáticamente, en pausa. Pulsa **Reproducir**;
+desmarca **Espada y escudo (Idle)** para comparar con la versión neutra.
+El equipo y la nueva pose permanecen exclusivamente en el visor.
+
+Typecheck, build, 142 pruebas unitarias y 10 casos únicos de navegador
+aprobaron; los casos de navegador se ejecutaron en dos lotes, sin reintentos.
+[Evidencia y registros](evidence/ruen-equipment/README.md). La verificación
+pública se hizo mediante Actions y los metadatos de publicación; el dominio
+público está restringido desde este entorno. El build de producción se probó
+en un servidor local. Los cambios documentales posteriores no modifican
+el build publicado, cuya fuente es `15a6a6c`.
+
+## Publicación anterior: prototipo de Idle propio
 
 El 22 de octubre de 2026 se integró el PR #2 y se publicó la fuente
 `43fa18c4c5711cc8d861bec05018490190b2f4c3` desde `main`. El árbol coincide
@@ -21,7 +45,7 @@ terminaron con **Success**.
 pulsar **Reproducir**. Es un prototipo sólo del visor. El juego mantiene la
 integración automática y el reposo estático de la revisión anterior. El master
 conserva su hash y sus 20 clips originales. Los cambios documentales posteriores
-no modifican el build publicado, cuya fuente es `43fa18c`.
+no modificaron ese build, cuya fuente fue `43fa18c`.
 
 Typecheck/build y 130 pruebas unitarias correctos; siete casos únicos del visor
 aprobados (tres repetidos después de cerrarse el servidor local). Ver la

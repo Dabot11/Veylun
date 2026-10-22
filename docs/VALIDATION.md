@@ -17,13 +17,21 @@ navegador** en dos ejecuciones sin reintentos ni cambios de aplicación: nueve
 en 6.1 minutos y uno en 28.5 segundos. La primera incluye tres casos del equipo,
 tres del Idle neutro y tres del visor sintético; la segunda revisa el master
 real en el visor original. Incluyen desarrollo y build de producción locales.
-La publicación está pendiente; estos resultados no prueban el sitio remoto.
+Estos resultados de navegador no prueban el sitio remoto.
 
 El equipo sigue las manos en los frames 0, 60 y 120, con loop cerrado y pies
 inmóviles. Se comprobaron comparación con el Idle neutro, restauración de
 poses originales, fallo/reintento sin recargar Ruen, liberación de recursos,
 guardado intacto y ausencia de hooks en producción. No se repitió la suite
 larga de aventura porque esta variante sólo cambia el visor.
+
+Fuente publicada `15a6a6c52d224303e79a01e24255ee74b31cc2e4`, con el mismo
+árbol que la revisión probada `bba241905e99869e2234a718f9c6c10096cb332c`.
+Build `844381b13cde0f13289091479ccb6bac913a4249`.
+[Actions 39868086193](https://github.com/Dabot11/Veylun/actions/runs/39868086193)
+confirmó **Success** para ese build. La verificación pública se limita a
+Actions y al `deployment.json` de `gh-pages`; el dominio público está
+restringido desde este entorno.
 [Inventario y alcance](RUEN_EQUIPMENT_PREVIEW.md) · [Evidencia visual](evidence/ruen-equipment/README.md).
 
 ## Primer Idle propio: prototipo del visor
