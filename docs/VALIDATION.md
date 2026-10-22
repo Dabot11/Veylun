@@ -21,7 +21,16 @@ provisionales, combate, aventura completa, muerte, checkpoints y guardado.
 El master conserva su SHA-256. La pose base no es una animación Idle; salto,
 esquiva, defensa y combate mantienen el rig provisional. Xbox físico y
 rendimiento en el Mac de David quedan pendientes. Se mantiene el aviso de
-chunk glTF mayor de 500 kB. Publicación de esta revisión pendiente.
+chunk glTF mayor de 500 kB.
+
+Se publicó la fuente `2045061ea5edffa5e93164ffe446b8034cf715dc` en `gh-pages`
+como `99da774c01f0c797c25eb7a9361b4a0ecad0318c`.
+[Actions 39839671135](https://github.com/Dabot11/Veylun/actions/runs/39839671135)
+finalizó con **Success**. El merge conserva exactamente el árbol probado
+`ad86656`. La verificación pública se limita a Actions: el dominio del sitio
+no está accesible desde este entorno cloud.
+[Juego](https://dabot11.github.io/Veylun/) ·
+[Visor](https://dabot11.github.io/Veylun/?inspect=ruen).
 
 [Evidencia y capturas](evidence/ruen-meshy/README.md) ·
 [Log completo de esta revisión](evidence/ruen-meshy/default-idle-browser.log).

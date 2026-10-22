@@ -159,7 +159,8 @@ fijado conservan el rig provisional. Los menús pausan los clips y un bloqueo po
 colisión los congela. Cámara, collider, daño, progresión y guardado siguen en la
 simulación existente. El visor `?inspect=ruen` carga automáticamente el master,
 queda pausado y permanece aislado de la simulación y del guardado. Pasaron
-123 pruebas unitarias y 26 de navegador; la publicación sigue pendiente.
+123 pruebas unitarias y 26 de navegador locales. La versión `2045061` de `main`
+está publicada en GitHub Pages, confirmada mediante Actions.
 Ver [inspección y límites](docs/RUEN_MESHY_INSPECTION.md).
 
 La aplicación libera listeners, escena, motor y audio en HMR. En desarrollo,

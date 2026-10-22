@@ -30,6 +30,11 @@ visor con fixture sintético y 17 regresiones del MVP. La prueba de producción
 usa el servidor local; no se midieron FPS ni se probó Xbox físico. La
 validación se detalla en el [informe principal](../../VALIDATION.md).
 
+La fuente `2045061` está publicada en [Veylun](https://dabot11.github.io/Veylun/).
+[Actions 39839671135](https://github.com/Dabot11/Veylun/actions/runs/39839671135)
+confirmó el despliegue con **Success**. Las capturas anteriores proceden de
+servidores locales; el dominio público está restringido desde este entorno.
+
 ## Prueba jugable anterior: 6a80022
 
 Walking y Running están conectados en el modo `?ruen=meshy`. Reposo, salto,

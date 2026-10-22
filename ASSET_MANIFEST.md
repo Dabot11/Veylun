@@ -20,7 +20,7 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 | ID | Implementación | Escala inicial | Materiales y articulación | Estado |
 |---|---|---|---|---|
 | ruen | `createRuen` en `src/assets/ruen.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas facetadas. Cadera, cabeza, hombros, codos, piernas, rodillas, capa, espada y escudo | 3D procedural provisional, primera revisión artística |
-| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips inventariados | Carga por defecto, reposo estático y Walking/Running; pruebas locales aprobadas, publicación pendiente |
+| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips inventariados | Carga por defecto, reposo estático y Walking/Running; pruebas locales aprobadas y versión `2045061` publicada |
 | corrupt-sprout | `createEnemyRig(..., 'sprout')` | ~1.1 m | Corteza, raíces, musgo, hojas y ojos ámbar. Cuerpo encorvado, cabeza baja y grandes brazos delanteros | 3D procedural provisional |
 | wandering-spirit | `createEnemyRig(..., 'spirit')` | ~1.25 m incluyendo aletas y cola | Núcleo emisivo, máscara de madera, ojos grandes, hojas y aletas de energía | 3D procedural provisional |
 | ancestral-guardian | `createEnemyRig(..., 'guardian')` | ~4.2 m | Raíces, placas de piedra, vegetación y runas turquesa. Cuerpo, cabeza, brazos y piernas | 3D procedural provisional |
@@ -34,7 +34,7 @@ verificó por SHA-256. Walking y Running se revisaron visualmente; los otros
 18 clips están inventariados, sin aprobación para gameplay. La revisión actual
 carga Meshy en `/` y conserva `?ruen=provisional` como alternativa. Su pose base
 exacta se revisó frontalmente y de espaldas para el reposo estático, sin crear
-un clip Idle. Esta revisión aún no está desplegada; el arte final sigue pendiente.
+un clip Idle. Esta revisión está publicada en GitHub Pages; el arte final sigue pendiente.
 Los PNG son referencias 2D, no una conversión automática de alta calidad. Ver el
 [informe y evidencia](docs/RUEN_MESHY_INSPECTION.md).
 

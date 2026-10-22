@@ -1,10 +1,10 @@
 # Ruen / Meshy: visor y prueba de locomoción
 
-Nueva revisión: **carga automática y reposo estático con 123 pruebas unitarias
-y 26 de navegador aprobadas; publicación pendiente**.
-La revisión publicada `6a80022` mantiene sus resultados de 119 pruebas unitarias
+Revisión vigente publicada: **carga automática y reposo estático con 123 pruebas
+unitarias y 26 de navegador aprobadas**.
+La revisión anterior `6a80022` mantiene sus resultados de 119 pruebas unitarias
 y 24 de navegador como historial del paso previo.
-Rama: `feat/ruen-meshy-inspector`. Visor previo: `9d64cf5`; base del MVP:
+Integrada en `main`; código publicado `2045061`. Visor previo: `9d64cf5`; base del MVP:
 `1928f65` en `work`. Esto no aprueba el arte final ni completa las animaciones.
 
 ## Archivo real y conservación del master
@@ -22,10 +22,10 @@ superara el límite de transferencia de 32 MiB. El archivo ya está en:
 
 ## Abrir las dos pruebas
 
-En GitHub Pages: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
+En GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
 y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-El código publicado sigue siendo `6a80022`, sin el nuevo comportamiento por
-defecto. Para probar la revisión actual localmente:
+El código publicado `2045061` carga Meshy por defecto. El visor también carga
+el master automáticamente y queda en pausa. Para probarlo localmente:
 
 ```sh
 cd /workspace/Veylun
@@ -147,10 +147,17 @@ del root motion antes de probar combate. No están conectados a daño.
 18.6 minutos sin reintentos. Son 17 casos del MVP, tres del visor con fixture
 sintético y seis de integración: cuatro cargan el master (visor, reposo/locomoción,
 colisión y build de producción), uno aborta su descarga y otro verifica el
-opt-out sin descargarlo. La publicación de esta revisión sigue pendiente.
+opt-out sin descargarlo. Estas pruebas se ejecutaron contra servidores locales.
 Ver [log actual](evidence/ruen-meshy/default-idle-browser.log),
 [reposo jugable](evidence/ruen-meshy/gameplay-idle.png) y
 [reposo en el build de producción](evidence/ruen-meshy/production-default-idle.png).
+
+Fuente publicada: `2045061ea5edffa5e93164ffe446b8034cf715dc` de `main`, con
+el mismo árbol que la revisión probada `ad86656`. Publicación `gh-pages`:
+`99da774c01f0c797c25eb7a9361b4a0ecad0318c`, confirmada con **Success** en
+[Actions 39839671135](https://github.com/Dabot11/Veylun/actions/runs/39839671135).
+La verificación pública se hizo mediante Actions; el sitio remoto no se
+comprobó en navegador por la restricción de red del entorno.
 
 Los siguientes resultados históricos corresponden a `6a80022`:
 

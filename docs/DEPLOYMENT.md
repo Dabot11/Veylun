@@ -8,26 +8,40 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Prueba de Ruen / Meshy publicada
+## Integración actual de Ruen / Meshy
 
-El 22 de octubre de 2026 se publicó el build del código
-`6a80022d1eb3988da303e5de4e48a35aaa80c9f4`, de la rama
-`feat/ruen-meshy-inspector`, en la revisión de `gh-pages`
-`ab38a2c85c4e1ac2e2fedc806fc0eae17ec8ec5f`.
-[Pages build and deployment 39832580525](https://github.com/Dabot11/Veylun/actions/runs/39832580525)
-finalizó con **Success**, incluido el job **Deploy to GitHub Pages**.
+El 22 de octubre de 2026 se integró el PR #1 en `main` y se publicó la fuente
+`2045061ea5edffa5e93164ffe446b8034cf715dc`, cuyo árbol coincide exactamente
+con la revisión validada `ad8665605291890093e2b2e33efed019f7430203`.
+El commit de `gh-pages` es `99da774c01f0c797c25eb7a9361b4a0ecad0318c`.
+[Pages build and deployment 39839671135](https://github.com/Dabot11/Veylun/actions/runs/39839671135)
+finalizó con **Success**, incluido el job de despliegue.
 
-Enlaces públicos: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
-y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-La ruta sin parámetros conserva el modo normal. La publicación se verificó
-mediante Actions; no se comprobó el sitio remoto en navegador porque el entorno
-cloud restringe el acceso a su dominio. Los cambios documentales posteriores
-no modifican el build publicado, cuya fuente sigue siendo `6a80022`.
+[Jugar](https://dabot11.github.io/Veylun/) carga a Ruen automáticamente y lo
+mantiene visible en reposo, caminando y corriendo. El
+[visor](https://dabot11.github.io/Veylun/?inspect=ruen) también carga el master
+sin pulsar un botón; la reproducción comienza pausada. `?ruen=meshy` sigue
+siendo un alias; `?ruen=provisional` permite elegir el rig anterior sin
+solicitar el GLB. El reposo es estático; las demás acciones conservan su rig
+provisional hasta integrar las animaciones correspondientes.
 
-`main` contiene la base del MVP y las referencias; esta prueba se publicó desde
-la rama indicada arriba. `gh-pages` contiene únicamente
-el build estático, `.nojekyll` y `deployment.json` con la revisión de origen.
-Vite genera rutas relativas compatibles con `/Veylun/`.
+La publicación se verificó mediante Actions. El sitio remoto no se comprobó
+en navegador porque el entorno cloud restringe el acceso a su dominio. La
+validación local pasó 123 pruebas unitarias, typecheck, build y 26 casos de
+navegador, incluidos desarrollo y producción.
+
+`main` contiene el código integrado. `gh-pages` contiene únicamente el build
+estático, `.nojekyll` y `deployment.json` con la revisión de origen. Vite genera
+rutas relativas compatibles con `/Veylun/`. Los cambios documentales
+posteriores no modifican el build publicado, cuya fuente es `2045061`.
+
+### Publicación anterior
+
+La prueba opt-in de Walking/Running se publicó desde `6a80022d1eb3988da303e5de4e48a35aaa80c9f4`
+en `ab38a2c85c4e1ac2e2fedc806fc0eae17ec8ec5f`.
+[Actions 39832580525](https://github.com/Dabot11/Veylun/actions/runs/39832580525)
+finalizó con **Success**. Esa versión requería `?ruen=meshy` y conservaba el
+rig provisional en reposo; fue reemplazada por la integración actual.
 
 ## Configuración de Pages
 
@@ -67,6 +81,6 @@ errores 404 de JavaScript/texturas. `deployment.json` identifica el commit
 fuente que está sirviendo el sitio.
 
 La red del entorno cloud bloquea actualmente `api.github.com` y
-`dabot11.github.io`. La publicación se confirmó mediante la página de Actions
-accesible en `github.com`, que muestra **Success** y la URL del sitio.
+`dabot11.github.io`. La publicación se confirmó mediante las herramientas conectadas de GitHub
+y Actions, que muestran **Success** y la URL del sitio.
 No se pudo abrir directamente el dominio público desde el entorno cloud.

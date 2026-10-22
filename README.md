@@ -37,11 +37,10 @@ los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
 ## Visor de Ruen / Meshy
 
-Disponible en GitHub Pages: [probar Ruen caminando/corriendo](https://dabot11.github.io/Veylun/?ruen=meshy)
+Disponible en GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
 o [abrir el visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-Se publicó el código `6a80022` de la rama `feat/ruen-meshy-inspector`;
+La versión publicada es `2045061` de `main`, con carga automática y reposo estático;
 consulta el [registro de despliegue](docs/DEPLOYMENT.md).
-La nueva revisión descrita abajo pasó las pruebas locales; **su publicación está pendiente**.
 
 El master real de Meshy está en
 `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`,
@@ -143,7 +142,7 @@ Ruen usa el GLB real de Meshy mediante `RuenLocomotionView`: pose base estática
 en reposo, Walking/Running y fallback para las demás acciones. Los tres enemigos
 y el rig alternativo de Ruen siguen siendo **3D procedurales provisionales**;
 simplifican notablemente las ilustraciones. La carga por defecto de Meshy pasó
-las pruebas locales y espera publicación. El arte final sigue pendiente. `VisualOverrides` conserva la vía
+las pruebas locales y está publicada. El arte final sigue pendiente. `VisualOverrides` conserva la vía
 genérica de carga desde `assetCatalog.ts` para futuras sustituciones.
 
 La primera revisión de Ruen añade cabello de mechones afinados, capa con
@@ -170,7 +169,7 @@ solo entradas normales para completar la aventura, con una muerte deliberada
 y recargas entre checkpoints. Dos regresiones adicionales revisan el progreso
 de sesión sin almacenamiento y la pausa durante la restauración.
 
-La revisión Meshy publicada (`6a80022`) pasó **119 pruebas unitarias en 12 archivos
+La revisión Meshy anterior (`6a80022`) pasó **119 pruebas unitarias en 12 archivos
 y 24 pruebas de navegador**, estas últimas en una ejecución sin reintentos de 11.8 minutos.
 Incluyen tres casos del visor con fixture sintético y cuatro del master real:
 carga/locomoción, transiciones y fallbacks, colisión y error de carga. Typecheck
