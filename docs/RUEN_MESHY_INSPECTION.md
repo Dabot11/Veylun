@@ -20,6 +20,10 @@ superara el límite de transferencia de 32 MiB. El archivo ya está en:
 
 ## Abrir las dos pruebas
 
+En GitHub Pages: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
+y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
+El código publicado corresponde a `6a80022`; para ejecutarlo localmente:
+
 ```sh
 cd /workspace/Veylun
 npm run dev
@@ -33,8 +37,7 @@ Agrega uno de estos parámetros a la dirección que imprime Vite:
 | `/?ruen=meshy` | Prueba jugable de Walking/Running con fallback explícito. |
 | `/` | MVP normal con su representación provisional existente. |
 
-Estas rutas son de esta rama y también funcionan con `npm run preview`;
-la prueba todavía no está desplegada en GitHub Pages. El visor permite
+Las rutas locales también funcionan con `npm run preview`. El visor permite
 **Cargar desde el repositorio** o **Abrir GLB desde tu equipo**; el selector
 local lee el archivo en memoria y no lo sube a un servicio. El botón de prueba
 del visor abre el modo jugable; **Salir de la prueba** vuelve al MVP normal.
@@ -144,6 +147,11 @@ del root motion antes de probar combate. No están conectados a daño.
 - El build emite un aviso de chunk del cargador glTF superior a 500 kB,
   sin fallo. La optimización del asset queda pendiente.
 - Xbox físico y FPS/rendimiento en el Mac de David: no probados.
+- Publicación `ab38a2c` del código `6a80022` confirmada mediante
+  [Actions 39832580525](https://github.com/Dabot11/Veylun/actions/runs/39832580525),
+  resultado **Success**, incluido el job **Deploy to GitHub Pages**.
+  El sitio remoto no se comprobó en navegador por la restricción de red del
+  entorno. Las pruebas de navegador anteriores usaron servidores locales.
 
 La [galería de evidencia](evidence/ruen-meshy/README.md) incluye seis capturas
 del master real en el visor y una del modo jugable corriendo. También se
@@ -168,4 +176,4 @@ geometría en esta tarea.
 Para salir del experimento, elimina `?ruen=meshy` o `?inspect=ruen`; no hay
 migraciones de guardado. La rama `work` conserva el MVP previo y `9d64cf5`
 el visor antes de integrar el master. Los commits del experimento se pueden
-revertir. Este cambio no publica ni modifica el sitio de GitHub Pages.
+revertir; cambiar el contenido publicado requiere desplegar de nuevo.

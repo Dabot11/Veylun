@@ -12,7 +12,17 @@ El master real conserva su hash. Se inventariaron 20 clips; sólo Walking y
 Running se revisaron visualmente en tres vistas y se conectaron a la prueba
 jugable `?ruen=meshy`, con el rig provisional para las demás acciones. No hay
 aprobación final del arte ni del resto de clips. Xbox físico y FPS en el Mac
-de David siguen sin probarse. Esta revisión no despliega cambios a Pages.
+de David siguen sin probarse.
+
+El build del código `6a80022d1eb3988da303e5de4e48a35aaa80c9f4` se publicó en
+GitHub Pages como `ab38a2c85c4e1ac2e2fedc806fc0eae17ec8ec5f`.
+[Actions 39832580525](https://github.com/Dabot11/Veylun/actions/runs/39832580525)
+y su job **Deploy to GitHub Pages** finalizaron con **Success**.
+Enlaces públicos: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
+y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
+La verificación pública se limita a Actions: la restricción de red del entorno
+impidió comprobar el sitio remoto en navegador. Los tests anteriores se
+ejecutaron contra los servidores locales del proyecto.
 
 El [informe de inspección](RUEN_MESHY_INSPECTION.md) y la
 [evidencia del master real](evidence/ruen-meshy/README.md) contienen resultados

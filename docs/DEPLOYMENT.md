@@ -8,7 +8,24 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-`main` contiene el código y las referencias. `gh-pages` contiene únicamente
+## Prueba de Ruen / Meshy publicada
+
+El 22 de octubre de 2026 se publicó el build del código
+`6a80022d1eb3988da303e5de4e48a35aaa80c9f4`, de la rama
+`feat/ruen-meshy-inspector`, en la revisión de `gh-pages`
+`ab38a2c85c4e1ac2e2fedc806fc0eae17ec8ec5f`.
+[Pages build and deployment 39832580525](https://github.com/Dabot11/Veylun/actions/runs/39832580525)
+finalizó con **Success**, incluido el job **Deploy to GitHub Pages**.
+
+Enlaces públicos: [prueba jugable](https://dabot11.github.io/Veylun/?ruen=meshy)
+y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
+La ruta sin parámetros conserva el modo normal. La publicación se verificó
+mediante Actions; no se comprobó el sitio remoto en navegador porque el entorno
+cloud restringe el acceso a su dominio. Los cambios documentales posteriores
+no modifican el build publicado, cuya fuente sigue siendo `6a80022`.
+
+`main` contiene la base del MVP y las referencias; esta prueba se publicó desde
+la rama indicada arriba. `gh-pages` contiene únicamente
 el build estático, `.nojekyll` y `deployment.json` con la revisión de origen.
 Vite genera rutas relativas compatibles con `/Veylun/`.
 

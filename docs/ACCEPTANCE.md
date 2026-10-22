@@ -58,8 +58,10 @@ Las pruebas aisladas crean estados específicos para verificar reglas.
       provisionales y simplifican las ilustraciones.
 - [ ] Revisión de los otros 18 clips Meshy, clips faltantes y ajuste final de
       contacto/deslizamiento de pies; sólo Walking/Running entran en gameplay.
-- [x] Publicación del MVP previo en GitHub Pages, confirmada por su despliegue.
-      La prueba Meshy de esta rama todavía no se ha publicado allí.
+- [x] Publicación de la [prueba Meshy](https://dabot11.github.io/Veylun/?ruen=meshy)
+      y el [visor](https://dabot11.github.io/Veylun/?inspect=ruen) en GitHub Pages,
+      confirmada por [Actions](https://github.com/Dabot11/Veylun/actions/runs/39832580525).
+      El sitio remoto no se comprobó en navegador desde el entorno cloud.
 - [x] Recorrido completo automatizado en Chromium desde Nueva partida hasta
       restaurar el altar, con muerte deliberada y recargas entre checkpoints.
 - [x] Guía transitable al cofre y salida, continuación sin almacenamiento local

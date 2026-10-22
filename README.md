@@ -37,8 +37,10 @@ los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
 ## Visor de Ruen / Meshy
 
-Esta prueba pertenece a la rama `feat/ruen-meshy-inspector`; todavía no se ha
-desplegado en el sitio de GitHub Pages enlazado arriba.
+Disponible en GitHub Pages: [probar Ruen caminando/corriendo](https://dabot11.github.io/Veylun/?ruen=meshy)
+o [abrir el visor](https://dabot11.github.io/Veylun/?inspect=ruen).
+Se publicó el código `6a80022` de la rama `feat/ruen-meshy-inspector`;
+consulta el [registro de despliegue](docs/DEPLOYMENT.md).
 
 El master real de Meshy está en
 `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`,
