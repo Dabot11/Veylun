@@ -21,6 +21,8 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 |---|---|---|---|---|
 | ruen | `createRuen` en `src/assets/ruen.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas facetadas. Cadera, cabeza, hombros, codos, piernas, rodillas, capa, espada y escudo | 3D procedural provisional, primera revisión artística |
 | ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips inventariados | Carga por defecto, reposo estático y Walking/Running; pruebas locales aprobadas y versión `2045061` publicada |
+| ruen-azure-sword | GLB Azure Oathblade en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:RightHand` | Idle equipado validado localmente; publicación pendiente; original intacto |
+| ruen-azure-shield | GLB Aegis of the Azure en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:LeftHand` | Idle equipado validado localmente; publicación pendiente; original intacto |
 | corrupt-sprout | `createEnemyRig(..., 'sprout')` | ~1.1 m | Corteza, raíces, musgo, hojas y ojos ámbar. Cuerpo encorvado, cabeza baja y grandes brazos delanteros | 3D procedural provisional |
 | wandering-spirit | `createEnemyRig(..., 'spirit')` | ~1.25 m incluyendo aletas y cola | Núcleo emisivo, máscara de madera, ojos grandes, hojas y aletas de energía | 3D procedural provisional |
 | ancestral-guardian | `createEnemyRig(..., 'guardian')` | ~4.2 m | Raíces, placas de piedra, vegetación y runas turquesa. Cuerpo, cabeza, brazos y piernas | 3D procedural provisional |
@@ -38,6 +40,13 @@ un clip Idle. Esta revisión está publicada en GitHub Pages; el arte final sigu
 Los PNG son referencias 2D, no una conversión automática de alta calidad. Ver el
 [informe y evidencia](docs/RUEN_MESHY_INSPECTION.md).
 
+Los dos GLB de equipo se recibieron como adjuntos del usuario. Cada uno tiene
+una malla, un material PBR y tres texturas JPEG 2048²; no contiene skin ni clips.
+Suman 44,478,640 bytes y 906,832 triángulos. Se conservan sin reexportar ni
+reducir geometría; la orientación y el agarre se ajustan en nodos exteriores.
+Los nombres completos, hashes e inventario están en la
+[ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
+
 ## Animación
 
 Ruen implementa idle, caminar, correr, salto, caída, aterrizaje, rodada, tres
@@ -48,6 +57,12 @@ Meshy usa la pose base estática en reposo y mezcla sólo Walking/Running, con
 fallback para acciones sin clip validado. La transición reposo↔locomoción dura
 0.2 s; no se añade respiración ni offsets a la pose base. La capa del
 GLB sigue su skin; no se añadió simulación de tela.
+
+El visor añade `Ruen_Idle_v1` y, sólo en la ruta con `equipment=azure`,
+`Ruen_Idle_Armed_v1`. Ambos son clips propios de cuatro segundos construidos
+por código sobre el rig original; no se escriben dentro del master. La
+variante equipada añade una postura de agarre a la respiración. Estos clips
+y los nuevos modelos de equipo todavía no se usan en gameplay.
 
 ## Sustitución por GLB
 

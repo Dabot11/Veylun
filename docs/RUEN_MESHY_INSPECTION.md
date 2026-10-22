@@ -40,6 +40,8 @@ Agrega uno de estos parámetros a la dirección que imprime Vite:
 | `/` o `/?ruen=meshy` | Carga automática de Meshy; reposo estático y Walking/Running. |
 | `/?ruen=provisional` | Rig procedural anterior para todas las acciones. |
 | `/?inspect=ruen` | Visor aislado; carga automática del master, pausado. |
+| `/?inspect=ruen&motion=idle-v1` | Idle neutro propio de cuatro segundos, exclusivo del visor. |
+| `/?inspect=ruen&motion=idle-v1&equipment=azure` | Idle con espada y escudo reales; pruebas locales aprobadas, publicación pendiente. |
 
 Las rutas locales también funcionan con `npm run preview`. El visor permite
 **Recargar modelo original** o abrir un GLB local; el selector lee el archivo
@@ -50,6 +52,11 @@ El visor carga pausado, selecciona Walking y reproduce un solo grupo a la vez.
 Incluye selector con nombres reales, reproducir/pausar, reinicio, velocidad
 0.1–2×, vistas frontal/lateral/trasera, órbita/zoom e inventario JSON exportable.
 La pestaña oculta pausa la reproducción. El frente +Z se confirmó visualmente.
+
+Las rutas de Idle seleccionan su clip propio en pausa. La variante con equipo
+carga además los GLB de Azure Oathblade y Aegis of the Azure, conserva los
+20 clips originales y añade dos clips propios al runtime. Su inventario de
+equipo se exporta por separado del master. Ver [alcance y archivos](RUEN_EQUIPMENT_PREVIEW.md).
 
 ## Inventario comprobado
 
@@ -114,9 +121,9 @@ Un bloqueo por colisión congela el ciclo; los menús pausan la animación.
 
 Las reglas de movimiento, salto, combate, daño, checkpoints y guardado siguen
 perteneciendo al MVP. El GLB no genera daño ni añade arco, hacha, escalada,
-parry o ataques cargados. La siguiente etapa es crear un Idle propio, resolver
-salto/esquiva/defensa y vincular espada/escudo a `mixamorig:RightHand` y
-`mixamorig:LeftHand`, revisando offsets, antes de integrar combos.
+parry o ataques cargados. El Idle propio y el montaje de espada/escudo se
+preparan primero en el visor. Queda revisar sus transiciones e integración
+jugable, resolver salto/esquiva/defensa y después integrar combos.
 
 ## Revisión visual y límites
 

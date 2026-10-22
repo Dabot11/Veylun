@@ -31,6 +31,30 @@ desde el visor. Su identidad y metadatos se mantienen separados del inventario
 de los 20 clips originales. [Abrir el prototipo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1) y pulsar **Reproducir**.
 Publicado desde `43fa18c`; [Actions](https://github.com/Dabot11/Veylun/actions/runs/39853291990) confirmó **Success**.
 
+## Idle con espada y escudo
+
+La ruta `?inspect=ruen&motion=idle-v1&equipment=azure` prepara una segunda
+variante, `Ruen_Idle_Armed_v1`, para visualizar los dos modelos entregados.
+La variante pasó las pruebas locales; su publicación está pendiente. La espada se monta en
+`mixamorig:RightHand` y el escudo en `mixamorig:LeftHand`; el ajuste utiliza
+el mango y el asa que ya existen en los GLB.
+
+El clip conserva el ciclo de respiración de cuatro segundos y añade claves
+constantes para la postura de brazos, manos y dedos. Esas claves pertenecen
+al clip propio, de modo que al salir de él se restaura la pose de los joints.
+El selector **Espada y escudo (Idle)** alterna con el Idle neutro conservando
+el momento del ciclo, la velocidad y el estado de reproducción. Elegir un
+clip original oculta el equipo y restaura los canales de la pose equipada.
+
+Los 20 clips originales permanecen separados de estas dos variantes propias.
+La ruta sin `equipment=azure` mantiene el prototipo neutro anterior. El equipo
+y la pose equipada sólo se cargan en esta prueba del visor: todavía no se
+conectan a locomoción, defensa ni daño. [Archivos y alcance de la prueba](RUEN_EQUIPMENT_PREVIEW.md).
+
+Tras el ajuste final aprobaron typecheck, build, 142 pruebas unitarias en
+15 archivos y 10 casos únicos de navegador, repartidos en dos ejecuciones
+sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
+
 ## Orden de trabajo
 
 1. **Idle:** revisar respiración, estabilidad y loop; después probar la transición
@@ -41,8 +65,9 @@ Publicado desde `43fa18c`; [Actions](https://github.com/Dabot11/Veylun/actions/r
    actual, manteniendo sus colisiones e invulnerabilidad.
 4. **Guardia y bloqueo:** crear una postura sostenida y una reacción de impacto
    que respeten la defensa y el arco frontal existentes.
-5. **Espada y escudo:** vincularlos a `mixamorig:RightHand` y `mixamorig:LeftHand`,
-   ajustar agarre/orientación y revisar que no atraviesen manos, cuerpo o capa.
+5. **Espada y escudo:** revisar el montaje inicial en el visor y ajustar
+   agarre/orientación; comprobar manos, cuerpo y capa antes de extenderlo
+   a locomoción y acciones del juego.
 6. **Golpes:** crear poses y transiciones para los ataques del MVP, haciendo
    coincidir el movimiento de la espada con sus ventanas de impacto existentes.
 

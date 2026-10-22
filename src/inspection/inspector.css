@@ -21,6 +21,10 @@ body[data-mode=asset-inspector] #renderCanvas{min-width:0;grid-column:1;grid-row
 #asset-playback{font-size:12px;color:#a9e1d8;margin-bottom:5px}
 #asset-clip-warning,.inspector-hint{font-size:11px;color:#b4c3cd}
 #asset-inspector output{float:right;color:#aadace}
+#asset-inspector .inspector-equipment{display:flex;align-items:center;gap:9px}
+#asset-inspector input[type=checkbox]{width:17px;height:17px;min-height:0;margin:0;accent-color:#8bd8c9}
+#asset-equipment-status{font-size:11px;color:#a9d8d2}
+#asset-equipment-status[data-state=error],#asset-equipment-status[data-state=partial]{color:#ffd3b8}
 #asset-inspector details{font:12px/1.6 Arial,sans-serif;color:#b6c6d0;border-top:1px solid #35444e;padding-top:12px;margin-top:15px}
 #asset-report{font:10px/1.5 monospace;overflow:auto;max-height:280px;background:#0e171e;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere}
 .inspector-note{font-size:11px;line-height:1.7;color:#a5b7c1;border-top:1px solid #35444e;padding-top:15px}
