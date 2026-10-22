@@ -59,6 +59,9 @@ El master tiene 20 clips y el arte final sigue pendiente. Consulta el
 [informe de inspección](docs/RUEN_MESHY_INSPECTION.md) y la
 [galería del modelo real](docs/evidence/ruen-meshy/README.md).
 
+La [guía de creación de animaciones](docs/RUEN_ANIMATION_WORKFLOW.md) describe
+el Idle propio en preparación, exclusivo del visor, y las siguientes etapas.
+
 ## Recorrido
 
 1. Explora el Claro del despertar y sigue la luz turquesa hacia el sendero.
