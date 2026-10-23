@@ -1,0 +1,1 @@
+var e=(e,t,n)=>Math.max(t,Math.min(n,e)),t=(e,t)=>Math.hypot(e.x-t.x,e.z-t.z),n=(e,t)=>Math.atan2(t.x-e.x,t.z-e.z),r=(e,t)=>Math.atan2(Math.sin(t-e),Math.cos(t-e)),i=(e,t,i,a)=>Math.abs(r(t,n(e,i)))<=a/2;function a(e){return()=>(e=e*1664525+1013904223>>>0,e/4294967296)}export{i as a,t as i,n,a as o,e as r,r as t};

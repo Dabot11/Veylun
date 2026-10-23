@@ -1,0 +1,1 @@
+import{a as e,i as t}from"./math-BHm_059Q.js";var n=[{windup:.14,activeEnd:.29,duration:.48,damage:1},{windup:.16,activeEnd:.32,duration:.5,damage:1},{windup:.23,activeEnd:.39,duration:.63,damage:2}];function r(n,r,i,a){return t(n,a)<=1.55+a.radius&&Math.abs(i-a.y)<1.7&&e(n,r,a,Math.PI*.7)}function i(t,n,r){return e(t,n,r,110*Math.PI/180)}export{i as n,r,n as t};
