@@ -1,0 +1,28 @@
+{
+  "stats": {
+    "startTime": "2026-10-23T05:23:21.411Z",
+    "duration": 2720.107,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "an incompatible synthetic rig keeps its original clips available without adding a false Idle",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1782,
+          "retry": 0
+        }
+      ]
+    }
+  ],
+  "renderer": "Chromium with --enable-unsafe-swiftshader",
+  "workers": 1,
+  "scope": "Isolated rerun of the incompatible-rig case after changing only the expected status text; application and build unchanged."
+}

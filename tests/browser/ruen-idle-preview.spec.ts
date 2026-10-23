@@ -182,7 +182,7 @@ test('an incompatible synthetic rig keeps its original clips available without a
   await page.route(assetPattern, route => route.fulfill({ contentType: 'model/gltf-binary', body: inspectionGlb() }));
   await page.goto(previewUrl);
   await expect(page.locator('#asset-status')).toHaveAttribute('data-state', 'loaded', { timeout: 60000 });
-  await expect(page.locator('#asset-status')).toContainText('Prototipo Idle no disponible para este modelo.');
+  await expect(page.locator('#asset-status')).toContainText('Animación propia no disponible para este modelo.');
   await expect(page.locator('#asset-clip')).toHaveValue('Walking');
   await expect(page.locator(`#asset-clip option[value="${idleName}"]`)).toHaveCount(0);
   expect(await page.evaluate(() => (window as PreviewWindow).__assetInspector.model!.container.animationGroups.map(group => group.name))).toEqual(['Walking', 'Running']);

@@ -5,9 +5,23 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
+## Combate equipado validado localmente
+
+La etapa actual crea **guardia, reacción al bloqueo y los tres golpes del combo**
+sobre el esqueleto real. Cada clip se define mediante keyframes de huesos; no
+requiere reemplazar el modelo ni descargar animaciones externas. Los tiempos
+se toman de `src/player/combat.ts`, manteniendo daño, alcance y movimiento de
+la simulación. La factoría crea cinco grupos de 60 fps: guardia de cuatro
+segundos, bloqueo de 0.22 s y ataques de 0.48/0.50/0.63 s. Typecheck, build y
+173 pruebas unitarias aprobaron tras corregir la repetición del visor y una
+tolerancia numérica detectadas en la primera tanda de navegador. Los siete
+casos nuevos y las 33 regresiones aprobaron; una regresión se repitió tras
+corregir sólo su texto esperado. Son 40 casos únicos aprobados. Publicación
+pendiente: [alcance de combate](RUEN_GAME_COMBAT.md).
+
 ## Integración jugable publicada
 
-La etapa actual lleva **Idle, caminar y correr con espada y escudo** a la ruta
+La versión publicada `50210a9c` lleva **Idle, caminar y correr con espada y escudo** a la ruta
 normal del juego. El escudo se reduce uniformemente un 30%; las armas usan
 copias ligeras y los originales se conservan. Typecheck, build, 152 pruebas
 unitarias y 33 de navegador aprobaron. Publicada desde `50210a9c`, con
@@ -23,7 +37,7 @@ Si no carga todo el equipo, se utiliza una variante sin armas con Idle neutro.
 ## Primer prototipo: Idle propio v1
 
 Estado histórico: **prototipo del visor validado y publicado en `43fa18c`**.
-Esa revisión no añadía Idle al gameplay. La etapa actual ya lo integra,
+Esa revisión no añadía Idle al gameplay. La versión `50210a9c` ya lo integra,
 sin modificar los 20 clips del master.
 
 La primera versión se define con claves creadas aquí mediante **Babylon.js**:
@@ -74,14 +88,15 @@ sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
 
 ## Orden de trabajo
 
-1. **Idle y locomoción equipada, etapa actual:** reducir el escudo, comprobar las
-   copias ligeras, agarres y transiciones al detenerse, caminar y correr.
-2. **Guardia y bloqueo:** crear postura sostenida y reacción de impacto que
-   respeten la defensa y el arco frontal existentes.
-3. **Primer ataque de espada:** adaptar la pose a las ventanas de impacto del
-   MVP; después extender la coreografía a los otros golpes del combo.
-4. **Salto y esquiva:** separar impulso, aire y aterrizaje, y adaptar la rodada
+1. **Idle y locomoción equipada, publicado:** escudo reducido, copias ligeras,
+   agarres y transiciones al detenerse, caminar y correr.
+2. **Guardia, bloqueo y combo completo, etapa actual:** crear la postura
+   sostenida, la reacción de impacto y los tres ataques con las ventanas
+   existentes. Validar poses, continuidad y ejecución desde los controles.
+3. **Salto y esquiva:** separar impulso, aire y aterrizaje, y adaptar la rodada
    a su duración y desplazamiento actuales, conservando física e invulnerabilidad.
+4. **Daño, muerte y demás acciones:** reemplazar sus variantes provisionales
+   tras comprobar interrupciones y transiciones.
 
 La duración de cada acción se ajusta a `Simulation` y a los tiempos de combate;
 no alargamos ni cambiamos las reglas para acomodar un clip. La simulación sigue
@@ -117,4 +132,8 @@ La publicación se confirmó mediante Actions; el dominio público no se pudo
 abrir desde la red de este entorno. Los resultados anteriores del juego se conservan
 en el [informe de Meshy](RUEN_MESHY_INSPECTION.md); no se presentan como pruebas
 de integración del Idle equipado en gameplay. Los resultados de esa etapa se
-registrarán en la [evidencia jugable](evidence/ruen-game-equipment/README.md).
+registraron en la [evidencia jugable](evidence/ruen-game-equipment/README.md).
+La etapa de combate tiene [su propio registro](evidence/ruen-game-combat/README.md),
+con las comprobaciones iniciales y los hallazgos de la primera tanda de
+navegador y el cierre de 40 casos únicos aprobados, incluida una repetición
+aislada por una expectativa de texto.

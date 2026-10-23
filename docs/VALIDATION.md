@@ -1,8 +1,53 @@
 # Validación ejecutada
 
+## Guardia, bloqueo y combo equipado: validado localmente
+
+22 de octubre de 2026, fecha de America/Monterrey. La nueva etapa adapta la
+defensa y los tres ataques al Ruen real con su equipo actual. Conserva los
+tiempos de combate y la reducción del escudo del 30%. Las animaciones se crean
+sobre el esqueleto existente; la simulación sigue decidiendo daño y movimiento.
+
+Tras corregir los hallazgos iniciales aprobaron **173 pruebas unitarias en
+17 archivos** en 3.24 s, typecheck y build. La comprobación inicial había
+aprobado 172 unitarias antes de esas correcciones.
+El build conserva el aviso conocido de chunks grandes de Babylon. La auditoría
+manual de poses revisó guardia, bloqueo y los tres ataques en frontal/lateral;
+el muestreo a 60 fps mantuvo la espada por encima del suelo, sin errores de
+página. No equivale a una prueba del combate desde los controles.
+
+La guardia móvil se calibró manualmente en cuatro direcciones, sin errores de
+página. Los cinco GLB coinciden por SHA-256 con los inventarios de la fuente
+publicada `50210a9c`.
+
+La primera tanda de siete casos nuevos de navegador terminó con **3 aprobados
+y 4 fallidos** en 365,099.253 ms. Detectó que el visor congelaba bloqueo y
+ataques al repetir clips `CONSTANT`, y que tres aserciones de agarre usaban una
+tolerancia inferior al error Float32 medido. Los cinco grupos usan ahora
+`CYCLE`; una regresión con reproducción real falló antes del cambio y pasa
+después. La tolerancia quedó en `1e-4`, frente al máximo observado de `1.1356e-5`.
+Los combos sí aplicaron daño 12 → 11 → 10 → 8, pero sus casos completos fallaron.
+Tras las correcciones, los **siete casos nuevos aprobaron** en 408,808.963 ms
+(6 min 48.809 s), sin omisiones ni reintentos. Los tres dispositivos ejecutaron
+daño 12 → 11 → 10 → 8 y coincidencia exacta entre el fotograma y `attackTime × 60`.
+La regresión terminó con **32 de 33 aprobados** en 1,780,410.323 ms
+(29 min 40.410 s). El caso del Idle con rig incompatible falló al esperar el
+texto antiguo «Prototipo Idle no disponible…» en lugar de «Animación propia
+no disponible…». Se ajustó sólo esa expectativa y el caso aislado aprobó
+todas sus comprobaciones en **2,720.107 ms**. La aplicación y el build
+permanecieron intactos.
+
+El cierre suma **40 casos únicos aprobados**: siete nuevos, 32 regresiones
+aprobadas inicialmente y una repetición aislada. Son tres tandas de cierre,
+con el fallo de texto y su repetición registrados, no dos tandas limpias.
+La publicación sigue pendiente.
+Las 152 pruebas unitarias y 33 casos de `50210a9c`
+permanecen como resultados históricos. Logs y capturas de calibración en
+[la evidencia de combate](evidence/ruen-game-combat/README.md).
+[Alcance de la etapa](RUEN_GAME_COMBAT.md).
+
 ## Idle y locomoción con equipo: validado y publicado
 
-22 de octubre de 2026, fecha de America/Monterrey. La etapa actual integra el
+22 de octubre de 2026, fecha de America/Monterrey. La versión `50210a9c` integra el
 Idle equipado y las adaptaciones de Walking/Running en la ruta normal del juego.
 El escudo se reduce uniformemente un 30%, de escala 0.42 a 0.294, alrededor
 del mismo punto de agarre. Los archivos originales se conservan y el juego

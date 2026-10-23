@@ -7,11 +7,13 @@ import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { Quaternion, Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { Animation } from '@babylonjs/core/Animations/animation';
 import { AnimationGroup } from '@babylonjs/core/Animations/animationGroup';
-import { Simulation } from '../../src/core/Simulation';
+import { Simulation, type GameEvent } from '../../src/core/Simulation';
 import type { CharacterRig } from '../../src/assets/characters';
 import { loadInspectionModel, instantiateInspectionModel, type InspectionModel } from '../../src/assets/inspectModel';
 import { RuenEquipmentPreview, type RuenEquipmentDiagnostics } from '../../src/assets/RuenEquipmentPreview';
 import { createRuenEquippedLocomotion } from '../../src/assets/ruenEquippedLocomotion';
+import { createRuenEquippedCombat, ruenEquippedCombatProfile } from '../../src/assets/ruenEquippedCombat';
+import { attacks } from '../../src/player/combat';
 import { RuenLocomotionView, ruenMeshyProfile } from '../../src/assets/RuenLocomotionView';
 import { ruenRuntimeEquipmentProfiles } from '../../src/assets/ruenEquipmentProfile';
 
@@ -20,22 +22,28 @@ vi.mock('../../src/assets/inspectModel', async importOriginal => ({
   loadInspectionModel: vi.fn(),
 }));
 vi.mock('../../src/assets/ruenEquippedLocomotion', () => ({ createRuenEquippedLocomotion: vi.fn() }));
+vi.mock('../../src/assets/ruenEquippedCombat', async importOriginal => ({
+  ...await importOriginal<typeof import('../../src/assets/ruenEquippedCombat')>(), createRuenEquippedCombat: vi.fn(),
+}));
 vi.mock('../../src/assets/RuenEquipmentPreview', () => ({ RuenEquipmentPreview: vi.fn() }));
 
 const engines: NullEngine[] = [];
-function fixture(options: { names?: string[]; equipmentStatus?: RuenEquipmentDiagnostics['status'] } = {}) {
+function fixture(options: { names?: string[]; equipmentStatus?: RuenEquipmentDiagnostics['status']; directionalRig?: boolean } = {}) {
   const engine = new NullEngine(); engines.push(engine);
   const scene = new Scene(engine);
   const fallback: CharacterRig = { root: new TransformNode('existing-rig', scene), parts: {}, update: vi.fn() };
   const container = new AssetContainer(scene);
   const conversion = new TransformNode('gltf-conversion', scene); conversion.scaling.z = -1;
-  const joint = new TransformNode('joint', scene); joint.parent = conversion;
+  const joint = new TransformNode('mixamorig:Hips', scene); joint.parent = conversion;
   joint.rotationQuaternion = Quaternion.RotationYawPitchRoll(0.1, 0.2, 0.3);
   joint.scaling.set(0.9, 1.1, 1);
-  const hand = new TransformNode('hand', scene); hand.parent = joint; hand.rotationQuaternion = Quaternion.Identity();
+  if (options.directionalRig) { joint.rotationQuaternion = Quaternion.Identity(); joint.scaling.setAll(1); }
+  const spine = new TransformNode('mixamorig:Spine', scene); spine.parent = joint; spine.position.y = 0.4; spine.rotationQuaternion = Quaternion.Identity();
+  const leg = new TransformNode('mixamorig:LeftUpLeg', scene); leg.parent = joint; leg.rotationQuaternion = Quaternion.Identity();
+  const hand = new TransformNode('hand', scene); hand.parent = spine; hand.rotationQuaternion = Quaternion.Identity();
   const rest = { rotation: joint.rotationQuaternion.clone(), scale: joint.scaling.clone() };
   const mesh = new Mesh('skin', scene); mesh.parent = joint; container.meshes.push(mesh);
-  container.transformNodes.push(conversion, joint, hand);
+  container.transformNodes.push(conversion, joint, spine, leg, hand);
   for (const name of options.names ?? ['Walking', 'Running', 'Attack', 'Combat_Stance']) {
     const group = new AnimationGroup(name, scene);
     const animation = new Animation(name, 'position.y', 60, Animation.ANIMATIONTYPE_FLOAT, Animation.ANIMATIONLOOPMODE_CYCLE);
@@ -74,9 +82,31 @@ function fixture(options: { names?: string[]; equipmentStatus?: RuenEquipmentDia
       add(joint, 'scaling', Animation.ANIMATIONTYPE_VECTOR3, [{ frame: 0, value: scale.clone() }, { frame: end, value: scale.clone() }]);
       const grip = equipped ? Quaternion.RotationAxis(Vector3.Right(), 0.7) : Quaternion.Identity();
       add(hand, 'rotationQuaternion', Animation.ANIMATIONTYPE_QUATERNION, [{ frame: 0, value: grip.clone() }, { frame: end, value: grip.clone() }]);
+      add(spine, 'position', Animation.ANIMATIONTYPE_VECTOR3, [{ frame: 0, value: spine.position.clone() }, { frame: end, value: spine.position.clone() }]);
+      add(spine, 'rotationQuaternion', Animation.ANIMATIONTYPE_QUATERNION, [{ frame: 0, value: Quaternion.Identity() }, { frame: end, value: Quaternion.Identity() }]);
+      add(leg, 'rotationQuaternion', Animation.ANIMATIONTYPE_QUATERNION, [{ frame: 0, value: Quaternion.Identity() }, { frame: end / 2, value: Quaternion.RotationAxis(Vector3.Right(), kind === 'idle' ? 0 : 0.5) }, { frame: end, value: Quaternion.Identity() }]);
       groups[kind] = group;
     }
     return groups as Record<'idle' | 'walk' | 'run', AnimationGroup>;
+  });
+  const combatGroups: Partial<ReturnType<typeof createRuenEquippedCombat>> = {};
+  vi.mocked(createRuenEquippedCombat).mockImplementationOnce((_model, _scene, locomotion) => {
+    expect(model.root.scaling.asArray()).toEqual([1, 1, 1]);
+    for (const kind of ['shield', 'block', 'attack1', 'attack2', 'attack3'] as const) {
+      const group = new AnimationGroup(ruenEquippedCombatProfile.names[kind], scene);
+      const isAttack = kind.startsWith('attack');
+      const duration = isAttack ? attacks[Number(kind.slice(-1)) - 1]!.duration : kind === 'block' ? 0.22 : 4;
+      for (const { target, animation } of locomotion.idle.targetedAnimations) {
+        const clone = animation.clone(true); clone.framePerSecond = 60;
+        let value = animation.getKeys()[0]!.value;
+        if (target === hand) value = Quaternion.RotationAxis(Vector3.Right(), isAttack ? 1.4 : 1.2);
+        const peak = isAttack && target === joint && animation.targetProperty === 'position.y' ? 0.2 : value;
+        clone.setKeys([{ frame: 0, value }, { frame: duration * 30, value: peak }, { frame: duration * 60, value }]);
+        group.addTargetedAnimation(clone, target);
+      }
+      combatGroups[kind] = group;
+    }
+    return combatGroups as ReturnType<typeof createRuenEquippedCombat>;
   });
   vi.mocked(loadInspectionModel).mockResolvedValueOnce(model);
   const view = new RuenLocomotionView(scene, fallback);
@@ -84,7 +114,7 @@ function fixture(options: { names?: string[]; equipmentStatus?: RuenEquipmentDia
   const advance = (seconds: number, z: number, x = 0) => {
     sim.age += seconds; sim.player.z += z; sim.player.x += x; view.update(sim, true);
   };
-  return { scene, fallback, container, conversion, joint, hand, mesh, model, gear, gearMesh, groups, rest, view, sim, advance };
+  return { scene, fallback, container, conversion, joint, spine, leg, hand, mesh, model, gear, gearMesh, groups, combatGroups, rest, view, sim, advance };
 }
 
 afterEach(() => {
@@ -114,7 +144,7 @@ describe('equipped Meshy locomotion visual adapter', () => {
     expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
     originalGroups.forEach((group, index) => expect(group.targetedAnimations[0]!.animation.getKeys()).toEqual(originalKeys[index]));
     expect(container.animationGroups.slice(0, 4)).toEqual(originalGroups);
-    expect(container.animationGroups).toHaveLength(7); expect(model.report.animationGroups).toHaveLength(4);
+    expect(container.animationGroups).toHaveLength(12); expect(model.report.animationGroups).toHaveLength(4);
   });
 
   it('opens in a paused equipped Idle and advances breathing only while the simulation plays', async () => {
@@ -329,5 +359,157 @@ describe('equipped Meshy locomotion visual adapter', () => {
     resolve(); await loading;
     expect(model.root.isDisposed()).toBe(true); expect(createRuenEquippedLocomotion).not.toHaveBeenCalled();
     expect(gear.dispose).toHaveBeenCalled(); expect(fallback.root.isDisposed()).toBe(false);
+  });
+});
+
+
+describe('equipped Meshy combat visual adapter', () => {
+  function attack(sim: Simulation, combo: 1 | 2 | 3, time: number): void {
+    sim.player.state = `attack${combo}`; sim.player.combo = combo;
+    sim.player.attackTime = time; sim.player.shield = false;
+  }
+  function guard(sim: Simulation): void {
+    sim.player.state = 'shield'; sim.player.shield = true; sim.player.attackTime = -1;
+  }
+
+  it.each([1, 2, 3] as const)('samples attack %s at exact controller windows without wall-clock, movement or playback-rate drift', async combo => {
+    const { view, sim, scene, combatGroups, joint, gear, model } = fixture();
+    await view.load(); view.update(sim, true); scene._animate(0);
+    const timing = attacks[combo - 1]!;
+    for (const time of [1 / 60, timing.windup - 0.0001, timing.windup, timing.activeEnd, timing.duration - 0.001]) {
+      attack(sim, combo, time); sim.age += 0.03; sim.player.stateTime = 200; sim.player.queued = true;
+      const before = structuredClone(sim.player); view.update(sim, true, 0.01); scene._animate(250);
+      expect(view.diagnostics.representation).toBe('meshy'); expect(gear.diagnostics.enabled).toBe(true);
+      expect(view.weights).toEqual({ idle: 0, walk: 0, run: 0 }); expect(view.actualSpeed).toBe(0);
+      expect(view.diagnostics.combat.state).toBe(`attack${combo}`);
+      expect(view.diagnostics.combat.frame).toBeCloseTo(time * 60, 8);
+      expect(view.diagnostics.combat.phase).toBe(time < timing.windup ? 'windup' : time < timing.activeEnd ? 'active' : 'recovery');
+      if (time >= 0.06) expect(view.diagnostics.combat.entryWeight).toBe(1);
+      else { expect(view.diagnostics.combat.entryWeight).toBeGreaterThan(0); expect(view.diagnostics.combat.entryWeight).toBeLessThan(1); }
+      const group = combatGroups[`attack${combo}`]!;
+      expect(group.getCurrentFrame()).toBeCloseTo(time * 60, 8); expect(group.isPlaying).toBe(false); expect(group.weight).toBe(1);
+      const pose = joint.position.clone(); view.update(sim, false); scene._animate(2000);
+      expect(joint.position.equalsWithEpsilon(pose)).toBe(true); expect(group.getCurrentFrame()).toBeCloseTo(time * 60, 8);
+      expect(view.diagnostics.reason).toBe('paused'); expect(sim.player).toEqual(before);
+      expect(model.container.animationGroups.slice(0, 4).every(original => !original.isStarted)).toBe(true);
+    }
+  });
+
+  it('keeps queued recovery, switches only on the controller combo, and restarts a repeated attack when its timer rewinds', async () => {
+    const { view, sim, scene, combatGroups, joint } = fixture();
+    await view.load(); view.update(sim, true); scene._animate(0);
+    attack(sim, 1, 0.43); sim.player.queued = true; sim.age += 0.1; view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.combat.state).toBe('attack1'); expect(view.diagnostics.combat.phase).toBe('recovery');
+    const recovery = joint.position.clone();
+    attack(sim, 2, 0); sim.age += 1 / 60; view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.combat.state).toBe('attack2'); expect(view.diagnostics.combat.frame).toBe(0);
+    expect(view.diagnostics.combat.entryWeight).toBe(0); expect(joint.position.equalsWithEpsilon(recovery)).toBe(true);
+    expect(combatGroups.attack1!.isStarted).toBe(false);
+    attack(sim, 2, attacks[1].windup); sim.age += 0.1; view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.combat.entryWeight).toBe(1); expect(view.diagnostics.combat.phase).toBe('active');
+    const active = joint.position.clone();
+    attack(sim, 2, 0); sim.age += 1 / 60; view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.combat.entryWeight).toBe(0); expect(joint.position.equalsWithEpsilon(active)).toBe(true);
+  });
+
+  it('fades the last combat pose into Idle and freezes that exit while paused', async () => {
+    const { view, sim, scene, joint, groups, combatGroups } = fixture();
+    await view.load(); view.update(sim, true); scene._animate(0);
+    attack(sim, 1, 0.24); sim.age += 0.1; view.update(sim, true); scene._animate(0);
+    const lastY = joint.position.y; expect(lastY).toBeGreaterThan(0);
+    sim.player.state = 'idle'; sim.player.attackTime = -1; view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.combat.state).toBeNull(); expect(combatGroups.attack1!.isStarted).toBe(false);
+    expect(joint.position.y).toBeCloseTo(lastY, 8); expect(groups.idle!.weight).toBe(0);
+    sim.age += 0.05; view.update(sim, true); scene._animate(50);
+    expect(groups.idle!.weight).toBeCloseTo(0.5, 8); expect(joint.position.y).toBeCloseTo(lastY / 2, 8);
+    view.update(sim, false); scene._animate(1000); expect(joint.position.y).toBeCloseTo(lastY / 2, 8);
+    sim.age += 0.05; view.update(sim, true); scene._animate(50);
+    expect(groups.idle!.weight).toBe(1); expect(joint.position.y).toBeCloseTo(0, 8);
+  });
+
+  it('timestamps block recoil from the single shield event and never replays duplicate or companion events', async () => {
+    const { view, sim, scene } = fixture();
+    await view.load(); view.update(sim, true); guard(sim); sim.age += 0.1; view.update(sim, true);
+    const event: GameEvent = { type: 'shield' };
+    sim.age += 0.03; view.handleEvent(event, sim); sim.age += 0.04; view.update(sim, true); scene._animate(1000);
+    expect(view.diagnostics.combat.state).toBe('block'); expect(view.diagnostics.combat.time).toBeCloseTo(0.04);
+    expect(view.diagnostics.combat.frame).toBeCloseTo(2.4);
+    view.update(sim, false); scene._animate(1000); expect(view.diagnostics.combat.frame).toBeCloseTo(2.4);
+    sim.age += 0.04; view.handleEvent(event, sim); view.handleEvent({ type: 'guardian-block' }, sim); view.update(sim, true);
+    expect(view.diagnostics.combat.time).toBeCloseTo(0.08);
+    sim.age += 0.2; view.update(sim, true); expect(view.diagnostics.combat.state).toBe('shield');
+    view.handleEvent(event, sim); view.update(sim, true); expect(view.diagnostics.combat.state).toBe('shield');
+    // Hurt may happen on an intervening fixed step without rendering that state.
+    view.handleEvent({ type: 'shield' }, sim); view.handleEvent({ type: 'hurt' }, sim);
+    view.update(sim, true); expect(view.diagnostics.combat.state).toBe('shield');
+  });
+
+  it('discards blocked events after interruption, release, airborne states and respawn', async () => {
+    const { view, sim, scene } = fixture(); await view.load(); view.update(sim, true);
+    for (const interrupt of ['hurt', 'roll', 'jump', 'idle'] as const) {
+      guard(sim); sim.age += 0.1; view.update(sim, true);
+      const event: GameEvent = { type: 'shield' }; view.handleEvent(event, sim);
+      sim.player.state = interrupt; sim.player.shield = interrupt === 'jump'; sim.player.grounded = interrupt !== 'jump';
+      view.update(sim, true); scene._animate(0);
+      expect(view.diagnostics.combat.state).toBeNull();
+      sim.player.grounded = true; guard(sim); view.handleEvent(event, sim); sim.age += 0.01; view.update(sim, true);
+      expect(view.diagnostics.combat.state).toBe('shield');
+    }
+    const stale: GameEvent = { type: 'shield' }; sim.player.state = 'hurt'; view.handleEvent(stale, sim);
+    guard(sim); view.handleEvent(stale, sim); view.update(sim, true); expect(view.diagnostics.combat.state).toBe('shield');
+    view.handleEvent({ type: 'shield' }, sim); sim.respawn(); view.update(sim, true);
+    expect(view.diagnostics.combat.state).toBeNull(); guard(sim); sim.age += 0.01; view.update(sim, true);
+    expect(view.diagnostics.combat.state).toBe('shield');
+    view.handleEvent({ type: 'shield' }, sim); sim.player.z += 40; sim.age += 0.1; view.update(sim, true);
+    expect(view.diagnostics.combat.state).toBe('shield'); expect(view.diagnostics.combat.guardFrame).toBe(0);
+  });
+
+  it.each([[0, 1, 0], [0, 0, -1], [Math.PI / 3, 1, 0]] as const)('steps in guard at yaw %s along x/z %s/%s while keeping the upper guard facing the controller', async (yaw, right, forward) => {
+    const { view, sim, scene, joint, spine, leg, model, combatGroups, groups } = fixture({ directionalRig: true });
+    await view.load(); sim.player.yaw = yaw; sim.targetId = 'sprout-1'; view.update(sim, true);
+    guard(sim); sim.age += 0.1; view.update(sim, true); scene._animate(0);
+    const upper = spine.computeWorldMatrix(true).clone(); const restLeg = leg.rotationQuaternion!.clone();
+    const before = structuredClone(sim.player); const dx = (right * Math.cos(yaw) + forward * Math.sin(yaw)) * 0.16;
+    const dz = (-right * Math.sin(yaw) + forward * Math.cos(yaw)) * 0.16;
+    for (let i = 0; i < 3; i++) { sim.age += 0.1; sim.player.x += dx; sim.player.z += dz; view.update(sim, true); scene._animate(100); }
+    expect(view.diagnostics.representation).toBe('meshy'); expect(view.diagnostics.combat.state).toBe('shield');
+    expect(view.diagnostics.combat.guardMoving).toBe(true); expect(view.diagnostics.combat.guardFrame).toBeGreaterThan(0);
+    expect(Math.abs(view.diagnostics.combat.guardDirection)).toBeLessThanOrEqual(Math.PI / 2 + 0.001);
+    expect(leg.rotationQuaternion!.equalsWithEpsilon(restLeg)).toBe(false);
+    expect(sim.player.yaw).toBe(before.yaw); expect(model.root.position.x).toBe(sim.player.x); expect(model.root.position.z).toBe(sim.player.z);
+    const facing = spine.computeWorldMatrix(true);
+    for (const index of [0, 1, 2, 4, 5, 6, 8, 9, 10]) expect(facing.m[index]).toBeCloseTo(upper.m[index]!, 5);
+    expect(combatGroups.shield!.isPlaying).toBe(false); expect(groups.walk!.weight).toBe(0);
+    const frame = view.diagnostics.combat.guardFrame, legPose = leg.rotationQuaternion!.clone(), rootPose = joint.position.clone();
+    view.update(sim, false); scene._animate(1000);
+    expect(view.diagnostics.combat.guardFrame).toBe(frame); expect(leg.rotationQuaternion!.equalsWithEpsilon(legPose)).toBe(true);
+    expect(joint.position.equalsWithEpsilon(rootPose)).toBe(true);
+    sim.age += 0.2; view.update(sim, true); scene._animate(200);
+    expect(view.diagnostics.combat.guardMoving).toBe(false); expect(view.diagnostics.combat.guardFrame).toBe(frame);
+    expect(leg.rotationQuaternion!.equalsWithEpsilon(restLeg)).toBe(true);
+  });
+
+  it.each(['partial', 'error'] as const)('keeps all equipped combat procedural when equipment is %s', async equipmentStatus => {
+    const { view, sim, model, gear } = fixture({ equipmentStatus }); await view.load(); view.update(sim, true);
+    expect(createRuenEquippedCombat).not.toHaveBeenCalled(); expect(model.container.animationGroups).toHaveLength(7);
+    for (const combo of [1, 2, 3] as const) {
+      attack(sim, combo, 0.2); view.update(sim, true);
+      expect(view.diagnostics.representation).toBe('fallback'); expect(view.diagnostics.combat.state).toBeNull(); expect(gear.diagnostics.enabled).toBe(false);
+    }
+    guard(sim); view.update(sim, true); expect(view.diagnostics.representation).toBe('fallback');
+    sim.player.shield = false; sim.player.state = 'idle'; view.update(sim, true);
+    expect(view.activeClip).toBe('Ruen_Idle_Unarmed'); expect(view.diagnostics.representation).toBe('meshy');
+  });
+
+  it('isolates combat authoring errors and disposes all owned combat groups with the hero', async () => {
+    const failed = fixture(); vi.mocked(createRuenEquippedCombat).mockReset().mockImplementationOnce(() => { throw new Error('invalid combat rig'); });
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {}); await failed.view.load(); failed.view.update(failed.sim, true);
+    expect(failed.view.status).toBe('ready'); expect(failed.view.diagnostics.combat.error).toBe('invalid combat rig');
+    expect(failed.view.activeClip).toBe(equipped('Idle')); attack(failed.sim, 1, 0.2); failed.view.update(failed.sim, true);
+    expect(failed.view.diagnostics.representation).toBe('fallback'); expect(warn).toHaveBeenCalledOnce();
+    const ready = fixture(); await ready.view.load(); guard(ready.sim); ready.view.update(ready.sim, true);
+    const owned = Object.values(ready.combatGroups).map(group => vi.spyOn(group, 'dispose'));
+    ready.view.dispose(); ready.view.dispose(); owned.forEach(dispose => expect(dispose).toHaveBeenCalledOnce());
+    expect(ready.scene.animationGroups).toHaveLength(0); expect(ready.view.diagnostics.combat.state).toBeNull();
   });
 });

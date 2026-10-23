@@ -91,6 +91,7 @@ colisión, fallos de carga y producción sin hooks.
 [Actions 39889821939](https://github.com/Dabot11/Veylun/actions/runs/39889821939)
 confirmó el despliegue; [registro de publicación](DEPLOYMENT.md).
 
-La siguiente etapa es guardia/bloqueo y el primer ataque
-de espada, ajustados a las ventanas de combate existentes. El equipo visible
-no implica que esas animaciones estén ya adaptadas.
+La siguiente etapa, ya validada localmente, adapta guardia/bloqueo y **los tres
+golpes del combo**, con las ventanas de combate existentes. Su publicación
+sigue pendiente: [combate equipado](RUEN_GAME_COMBAT.md).
+Los resultados de esta ficha corresponden a Idle y locomoción.

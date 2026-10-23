@@ -1,0 +1,576 @@
+{
+  "uniqueCases": 40,
+  "passed": 40,
+  "finalSourceRunDurationMs": 2191939.3929999997,
+  "reports": [
+    {
+      "report": "new-browser-retest-report.json",
+      "startTime": "2026-10-23T04:45:49.755Z",
+      "duration": 408808.963,
+      "expected": 7,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    {
+      "report": "regression-browser-report.json",
+      "startTime": "2026-10-23T04:52:55.828Z",
+      "duration": 1780410.3229999999,
+      "expected": 32,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    {
+      "report": "copy-retest-report.json",
+      "startTime": "2026-10-23T05:23:21.411Z",
+      "duration": 2720.107,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  ],
+  "tests": [
+    {
+      "file": "ruen-combat-preview.spec.ts",
+      "title": "combat preview opens paused and deforms the real skin with five independent equipped clips",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 55243,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-combat-preview.spec.ts",
+      "title": "production combat preview exposes its clips and comparison controls without development hooks",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 22939,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "keyboard: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 70296,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "mouse: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 63673,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "gamepad: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 64571,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "real shield input blocks a Brote hit and keeps equipped guard while moving under lock-on",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 64094,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "attack pause preserves the exact frame, and dodge or enemy damage cancels into safe fallbacks",
+      "status": "expected",
+      "results": [
+        {
+          "report": "new-browser-retest-report.json",
+          "status": "passed",
+          "durationMs": 66906,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "asset-inspector.spec.ts",
+      "title": "inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 3504,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "asset-inspector.spec.ts",
+      "title": "bad local GLB reports failure and allows a later real loader retry with the synthetic fixture",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 1711,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "asset-inspector.spec.ts",
+      "title": "production inspector automatically loads and reloads the repository URL without autoplay",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 1785,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "new game, keyboard movement, jump, roll, camera, pause and responsive HUD",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 66480,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "corrupt saves are handled without crashing or enabling Continue",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 18086,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "saved checkpoint, key and boss completion persist; new game requires confirmation",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 57153,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "synthetic standard Xbox is detected, starts game, moves and pauses on a single edge",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 36671,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "keyboard: three real attack presses hit and defeat a nearby enemy",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 16749,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "mouse: three real attack presses hit and defeat a nearby enemy",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 14065,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "gamepad: three real attack presses hit and defeat a nearby enemy",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 15702,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "active Brote: lock, block the charge, then counterattack without losing health",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 21359,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "guardian.spec.ts",
+      "title": "completed sanctuary reload hides defeated enemies and a new adventure resets the light",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 17748,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "guardian.spec.ts",
+      "title": "keyboard: block, counter, escape the slam, defeat the Guardian and restore the altar",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 89007,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "guardian.spec.ts",
+      "title": "gamepad: block, counter, escape the slam, defeat the Guardian and restore the altar",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 87456,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "new adventure to restoration with normal inputs, death, checkpoints and reloads",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 393484,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "unavailable storage keeps session Continue and restart confirmation; new game clears old notices",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 46874,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "controls before starting do not create a save; restoration can pause and resume safely",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 31021,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-equipment-preview.spec.ts",
+      "title": "real equipment follows the hands through Idle, toggles cleanly, and releases on model replacement",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 159978,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-equipment-preview.spec.ts",
+      "title": "a failed sword leaves neutral Idle usable and retry replaces partial equipment without reloading Ruen",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 37650,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-equipment-preview.spec.ts",
+      "title": "production opens equipped Idle and comparison controls without development hooks",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 83347,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "authored Idle previews on the real master with a closed breathing loop and stationary feet",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 51533,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "an incompatible synthetic rig keeps its original clips available without adding a false Idle",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "failed",
+          "durationMs": 6286,
+          "retry": 0
+        },
+        {
+          "report": "copy-retest-report.json",
+          "status": "passed",
+          "durationMs": 1782,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "production loads the real Idle preview and controls it without development hooks",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 14063,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 26461,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "default Ruen breathes with reduced equipment, blends walking and running, and preserves action fallbacks",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 97659,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "actual collision displacement freezes Meshy even while the controller requests movement",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 53858,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a failed real model request retains the existing playable Ruen",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 15060,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "explicit provisional opt-out keeps the old Ruen without requesting the Meshy master",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 8602,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 53392,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a missing runtime shield keeps a neutral real hero playable without partial floating equipment",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 62592,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "scenarios.spec.ts",
+      "title": "rendered gameplay responds to controls and victory requires the altar interaction",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 27453,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "spirit.spec.ts",
+      "title": "keyboard: read the spell, block, approach, defeat the Spirit and activate its switch",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 76655,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "spirit.spec.ts",
+      "title": "gamepad: read the spell, block, approach, defeat the Spirit and activate its switch",
+      "status": "expected",
+      "results": [
+        {
+          "report": "regression-browser-report.json",
+          "status": "passed",
+          "durationMs": 85077,
+          "retry": 0
+        }
+      ]
+    }
+  ],
+  "execution": {
+    "workers": 1,
+    "chromium": "/usr/bin/chromium",
+    "renderer": "SwiftShader",
+    "developmentCases": 31,
+    "productionCases": 9
+  },
+  "notes": [
+    "40 distinct cases pass after updating one stale UI-copy expectation; the full 33-case regression report retains that initial assertion failure.",
+    "The earlier pre-fix 7-case attempt remains preserved separately in new-browser-report.json and is excluded from these final-source results.",
+    "Application source and production build were unchanged during these final-source runs. The only later edit updated the incompatible-rig test message expectation.",
+    "Gameplay PNGs capture an actual rendered active frame, not the entire attack trajectory. Representative trajectories are documented by the separate inspector pose audit.",
+    "Local software-renderer validation is not a hardware FPS benchmark."
+  ]
+}

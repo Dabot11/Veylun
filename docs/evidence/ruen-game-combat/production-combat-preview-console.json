@@ -1,0 +1,11 @@
+{
+  "errors": {
+    "unhandled": [],
+    "console": []
+  },
+  "requests": [
+    "http://127.0.0.1:4173/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb",
+    "http://127.0.0.1:4173/assets/models/ruen/equipment/runtime/azure-oathblade.glb",
+    "http://127.0.0.1:4173/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb"
+  ]
+}

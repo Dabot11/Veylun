@@ -60,11 +60,21 @@ La integración está publicada desde `50210a9c`; ver el
 
 ## Animación
 
+La nueva etapa crea `Ruen_Guard_Equipped`, `Ruen_Block_Equipped` y
+`Ruen_Attack1_Equipped` a `Ruen_Attack3_Equipped` sobre el rig real. Sus 160
+canales parten del Idle equipado, con rotaciones propias de torso, brazos y
+manos. El montaje del escudo sigue en 0.294 y el de la espada en 0.55.
+La fuente final aprobó typecheck, build y 173 pruebas unitarias tras corregir
+los hallazgos iniciales del navegador. Los cinco GLB conservan
+sus hashes publicados; [verificación](docs/evidence/ruen-game-combat/asset-hashes.json).
+Los 40 casos únicos de navegador aprobaron, con una repetición aislada
+tras corregir el texto esperado de un test. Publicación pendiente: [alcance del combate](docs/RUEN_GAME_COMBAT.md).
+
 El rig provisional conserva idle, caminar, correr, salto, caída, aterrizaje,
 rodada, ataques, escudo, daño, muerte, interacción y victoria. Enemigos tienen
 patrulla/flotación, anticipación, ataque, recuperación, reacción y colapso.
 
-Esta revisión crea `Ruen_Idle_Equipped`, `Ruen_Walk_Equipped` y
+La versión publicada crea `Ruen_Idle_Equipped`, `Ruen_Walk_Equipped` y
 `Ruen_Run_Equipped` sobre el rig original. Idle usa la respiración de cuatro
 segundos; caminar/correr conservan cuerpo y piernas de Walking/Running y
 adaptan brazos, manos y dedos para el agarre. Los tres grupos cubren los mismos

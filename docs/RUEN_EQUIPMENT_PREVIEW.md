@@ -2,6 +2,8 @@
 
 Estado: **visor con escudo reducido e integración jugable publicados en `50210a9c`**.
 Este visor permite revisar la postura usando los modelos originales completos.
+La nueva etapa de [combate equipado](RUEN_GAME_COMBAT.md) está validada localmente
+y pendiente de publicación; su revisión de poses y pruebas se registran por separado.
 La etapa actual reduce el escudo un 30% e integra Idle, caminar y correr con
 copias ligeras dentro del juego. [Integración jugable](RUEN_GAME_EQUIPMENT.md).
 
