@@ -37,7 +37,8 @@ export class AssetInspector {
  private panel:HTMLElement;
  private disposed=false;
  private started=false;
- private readonly traversalPreviewRequested=new URLSearchParams(location.search).get('motion')==='traversal-v1';
+ private readonly actionsPreviewRequested=new URLSearchParams(location.search).get('motion')==='actions-v1';
+ private readonly traversalPreviewRequested=this.actionsPreviewRequested||new URLSearchParams(location.search).get('motion')==='traversal-v1';
  private readonly combatPreviewRequested=this.traversalPreviewRequested||new URLSearchParams(location.search).get('motion')==='combat-v1';
  private readonly idlePreviewRequested=this.combatPreviewRequested||new URLSearchParams(location.search).get('motion')==='idle-v1';
  private readonly equipmentRequested=this.combatPreviewRequested||(this.idlePreviewRequested&&new URLSearchParams(location.search).get('equipment')==='azure');
@@ -95,9 +96,9 @@ export class AssetInspector {
   this.panel.innerHTML=`
    <a class="inspector-back" href="${import.meta.env.BASE_URL}">← Volver al MVP</a>
    <p class="inspector-kicker">VEYLUN · PRUEBA DE ASSET</p>
-   <h1>${this.traversalPreviewRequested?'Ruen / Salto y voltereta':this.combatPreviewRequested?'Ruen / Defensa y ataques':this.equipmentRequested?'Ruen / Idle con equipo':this.idlePreviewRequested?'Ruen / Idle · prototipo v1':'Ruen / Meshy'}</h1>
+   <h1>${this.actionsPreviewRequested?'Ruen / Acciones completas':this.traversalPreviewRequested?'Ruen / Salto y voltereta':this.combatPreviewRequested?'Ruen / Defensa y ataques':this.equipmentRequested?'Ruen / Idle con equipo':this.idlePreviewRequested?'Ruen / Idle · prototipo v1':'Ruen / Meshy'}</h1>
    <p class="inspector-intro">El modelo original se carga automáticamente. Revisa sus materiales, esqueleto y un clip a la vez.</p>
-   ${this.traversalPreviewRequested?'<p class="inspector-note">Subida, caída, aterrizaje y voltereta con espada y escudo. Elige un clip y reduce la velocidad para revisar las poses. Aquí se repiten en el sitio; en el juego siguen la altura y la dirección del movimiento.</p>':this.combatPreviewRequested?'<p class="inspector-note">Guardia, reacción al bloqueo y tres golpes de espada. Elige un clip y reduce la velocidad para revisar sus poses. Las animaciones se repiten aquí para facilitar la comparación.</p>':this.idlePreviewRequested?'<p class="inspector-note">Respiración suave en un ciclo de 4 segundos. El juego incorpora esta base de Idle con espada y escudo; aquí puedes revisar los modelos originales.</p>':''}
+   ${this.actionsPreviewRequested?'<p class="inspector-note">Daño, muerte, interacción, victoria y pasos laterales o hacia atrás con espada y escudo. Elige una animación y reduce la velocidad para revisar las poses. Aquí se repiten para compararlas; en el juego, muerte y victoria conservan su pose final.</p>':this.traversalPreviewRequested?'<p class="inspector-note">Subida, caída, aterrizaje y voltereta con espada y escudo. Elige un clip y reduce la velocidad para revisar las poses. Aquí se repiten en el sitio; en el juego siguen la altura y la dirección del movimiento.</p>':this.combatPreviewRequested?'<p class="inspector-note">Guardia, reacción al bloqueo y tres golpes de espada. Elige un clip y reduce la velocidad para revisar sus poses. Las animaciones se repiten aquí para facilitar la comparación.</p>':this.idlePreviewRequested?'<p class="inspector-note">Respiración suave en un ciclo de 4 segundos. El juego incorpora esta base de Idle con espada y escudo; aquí puedes revisar los modelos originales.</p>':''}
    <label class="inspector-file">Abrir GLB desde tu equipo<input id="asset-file" type="file" accept=".glb,model/gltf-binary"></label>
    <button id="asset-load-default" type="button">Recargar modelo original</button>
    <p id="asset-status" role="status">Preparando la carga del modelo…</p>
@@ -119,7 +120,7 @@ export class AssetInspector {
    </fieldset>
    <details><summary>Inventario real del archivo</summary><pre id="asset-report">Sin datos: aún no se ha cargado un GLB.</pre><button id="asset-export" disabled type="button">Descargar informe JSON</button></details>
    <details><summary>Animaciones originales y adaptaciones</summary><p>El archivo original no incluye un Idle neutro, bloqueo, voltereta ni salto normal identificados. El juego añade sus propias animaciones para estas acciones. Revisa manos, hombros, rodillas, capa y contacto de pies desde las tres vistas.</p></details>
-   <p class="inspector-note">Visor aislado: reproduce un solo clip. El juego usa a Ruen con su equipo para reposo, movimiento, defensa, ataques, salto y voltereta. Las reacciones al daño y otras acciones pendientes conservan el modelo provisional.</p>
+   <p class="inspector-note">Visor aislado: reproduce una animación a la vez. El juego combina las poses para mantener el equipo al moverse, combatir e interactuar, también durante el salto.</p>
    <a class="inspector-back" href="${import.meta.env.BASE_URL}">Jugar con Ruen →</a>`;
   document.querySelector('#app')!.append(this.panel);
   this.file=this.element<HTMLInputElement>('asset-file');
@@ -193,12 +194,19 @@ export class AssetInspector {
      if(this.disposed){model.dispose();return;}
      const traversal=traversalFactory?.createRuenEquippedTraversal(model,this.scene,locomotion);
      if(traversal)model.container.animationGroups.push(...Object.values(traversal));
+     const actionsFactory=this.actionsPreviewRequested?await import('../assets/ruenEquippedActions'):undefined;
+     const directionalFactory=this.actionsPreviewRequested?await import('../assets/ruenEquippedDirectional'):undefined;
+     if(this.disposed){model.dispose();return;}
+     const actions=actionsFactory?.createRuenEquippedActions(model,this.scene,locomotion);
+     if(actions)model.container.animationGroups.push(...Object.values(actions));
+     const directional=directionalFactory?.createRuenEquippedDirectional(model,this.scene,locomotion);
+     if(directional)model.container.animationGroups.push(...Object.values(directional));
      const neutral=createRuenIdlePreview(model,this.scene);
      model.container.animationGroups.push(neutral);
      this.idlePreviewName=neutral.name;this.equippedIdleName=locomotion.idle.name;
-     const labels:Record<string,string>={walk:'Caminar',run:'Correr',shield:'Guardia',block:'Bloqueo recibido',attack1:'Ataque 1 · corte diagonal',attack2:'Ataque 2 · revés',attack3:'Ataque 3 · golpe alto',jump:'Salto · subida',fall:'Caída',land:'Aterrizaje',roll:'Voltereta'};
-     this.combatOptions=Object.entries({...locomotion,...combat,...traversal}).filter(([kind])=>kind!=='idle').map(([kind,group])=>({name:group.name,label:labels[kind]??kind,duration:(group.to-group.from)/group.targetedAnimations[0]!.animation.framePerSecond}));
-     authoredPreview={author:'Veylun',stage:this.traversalPreviewRequested?'traversal-v1':'combat-v1',notInMaster:true,gameplayIntegrated:true,clips:[locomotion.idle.name,...this.combatOptions.map(clip=>clip.name)]};
+     const labels:Record<string,string>={walk:'Caminar',run:'Correr',shield:'Guardia',block:'Bloqueo recibido',attack1:'Ataque 1 · corte diagonal',attack2:'Ataque 2 · revés',attack3:'Ataque 3 · golpe alto',jump:'Salto · subida',fall:'Caída',land:'Aterrizaje',roll:'Voltereta',hurt:'Daño',death:'Muerte',interact:'Interacción',victory:'Restauración y victoria',walkLeft:'Caminar · izquierda',walkRight:'Caminar · derecha',walkBack:'Caminar · atrás',runLeft:'Correr · izquierda',runRight:'Correr · derecha',runBack:'Correr · atrás'};
+     this.combatOptions=Object.entries({...locomotion,...combat,...traversal,...actions,...directional}).filter(([kind])=>kind!=='idle').map(([kind,group])=>({name:group.name,label:labels[kind]??kind,duration:(group.to-group.from)/group.targetedAnimations[0]!.animation.framePerSecond}));
+     authoredPreview={author:'Veylun',stage:this.actionsPreviewRequested?'actions-v1':this.traversalPreviewRequested?'traversal-v1':'combat-v1',notInMaster:true,gameplayIntegrated:true,clips:[locomotion.idle.name,...this.combatOptions.map(clip=>clip.name)]};
     }catch(error){
      this.idlePreviewError=error instanceof Error?error.message:String(error);
      console.warn('Animaciones de combate no disponibles para este modelo.',error);
@@ -267,7 +275,7 @@ export class AssetInspector {
    const ready=equipment.diagnostics.status==='ready';
    status.dataset['state']=equipment.diagnostics.status;
    toggle.disabled=!ready;retry.hidden=ready;
-   status.textContent=ready?(this.traversalPreviewRequested?'Espada y escudo del juego. Selecciona salto, caída, aterrizaje o voltereta; desmarca para volver al Idle sin equipo.':this.combatPreviewRequested?'Espada y escudo del juego. Selecciona guardia, bloqueo o un ataque; desmarca para volver al Idle sin equipo.':'Azure Oathblade y Aegis of the Azure. Desmarca para comparar con el Idle sin equipo.'):'No se pudo cargar todo el equipo. Puedes usar el Idle sin equipo y reintentar la carga.';
+   status.textContent=ready?(this.actionsPreviewRequested?'Espada y escudo del juego. Selecciona una acción o un paso lateral; desmarca para volver al Idle sin equipo.':this.traversalPreviewRequested?'Espada y escudo del juego. Selecciona salto, caída, aterrizaje o voltereta; desmarca para volver al Idle sin equipo.':this.combatPreviewRequested?'Espada y escudo del juego. Selecciona guardia, bloqueo o un ataque; desmarca para volver al Idle sin equipo.':'Azure Oathblade y Aegis of the Azure. Desmarca para comparar con el Idle sin equipo.'):'No se pudo cargar todo el equipo. Puedes usar el Idle sin equipo y reintentar la carga.';
    let armedOption=Array.from(this.clips.options).find(option=>option.value===this.equippedIdleName);
    if(ready&&!armedOption){armedOption=new Option('Idle con espada y escudo · prototipo v1 · 4.000 s',this.equippedIdleName);this.clips.add(armedOption,0);}
    if(armedOption)armedOption.disabled=!ready;
@@ -276,7 +284,7 @@ export class AssetInspector {
     if(ready&&!option){option=new Option(`${clip.label} · ${clip.duration.toFixed(3)} s`,clip.name);this.clips.add(option,this.combatOptions.indexOf(clip)+1);}
     if(option)option.disabled=!ready;
    }
-   const selected=ready?(this.combatOptions.find(clip=>clip.label===(this.traversalPreviewRequested?'Voltereta':'Guardia'))?.name??this.equippedIdleName):this.idlePreviewName;
+   const selected=ready?(this.combatOptions.find(clip=>clip.label===(this.actionsPreviewRequested?'Daño':this.traversalPreviewRequested?'Voltereta':'Guardia'))?.name??this.equippedIdleName):this.idlePreviewName;
    if(selected){this.clips.value=selected;model.player.select(selected);model.player.pause();}
   }catch(error){
    if(this.disposed||this.model!==model)return;

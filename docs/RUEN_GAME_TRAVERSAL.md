@@ -6,6 +6,10 @@ y escudo. Amplía la versión anterior `f828d841`, con Idle, locomoción y comba
 equipados; sus 173 unitarias y 40 casos de navegador permanecen como resultados
 de aquella etapa.
 
+La [etapa posterior de acciones](RUEN_COMPLETE_ACTIONS.md) compone ataques
+y defensa con salto/caída, y guardia/bloqueo con aterrizaje. Sus comprobaciones
+y estado de publicación se registran por separado.
+
 ## Movimiento y animación
 
 `createRuenEquippedTraversal` crea `Ruen_Jump_Equipped`, `Ruen_Fall_Equipped`,
@@ -61,8 +65,9 @@ PR #6 y la base anterior se detallan en el [registro de despliegue](DEPLOYMENT.m
 
 ## Validación y límites
 
-Daño, muerte, interacción y los desplazamientos laterales/hacia atrás con
-objetivo fijado fuera de guardia conservan sus variantes provisionales. Se
+En la etapa `b83b0f36`, daño, muerte, interacción y desplazamientos laterales/
+hacia atrás con objetivo fijado fuera de guardia conservaban sus variantes
+provisionales; la [etapa de acciones](RUEN_COMPLETE_ACTIONS.md) los adapta. Se
 mantiene el fallback para modelos o equipo no disponibles, o si falla la
 creación de estos clips. Equipo parcial/error conserva la locomoción real
 sin armas y usa el rig provisional para salto y voltereta.

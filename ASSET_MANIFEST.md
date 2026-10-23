@@ -34,9 +34,10 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 | sound-fx | `src/audio/AudioManager.ts` | Síntesis Web Audio | Pasos, espada, impacto, escudo, rodada, proyectil, cofre, interruptor, checkpoint, derrota y victoria | Efectos originales funcionales |
 
 El master de Meshy se recibió mediante el release `ruen-modelo-prueba` y se
-verificó por SHA-256. Sus 20 clips se conservan sin editar. Esta revisión
-adapta Walking/Running y el Idle propio para portar equipo; los otros 18 clips
-siguen inventariados, sin asignación automática al gameplay. El arte final
+verificó por SHA-256. Sus 20 clips se conservan sin editar. La revisión actual
+crea 22 clips propios sobre su esqueleto; Walking/Running sirven de base a
+la locomoción equipada. Los originales siguen inventariados, sin asignación
+automática al gameplay. El arte final
 continúa pendiente. Los PNG son referencias 2D, no una conversión automática
 de alta calidad. Ver el [informe del master](docs/RUEN_MESHY_INSPECTION.md).
 
@@ -61,7 +62,17 @@ en `f828d841`. La fuente vigente `b83b0f36` añade salto y voltereta. Ver el
 
 ## Animación
 
-La etapa de salto y voltereta añade cuatro clips propios en memoria, sin
+**Validado; publicación pendiente:** cuatro clips de daño,
+muerte, interacción y victoria, seis variantes de caminar/correr hacia
+izquierda, derecha y atrás, y composición de combate con clips existentes.
+El conjunto suma 22 clips propios y 42 grupos en gameplay; el visor
+`actions-v1` añade el Idle neutro y muestra 43. Los cinco GLB coinciden por
+SHA-256 con `b83b0f36`; se conservan los 20 clips originales y el escudo al 70%.
+Aprobaron 234 unitarias, 13 casos seleccionados de navegador, typecheck, build
+y la calibración de contacto.
+[Alcance de las acciones](docs/RUEN_COMPLETE_ACTIONS.md).
+
+La etapa publicada de salto y voltereta añade cuatro clips propios en memoria, sin
 reexportar los cinco GLB ni cambiar el tamaño del equipo. Hay 12 clips
 propios en total: tres de locomoción, cinco de combate y cuatro de movimiento.
 Los 20 originales permanecen separados; son 32 grupos en gameplay y 33 en el
@@ -93,7 +104,8 @@ No se añadió simulación de tela: la capa sigue su skin.
 
 Si falla una pieza, se usan las variantes sin equipo `Ruen_Idle_Unarmed`,
 `Ruen_Walk_Unarmed` y `Ruen_Run_Unarmed`, y se oculta cualquier carga parcial.
-Las acciones todavía no adaptadas conservan el rig provisional y sus reglas.
+Ante ese fallo, las demás acciones usan el rig provisional con las mismas
+reglas. Con el equipo completo, todos los estados existentes usan el modelo real.
 El visor mantiene `Ruen_Idle_v1` y `Ruen_Idle_Armed_v1` para comparar los masters;
 sus inventarios siguen separados de los grupos creados en memoria.
 

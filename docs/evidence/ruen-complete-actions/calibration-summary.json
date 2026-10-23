@@ -1,0 +1,115 @@
+{
+  "method": "CPU-skinned body and both runtime weapon meshes sampled at 60 fps in the isolated inspector; exact final frame also sampled. Manual calibration, separate from control-driven browser tests.",
+  "tolerance": 0.01,
+  "groups": 43,
+  "originalClips": 20,
+  "samples": 523,
+  "pageErrors": [],
+  "clips": [
+    {
+      "name": "Ruen_Hurt_Equipped",
+      "duration": 0.3,
+      "samples": 19,
+      "bodyMinimumY": -0.0007711866055615246,
+      "equipmentMinimumY": {
+        "sword": 0.0896422517238446,
+        "shield": 0.7869321560374666
+      }
+    },
+    {
+      "name": "Ruen_Death_Equipped",
+      "duration": 1.25,
+      "samples": 76,
+      "bodyMinimumY": -0.0008137135300785303,
+      "equipmentMinimumY": {
+        "sword": 0.0896422517238446,
+        "shield": 0.5006523201345099
+      }
+    },
+    {
+      "name": "Ruen_Interact_Equipped",
+      "duration": 0.5,
+      "samples": 31,
+      "bodyMinimumY": -0.0007345388294197619,
+      "equipmentMinimumY": {
+        "sword": 0.0896422517238446,
+        "shield": 0.7037153717230964
+      }
+    },
+    {
+      "name": "Ruen_Victory_Equipped",
+      "duration": 3.0,
+      "samples": 181,
+      "bodyMinimumY": -0.0008644876070320606,
+      "equipmentMinimumY": {
+        "sword": 0.0896422517238446,
+        "shield": 0.7869321560374666
+      }
+    },
+    {
+      "name": "Ruen_Walk_Left_Equipped",
+      "duration": 0.8,
+      "samples": 49,
+      "bodyMinimumY": 0.0016842150362208486,
+      "equipmentMinimumY": {
+        "sword": 0.08964216366066574,
+        "shield": 0.7869321534914511
+      }
+    },
+    {
+      "name": "Ruen_Walk_Right_Equipped",
+      "duration": 0.8,
+      "samples": 49,
+      "bodyMinimumY": 0.002814704552292824,
+      "equipmentMinimumY": {
+        "sword": 0.08964219206821666,
+        "shield": 0.7869321531454965
+      }
+    },
+    {
+      "name": "Ruen_Walk_Back_Equipped",
+      "duration": 0.8,
+      "samples": 49,
+      "bodyMinimumY": 0.007749846670776606,
+      "equipmentMinimumY": {
+        "sword": 0.08964222334178529,
+        "shield": 0.7869322727255958
+      }
+    },
+    {
+      "name": "Ruen_Run_Left_Equipped",
+      "duration": 0.36,
+      "samples": 23,
+      "bodyMinimumY": 0.0010981669183820486,
+      "equipmentMinimumY": {
+        "sword": 0.11464219947443577,
+        "shield": 0.7869321554628317
+      }
+    },
+    {
+      "name": "Ruen_Run_Right_Equipped",
+      "duration": 0.36,
+      "samples": 23,
+      "bodyMinimumY": 0.0030440720729529858,
+      "equipmentMinimumY": {
+        "sword": 0.11464219949484517,
+        "shield": 0.7869139044050422
+      }
+    },
+    {
+      "name": "Ruen_Run_Back_Equipped",
+      "duration": 0.36,
+      "samples": 23,
+      "bodyMinimumY": 0.002477011876180768,
+      "equipmentMinimumY": {
+        "sword": 0.11464217117909636,
+        "shield": 0.7869321276834416
+      }
+    }
+  ],
+  "initialFindings": {
+    "deathMinimumY": -0.04553066939115524,
+    "correction": "Action-specific support from the original cape side and boot vertices, with weighted skin bindings. Shared traversal support unchanged.",
+    "captureInterruption": "Initial sample data completed; live reload interrupted the last 3 of 33 screenshots. Final capture used a dedicated server without hot reload and completed all 33."
+  }
+}

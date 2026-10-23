@@ -1,0 +1,28 @@
+[WebServer] (node:30262) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:30275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 7 tests using 1 worker
+
+(node:30299) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/7] tests/browser/ruen-actions-preview.spec.ts:123:1 › actions preview opens paused and deforms the real equipped skin while preserving ground and source clips
+[2/7] tests/browser/ruen-actions-preview.spec.ts:182:1 › production actions preview offers its complete equipped catalog without development hooks or save changes
+[3/7] tests/browser/ruen-actions.spec.ts:18:1 › real enemy hits animate hurt and death, pause exactly, and respawn with saved progress
+[4/7] tests/browser/ruen-actions.spec.ts:59:1 › normal E interactions keep equipment through switch, chest and door, then reload the earned key and checkpoint
+[5/7] tests/browser/ruen-actions.spec.ts:90:1 › altar input pauses and resumes the equipped restoration, renders its exact final pose, and reloads completed victory
+[6/7] tests/browser/ruen-actions.spec.ts:125:1 › real gamepad walking and running stay equipped to both sides and backward under lock-on
+[7/7] tests/browser/ruen-actions.spec.ts:167:1 › Space permits the existing aerial sword attack and a real airborne shield block without changing damage rules
+  Slow test file: tests/browser/ruen-actions.spec.ts (7.5m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  7 passed (9.2m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

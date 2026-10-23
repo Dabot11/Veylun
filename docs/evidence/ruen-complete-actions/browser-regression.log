@@ -1,0 +1,70 @@
+[WebServer] (node:31136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:31149) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 6 tests using 1 worker
+
+(node:31173) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/6] tests/browser/journey.spec.ts:81:1 › new adventure to restoration with normal inputs, death, checkpoints and reloads
+tests/browser/journey.spec.ts:81:1 › new adventure to restoration with normal inputs, death, checkpoints and reloads
+Journey: Brotes cleared, checkpoint 1 earned
+
+Journey: Spirit cleared, switch and grate opened
+
+Journey: key acquired, enclosure exited, checkpoint 2 earned
+
+Journey: death and reload preserve progress, Guardian resets
+
+Journey: Guardian defeated, explicit altar activation still required
+
+Journey: victory, 79.0 simulated seconds, 1 deliberate death
+
+[2/6] tests/browser/ruen-combat.spec.ts:204:3 › keyboard: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage
+[3/6] tests/browser/ruen-combat.spec.ts:295:1 › attack pause preserves the exact frame, and dodge or enemy damage keeps the equipped hero
+[4/6] tests/browser/ruen-meshy.spec.ts:190:1 › default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal
+[5/6] tests/browser/ruen-meshy.spec.ts:390:1 › production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks
+[6/6] tests/browser/ruen-meshy.spec.ts:419:1 › a missing runtime shield keeps a neutral real hero playable without partial floating equipment
+  1) tests/browser/ruen-meshy.spec.ts:419:1 › a missing runtime shield keeps a neutral real hero playable without partial floating equipment 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 3
+    + Received  + 1
+
+    - Array [
+    -   "Ruen_Idle_Unarmed",
+    - ]
+    + Array []
+
+      434 |   expect(initial.diagnostics?.equipped).toBe(false);
+      435 |   expect(initial.diagnostics?.equipment?.enabled).toBe(false);
+    > 436 |   expect(initial.diagnostics?.clips.filter(clip => clip.isPlaying).map(clip => clip.name)).toEqual(['Ruen_Idle_Unarmed']);
+          |                                                                                            ^
+      437 |   const fallback = await page.evaluate(() => {
+      438 |     const view = (window as TestWindow).__veylun.locomotion!;
+      439 |     const model = view.model!;
+        at /workspace/Veylun/tests/browser/ruen-meshy.spec.ts:436:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../veylun-validation/ruen-complete-actions/browser-regression/ruen-meshy-a-missing-runti-76e76--partial-floating-equipment/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../veylun-validation/ruen-complete-actions/browser-regression/ruen-meshy-a-missing-runti-76e76--partial-floating-equipment/error-context.md
+
+
+  Slow test file: tests/browser/journey.spec.ts (6.8m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    tests/browser/ruen-meshy.spec.ts:419:1 › a missing runtime shield keeps a neutral real hero playable without partial floating equipment 
+  5 passed (12.0m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

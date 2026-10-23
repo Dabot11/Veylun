@@ -1,0 +1,125 @@
+{
+  "method": "Manual 60 Hz Simulation steps with the real visual adapter and CPU-skinned body/equipment meshes; setup prepares each scenario, then existing movement, damage and interaction APIs drive it. This is contact calibration, separate from browser tests driven through controls.",
+  "samples": 915,
+  "tolerance": 0.01,
+  "allPassed": true,
+  "initialFindings": [
+    {
+      "action": "death",
+      "minimumBodyToFloor": -0.042206990642041475,
+      "penetratingSamples": 44
+    },
+    {
+      "action": "death-air",
+      "minimumBodyToFloor": -0.03883508247751877,
+      "penetratingSamples": 39
+    },
+    {
+      "action": "death-roll",
+      "minimumBodyToFloor": -0.042206990642041475,
+      "penetratingSamples": 44
+    },
+    {
+      "action": "interact-moving",
+      "minimumBodyToFloor": -0.030144891547931374,
+      "penetratingSamples": 3
+    }
+  ],
+  "corrections": [
+    "Death-specific support of measured cape and boot surfaces.",
+    "Maintain the weighted foot/toe support envelope when blending a moving gesture with a gait.",
+    "Keep lower-body gait weight complete and preserve phase when exiting an action; crossfade the upper body."
+  ],
+  "finalScenarios": [
+    {
+      "action": "hurt",
+      "samples": 50,
+      "minFloor": -0.000657776794402605,
+      "minGearFloor": 0.07645962491746733,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "hurt-moving",
+      "samples": 50,
+      "minFloor": 0.008352258803638213,
+      "minGearFloor": 0.05058541559447771,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "death",
+      "samples": 100,
+      "minFloor": -0.0006940497585371797,
+      "minGearFloor": 0.07645948163785038,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "death-air",
+      "samples": 100,
+      "minFloor": -1.7115338789120206e-08,
+      "minGearFloor": 0.07645948163785038,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "death-roll",
+      "samples": 100,
+      "minFloor": -0.0006940497585371797,
+      "minGearFloor": 0.07645948163785038,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "interact-moving",
+      "samples": 50,
+      "minFloor": -0.000547136056968156,
+      "minGearFloor": 0.04269670612656956,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "victory",
+      "samples": 185,
+      "minFloor": -0.0007373332165420132,
+      "minGearFloor": 0.07765579479357887,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "direction-blends",
+      "samples": 180,
+      "minFloor": 0.0021847223321603774,
+      "minGearFloor": 0.09276854442185593,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "air-attack",
+      "samples": 50,
+      "minFloor": -0.0006886839830316446,
+      "minGearFloor": 0.07645837352845697,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "action": "air-guard",
+      "samples": 50,
+      "minFloor": -0.0006886839830316446,
+      "minGearFloor": 0.19547359896014366,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    }
+  ]
+}

@@ -20,6 +20,7 @@ interface RenderSample {
   position: number[]; target: string | null; representation: string; combat: CombatDiagnostic;
   weights: number[]; originalPlaying: string[]; rootError: number; groupFrame: number | null; arms: number[][];
   traversal: RuenLocomotionView['diagnostics']['traversal'];
+  actions: { state: string | null; clip: string | null; frame: number | null; time: number };
   gear: { kind: string; enabled: boolean; parent: string | undefined; gripError: number; scale: number[] }[];
 }
 interface StepSample {
@@ -91,7 +92,7 @@ async function collectEvidence(page: Page): Promise<void> {
       const sample: RenderSample = {
         age: sim.age, state: p.state, combo: p.combo, attackTime: p.attackTime, health: p.health,
         hp: sim.enemies.map(enemy => enemy.hp), position: [p.x, p.y, p.z], target: sim.targetId,
-        representation: diagnostics.representation, combat: diagnostics.combat, traversal: diagnostics.traversal,
+        representation: diagnostics.representation, combat: diagnostics.combat, traversal: diagnostics.traversal, actions: diagnostics.actions,
         groupFrame: model.container.animationGroups.find(group => group.name === diagnostics.combat.clip)?.getCurrentFrame() ?? null,
         arms: model.container.transformNodes.filter(node => /mixamorig:(Left|Right)(Arm|ForeArm|Hand)$/.test(node.name))
           .map(node => node.rotationQuaternion!.asArray()),
@@ -291,7 +292,7 @@ test('real shield input blocks a Brote hit and keeps equipped guard while moving
   for (const sample of evidence.renders.filter(sample => sample.combat.state)) expectEquipped(sample);
 });
 
-test('attack pause preserves the exact frame, dodge keeps equipment, and enemy damage uses the safe fallback', async ({ page }, info) => {
+test('attack pause preserves the exact frame, and dodge or enemy damage keeps the equipped hero', async ({ page }, info) => {
   const errors = collectErrors(page);
   await startTrial(page);
   await page.evaluate(() => {
@@ -398,9 +399,11 @@ test('attack pause preserves the exact frame, dodge keeps equipment, and enemy d
         expect(sample.traversal.state).toBe('roll');
         expect(sample.traversal.clip).toBe('Ruen_Roll_Equipped');
       } else {
-        expect(sample.representation).toBe('fallback');
+        expectEquipped(sample);
         expect(sample.traversal.state).toBeNull();
-        expect(sample.gear.every(item => !item.enabled)).toBe(true);
+        expect(sample.actions.state).toBe('hurt');
+        expect(sample.actions.clip).toBe('Ruen_Hurt_Equipped');
+        expect(sample.actions.frame).toBeCloseTo(sample.actions.time * 60, 5);
       }
     }
   }
