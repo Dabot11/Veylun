@@ -49,7 +49,7 @@ export class Application {
  }
  private async enableRuenModel():Promise<void>{
   const panel=document.createElement('aside');panel.id='ruen-model-trial';
-  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Idle y movimiento con equipo · acciones en revisión</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=idle-v1&equipment=azure">Ver el equipo</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
+  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Espada y escudo · movimiento, defensa y combo</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=combat-v1&equipment=azure">Ver animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
   document.querySelector('#app')!.append(panel);this.ruenStatus=panel.querySelector('#ruen-model-status')!;
   try{
    await import('../ui/ruenTrial.css');
@@ -73,7 +73,8 @@ export class Application {
   this.ruenStatus.dataset['status']=d.status;this.ruenStatus.dataset['representation']=d.representation;
   const equipment=d.equipment?.status??'idle';this.ruenStatus.dataset['equipmentStatus']=equipment;
   const states:Record<string,string>={idle:'reposo',jump:'salto',fall:'caída',land:'aterrizaje',roll:'esquiva',shield:'defensa',attack1:'ataque 1',attack2:'ataque 2',attack3:'ataque 3',hurt:'daño',death:'muerte',interact:'interacción',victory:'victoria'};
-  const motion=this.sim.player.state==='idle'?'en reposo':this.sim.player.state==='walk'?'caminando':'corriendo';
+  const motion=this.sim.player.state==='idle'?'en reposo':this.sim.player.state==='walk'?'caminando':this.sim.player.state==='run'?'corriendo':states[this.sim.player.state]??this.sim.player.state;
+  this.ruenStatus.dataset['motion']=this.sim.player.state;
   const gearLabel=equipment==='ready'?'con espada y escudo':equipment==='loading'?'cargando equipo':'sin equipo: carga no disponible';
   const label=d.status==='loading'?'Cargando Ruen y su equipo…':d.status==='error'?'No se pudo cargar Ruen. Se muestra el modelo provisional.':d.representation==='meshy'?`Ruen · ${motion} · ${gearLabel}`:`Modelo provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
   if(this.ruenStatus.textContent!==label)this.ruenStatus.textContent=label;
@@ -115,7 +116,10 @@ export class Application {
     this.camera.update(this.sim,dt,look,this.input.zoom);
     this.loop.advance(dt,step=>{
       const a=this.camera.yaw,x=this.input.movement.x,z=this.input.movement.y;
+      const firstEvent=this.sim.events.length;
       this.sim.step(step,{x:x*Math.cos(a)+z*Math.sin(a),z:z*Math.cos(a)-x*Math.sin(a),viewYaw:a,jump:this.input.take('jump'),dodge:this.input.take('dodge'),attack:this.input.take('attack'),shield:this.input.shield,interact:this.input.take('interact'),target:this.input.take('target'),cycle:this.input.take('nextTarget')?1:this.input.take('previousTarget')?-1:0});
+      // Capture the simulation timestamp of each block before further fixed steps.
+      for(let i=firstEvent;i<this.sim.events.length;i++)this.ruenLocomotion?.handleEvent(this.sim.events[i]!,this.sim);
     });
     for(const e of this.sim.events){
       if(e.type==='save')this.store.write(this.sim.save);

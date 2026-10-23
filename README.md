@@ -35,7 +35,17 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
-## Ruen equipado: publicado
+## Animaciones de combate: validadas localmente
+
+La revisión actual adapta la guardia, la reacción de bloqueo y los tres golpes
+del combo al Ruen real con espada y escudo. El escudo conserva su reducción
+del 30%. Las animaciones se crean sobre su esqueleto y siguen los tiempos de
+combate existentes. Aprobaron typecheck, build, **173 pruebas unitarias y
+40 casos únicos de navegador**. La publicación sigue pendiente; la evidencia
+registra las correcciones y la repetición aislada de una expectativa de texto.
+[Alcance del combate](docs/RUEN_GAME_COMBAT.md).
+
+## Ruen equipado: versión publicada
 
 Esta revisión integra Idle, caminar y correr con espada y escudo en la ruta
 normal `/`. Typecheck, build, **152 pruebas unitarias y 33 de navegador**
@@ -169,7 +179,13 @@ Detalles y comprobaciones en `docs/ART_PASS.md`.
 
 ## Pruebas
 
-La revisión del Idle equipado dentro del juego aprobó typecheck, build,
+La fuente final de combate aprobó typecheck, build, **173 pruebas unitarias
+en 17 archivos y 40 casos únicos de navegador**. El cierre comprende siete
+casos nuevos, 32 regresiones y un caso repetido tras corregir sólo el texto
+esperado del test. La aplicación y el build se conservaron durante ese ajuste.
+[Incidencias y evidencia de combate](docs/evidence/ruen-game-combat/README.md).
+
+La versión publicada `50210a9c`, con Idle y locomoción equipada, aprobó typecheck, build,
 **152 pruebas unitarias en 16 archivos y 33 de navegador**. La suite completa
 de navegador terminó en 28.7 minutos sin omisiones ni reintentos. El estado,
 las capturas y la evidencia actual se registran en

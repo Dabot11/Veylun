@@ -206,8 +206,8 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
     return { hero: view.model!.report, groups: view.model!.container.animationGroups.map(group => group.name), equipment: view.equipment!.report };
   });
   expect(inventory.hero.animationGroups).toHaveLength(20);
-  expect(inventory.groups).toHaveLength(23);
-  expect(new Set(inventory.groups).size).toBe(23);
+  expect(inventory.groups).toHaveLength(28);
+  expect(new Set(inventory.groups).size).toBe(28);
   expect(inventory.equipment.items).toHaveLength(2);
   const triangleCount = inventory.equipment.items.reduce((sum, item) => sum + item.inventory!.meshes.reduce((total, mesh) => total + mesh.triangles, 0), 0);
   expect(triangleCount).toBeGreaterThan(10000);
@@ -282,7 +282,7 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
   expectSameFeet(await equipmentPose(page), standing);
   await page.screenshot({ path: info.outputPath('equipped-gameplay-idle.png') });
 
-  for (const [key, pattern] of [['Space', /^(jump|fall)$/], ['ShiftLeft', /^roll$/], ['KeyJ', /^attack[123]$/], ['KeyK', /^shield$/]] as const) {
+  for (const [key, pattern] of [['Space', /^(jump|fall)$/], ['ShiftLeft', /^roll$/]] as const) {
     await page.keyboard.down(key);
     await expect.poll(async () => (await state(page)).state, { intervals: [25, 50, 100] }).toMatch(pattern);
     const action = await state(page);

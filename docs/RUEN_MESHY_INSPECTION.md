@@ -1,6 +1,10 @@
 # Ruen / Meshy: visor y prueba de locomoción
 
-Esta revisión integra **Idle, caminar y correr con equipo optimizado**
+La nueva etapa adapta [defensa y los tres ataques del combo](RUEN_GAME_COMBAT.md);
+su validación local aprobó con 173 unitarias y 40 casos únicos de navegador.
+La publicación sigue pendiente.
+
+La versión publicada integra **Idle, caminar y correr con equipo optimizado**
 y reduce el escudo un 30%. La validación local aprobó y la fuente `50210a9c`
 está publicada, con confirmación de Actions.
 [Alcance de esta etapa](RUEN_GAME_EQUIPMENT.md).
