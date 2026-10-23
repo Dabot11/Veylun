@@ -1,0 +1,15 @@
+
+> veylun@0.0.1 test
+> vitest run
+
+
+ RUN  v5.0.5 /workspace/Veylun
+
+
+ Test Files  20 passed (20)
+      Tests  234 passed (234)
+   Start at  07:37:44
+   Duration  5.67s (tests 68%, import 23%, transform 8%)
+
+    Isolate  20 workers spawned · ~100ms startup each (spawn + environment, per file)
+             at least ~567ms faster with isolate: false — reuses workers across files instead of one per file

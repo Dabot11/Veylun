@@ -206,8 +206,8 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
     return { hero: view.model!.report, groups: view.model!.container.animationGroups.map(group => group.name), equipment: view.equipment!.report };
   });
   expect(inventory.hero.animationGroups).toHaveLength(20);
-  expect(inventory.groups).toHaveLength(32);
-  expect(new Set(inventory.groups).size).toBe(32);
+  expect(inventory.groups).toHaveLength(42);
+  expect(new Set(inventory.groups).size).toBe(42);
   expect(inventory.equipment.items).toHaveLength(2);
   const triangleCount = inventory.equipment.items.reduce((sum, item) => sum + item.inventory!.meshes.reduce((total, mesh) => total + mesh.triangles, 0), 0);
   expect(triangleCount).toBeGreaterThan(10000);
@@ -429,6 +429,11 @@ test('a missing runtime shield keeps a neutral real hero playable without partia
   await expect(page.locator('#ruen-model-status')).toHaveAttribute('data-equipment-status', 'partial');
   await expect.poll(async () => (await state(page)).diagnostics?.representation).toBe('meshy');
   await expect.poll(async () => (await state(page)).diagnostics?.weights.idle).toBe(1);
+  const beforePlayback = await state(page);
+  // Ready/idle weight also hold during pause and the first reset frame.
+  // Wait for a resumed simulation tick, as the walk/run checks do below.
+  await expect.poll(async () => (await state(page)).diagnostics?.clips.filter(clip => clip.isPlaying).map(clip => clip.name))
+    .toEqual(['Ruen_Idle_Unarmed']);
   const initial = await state(page);
   expect(initial.diagnostics?.status).toBe('ready');
   expect(initial.diagnostics?.equipped).toBe(false);
@@ -463,7 +468,7 @@ test('a missing runtime shield keeps a neutral real hero playable without partia
   expect(await page.evaluate(() => (window as TestWindow).__veylun.locomotion!.equipment!.models.every(item => !item.mount.isEnabled()))).toBe(true);
   expect(requests).toHaveLength(3);
   await page.screenshot({ path: info.outputPath('runtime-equipment-failure-neutral-hero.png') });
-  await info.attach('runtime-equipment-failure.json', { body: JSON.stringify({ initial, fallback, errors, unhandled }, null, 2), contentType: 'application/json' });
+  await info.attach('runtime-equipment-failure.json', { body: JSON.stringify({ beforePlayback, initial, fallback, errors, unhandled }, null, 2), contentType: 'application/json' });
   expect(unhandled).toEqual([]);
   expect(errors.every(message => /503|Service Unavailable|Intentional runtime|Unable to load|Failed to load resource/.test(message))).toBe(true);
 });

@@ -35,9 +35,19 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
+## Acciones restantes: validadas; publicación pendiente
+
+La nueva etapa cubre daño, muerte, interacción, victoria, locomoción lateral
+y hacia atrás, y combate compuesto con salto, caída, aterrizaje e interacción.
+Todos los estados existentes usan el modelo real con equipo cuando la carga
+es correcta. Aprobaron **234 unitarias y 13 casos seleccionados de navegador**,
+además de typecheck, build y calibración de contacto.
+[Alcance y evidencia](docs/RUEN_COMPLETE_ACTIONS.md). La versión pública
+vigente continúa siendo `b83b0f36` hasta el próximo despliegue.
+
 ## Salto y voltereta: publicados
 
-La nueva etapa adapta subida, caída, aterrizaje y voltereta con espada y escudo.
+La versión publicada adapta subida, caída, aterrizaje y voltereta con espada y escudo.
 Mantiene la física del salto, la voltereta con Shift y el escudo al 70% del
 tamaño inicial. Aprobaron typecheck, build, **197 pruebas unitarias y 22 casos
 seleccionados de navegador**. La calibración de contacto durante transiciones
@@ -75,9 +85,10 @@ las copias jugables y el alcance de las animaciones.
 
 Ruen respira al detenerse y mantiene el equipo al caminar y correr, con
 transiciones de 0.2 s. Guardia, bloqueo y combo también usan el modelo real.
-Salto, caída, aterrizaje y voltereta también usan el modelo real. Daño y las
-demás acciones aún sin adaptar conservan el rig provisional. Si una pieza del
-equipo no carga, queda disponible el Ruen real sin equipo, con Idle y locomoción.
+Esta revisión completa salto, caída, aterrizaje, voltereta, daño, muerte,
+interacción, victoria y locomoción direccional con el mismo modelo y equipo.
+Si una pieza no carga, queda disponible Ruen sin equipo para Idle y locomoción,
+y el rig provisional cubre las otras acciones.
 `/?ruen=meshy` sigue siendo un alias y `/?ruen=provisional` carga el rig anterior.
 
 ## Visor de Ruen / Meshy
@@ -179,9 +190,9 @@ imagen del santuario visible en el chat. Los originales están separados en
 `design/references/` y no se descargan con el juego.
 
 Ruen usa el GLB real de Meshy mediante `RuenLocomotionView`. Esta revisión
-integra Idle, locomoción, guardia, bloqueo y combo con equipo optimizado;
-el resto de acciones conserva
-el rig provisional. Los tres enemigos y el rig alternativo de Ruen siguen
+representa todos los estados existentes con su equipo optimizado. El rig
+alternativo permanece disponible ante errores o mediante `?ruen=provisional`.
+Los tres enemigos y ese rig alternativo siguen
 siendo **3D procedurales provisionales**; simplifican las ilustraciones.
 El arte final y el rendimiento en el equipo del usuario siguen pendientes.
 `VisualOverrides` conserva la vía genérica de carga desde `assetCatalog.ts`
@@ -194,7 +205,13 @@ Detalles y comprobaciones en `docs/ART_PASS.md`.
 
 ## Pruebas
 
-La fuente final de combate aprobó typecheck, build, **173 pruebas unitarias
+La etapa actual aprobó 234 unitarias y 13 casos seleccionados de los 51 de
+navegador: siete nuevos y seis regresiones, incluido el recorrido completo.
+Doce aprobaron al primer intento; el caso de escudo ausente aprobó tras
+corregir la espera de la prueba, sin cambiar la aplicación ni el build.
+[Resultados de acciones](docs/evidence/ruen-complete-actions/README.md).
+
+La revisión de combate `f828d841` aprobó typecheck, build, **173 pruebas unitarias
 en 17 archivos y 40 casos únicos de navegador**. El cierre comprende siete
 casos nuevos, 32 regresiones y un caso repetido tras corregir sólo el texto
 esperado del test. La aplicación y el build se conservaron durante ese ajuste.

@@ -5,9 +5,19 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
+## Acciones restantes: validadas; publicación pendiente
+
+La etapa actual adapta daño, muerte, interacción, victoria y seis variantes
+de locomoción lateral/hacia atrás. También compone ataques y defensa con
+salto/caída, defensa con aterrizaje y bloqueo temporal con interacción. Las
+poses usan keyframes sobre el mismo esqueleto y conservan las reglas del
+juego. Aprobaron 234 unitarias, 13 casos seleccionados de navegador, typecheck,
+build y la calibración de contacto. La publicación sigue pendiente.
+[Alcance de las acciones](RUEN_COMPLETE_ACTIONS.md).
+
 ## Salto y voltereta publicados
 
-La etapa actual crea cuatro clips propios: subida del salto, caída, aterrizaje
+La versión `b83b0f36` incorpora cuatro clips propios: subida del salto, caída, aterrizaje
 y voltereta. El controlador conserva la altura, la gravedad y la dirección
 de esquiva; las poses siguen sus datos sin añadir otro desplazamiento. Se
 mantienen 0.12 s de aterrizaje, 0.45 s de voltereta y 0.25 s de invulnerabilidad.
@@ -70,7 +80,7 @@ desde el visor. Su identidad y metadatos se mantienen separados del inventario
 de los 20 clips originales. [Abrir el prototipo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1) y pulsar **Reproducir**.
 Publicado desde `43fa18c`; [Actions](https://github.com/Dabot11/Veylun/actions/runs/39853291990) confirmó **Success**.
 
-## Idle con espada y escudo
+## Etapa anterior: Idle con espada y escudo
 
 La ruta `?inspect=ruen&motion=idle-v1&equipment=azure` prepara una segunda
 variante, `Ruen_Idle_Armed_v1`, para visualizar los dos modelos entregados.
@@ -89,7 +99,8 @@ clip original oculta el equipo y restaura los canales de la pose equipada.
 Los 20 clips originales permanecen separados de estas dos variantes propias.
 La ruta sin `equipment=azure` mantiene el prototipo neutro anterior. El visor
 conserva los masters completos; la integración jugable usa copias optimizadas
-con la misma referencia de agarre. Defensa y daño siguen fuera de esta etapa.
+con la misma referencia de agarre. En aquella etapa del visor, defensa y daño
+quedaban fuera del alcance; las etapas posteriores los integran al juego.
 [Archivos y alcance del visor](RUEN_EQUIPMENT_PREVIEW.md).
 
 Tras el ajuste final aprobaron typecheck, build, 142 pruebas unitarias en
@@ -104,8 +115,9 @@ sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
    reacción de impacto y tres ataques con las ventanas de combate existentes.
 3. **Salto y voltereta, publicado:** subida, caída y aterrizaje separados,
    con rodada que conserva duración, dirección, física e invulnerabilidad.
-4. **Daño, muerte y demás acciones:** reemplazar sus variantes provisionales
-   tras comprobar interrupciones y transiciones.
+4. **Acciones restantes, validadas:** daño, muerte, interacción, victoria,
+   locomoción lateral/hacia atrás y composición de combate. Publicación
+   pendiente.
 
 La duración de cada acción se ajusta a `Simulation` y a los tiempos de combate;
 no alargamos ni cambiamos las reglas para acomodar un clip. La simulación sigue

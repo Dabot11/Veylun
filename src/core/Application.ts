@@ -49,7 +49,7 @@ export class Application {
  }
  private async enableRuenModel():Promise<void>{
   const panel=document.createElement('aside');panel.id='ruen-model-trial';
-  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Espada y escudo · salto, esquiva y combate</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=traversal-v1&equipment=azure">Ver animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
+  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Espada y escudo · movimiento, combate y acciones</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=actions-v1&equipment=azure">Ver animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
   document.querySelector('#app')!.append(panel);this.ruenStatus=panel.querySelector('#ruen-model-status')!;
   try{
    await import('../ui/ruenTrial.css');
@@ -73,10 +73,11 @@ export class Application {
   this.ruenStatus.dataset['status']=d.status;this.ruenStatus.dataset['representation']=d.representation;
   const equipment=d.equipment?.status??'idle';this.ruenStatus.dataset['equipmentStatus']=equipment;
   const states:Record<string,string>={idle:'reposo',jump:'salto',fall:'caída',land:'aterrizaje',roll:'esquiva',shield:'defensa',attack1:'ataque 1',attack2:'ataque 2',attack3:'ataque 3',hurt:'daño',death:'muerte',interact:'interacción',victory:'victoria'};
-  const motion=this.sim.player.state==='idle'?'en reposo':this.sim.player.state==='walk'?'caminando':this.sim.player.state==='run'?'corriendo':states[this.sim.player.state]??this.sim.player.state;
-  this.ruenStatus.dataset['motion']=this.sim.player.state;
+  const state=this.sim.mode==='restoring'||this.sim.mode==='won'?'victory':this.sim.player.state;
+  const motion=state==='idle'?'en reposo':state==='walk'?'caminando':state==='run'?'corriendo':states[state]??state;
+  this.ruenStatus.dataset['motion']=state;
   const gearLabel=equipment==='ready'?'con espada y escudo':equipment==='loading'?'cargando equipo':'sin equipo: carga no disponible';
-  const label=d.status==='loading'?'Cargando Ruen y su equipo…':d.status==='error'?'No se pudo cargar Ruen. Se muestra el modelo provisional.':d.representation==='meshy'?`Ruen · ${motion} · ${gearLabel}`:`Modelo provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
+  const label=d.status==='loading'?'Cargando Ruen y su equipo…':d.status==='error'?'No se pudo cargar Ruen. Se muestra el modelo provisional.':d.representation==='meshy'?`Ruen · ${motion} · ${gearLabel}`:`Modelo provisional · ${states[state]??'movimiento no validado'}`;
   if(this.ruenStatus.textContent!==label)this.ruenStatus.textContent=label;
  }
  private resize=():void=>{this.engine.resize();this.needsRender=true;};
@@ -129,7 +130,7 @@ export class Application {
     }
     this.sim.events=[];
     if(this.sim.player.state==='run'||this.sim.player.state==='walk')this.audio.play('step');
-    if(this.sim.mode==='won'){this.ui.show('victory',true,this.sim.save);document.exitPointerLock?.();}
+    if(this.sim.mode==='won'){this.ui.show('victory',true,this.sim.save);document.exitPointerLock?.();this.needsRender=true;}
     if(this.input.connectionNotice){this.ui.toast(this.input.connectionNotice,this.sim.age);this.input.connectionNotice='';}
     if(this.frame++%4===0)this.ui.update(this.sim,this.input);
     this.ui.combat.update(this.sim,this.input.device);

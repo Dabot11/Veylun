@@ -1,0 +1,324 @@
+{
+  "scope": {
+    "selected": 13,
+    "new": 7,
+    "regression": 6,
+    "development": 11,
+    "production": 2,
+    "catalog": 51,
+    "fullCatalogExecuted": false
+  },
+  "status": {
+    "finalPassed": 13,
+    "finalFailed": 0,
+    "skipped": 0,
+    "playwrightFlaky": 0,
+    "firstAttemptPassed": 12,
+    "initialFailedAttempts": 1,
+    "isolatedRetests": 1
+  },
+  "execution": {
+    "workers": 1,
+    "browser": "/usr/bin/chromium",
+    "viewports": {
+      "actionsAndSelectedRuenCases": [
+        800,
+        600
+      ],
+      "journey": [
+        640,
+        480
+      ]
+    },
+    "productionBaseUrl": "http://127.0.0.1:4173",
+    "developmentBaseUrl": "http://127.0.0.1:5174"
+  },
+  "durationMs": {
+    "runsWallClock": 1326881.419,
+    "developmentCases": 1218439,
+    "productionCases": 62891
+  },
+  "sourceIntegrity": {
+    "manifest": "source-manifest.sha256",
+    "files": 97,
+    "mismatchesAgainstFinalManifest": [],
+    "manifestSha256": "3a27e84726ad3941e9c8c3bec33704358df9bb925c0be89a6dddcb8788059cd2",
+    "prefreezeChange": "Only ruen-actions.spec.ts added guarded-landing assertions for the final adapter contract; prior 97-file manifest retained externally.",
+    "postFirstRunTestOnlyChange": "ruen-meshy.spec.ts now waits for actual Ruen_Idle_Unarmed playback after resume, preserving the original assertion and all subsequent fallback checks; only that case was rerun.",
+    "applicationAndAssetsUnchangedDuringAllRuns": true,
+    "postValidationFormatting": "Removed one extra blank line at EOF from src/assets/ruenPoseAuthoring.ts after validation; no executable code changed. source-manifest.sha256 preserves the tested bytes; final-source-manifest.sha256 records the committed source."
+  },
+  "runs": [
+    {
+      "report": "new-browser-report.json",
+      "sha256": "ec2d5629466d208a6dceabed1e5fabf6c113793a408958e637fa136f52fe361b",
+      "stats": {
+        "startTime": "2026-10-23T07:42:48.795Z",
+        "duration": 553251.823,
+        "expected": 7,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "caseCount": 7
+    },
+    {
+      "report": "regression-browser-report.json",
+      "sha256": "9f63827469c73bc1307cff53717307b88a30d6af1ac988ffc9e570e580e31fcb",
+      "stats": {
+        "startTime": "2026-10-23T07:52:28.766Z",
+        "duration": 718760.412,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "caseCount": 6
+    },
+    {
+      "report": "partial-retest-report.json",
+      "sha256": "99328d37ac13beb8bc969259d65c7f5c3cfa117e3b52c73781c467907da80189",
+      "stats": {
+        "startTime": "2026-10-23T08:06:31.117Z",
+        "duration": 54869.184,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "caseCount": 1
+    }
+  ],
+  "cases": [
+    {
+      "file": "ruen-actions-preview.spec.ts",
+      "title": "actions preview opens paused and deforms the real equipped skin while preserving ground and source clips",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 80910,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-actions-preview.spec.ts",
+      "title": "production actions preview offers its complete equipped catalog without development hooks or save changes",
+      "environment": "production",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 24028,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-actions.spec.ts",
+      "title": "real enemy hits animate hurt and death, pause exactly, and respawn with saved progress",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 137136,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-actions.spec.ts",
+      "title": "normal E interactions keep equipment through switch, chest and door, then reload the earned key and checkpoint",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 80304,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-actions.spec.ts",
+      "title": "altar input pauses and resumes the equipped restoration, renders its exact final pose, and reloads completed victory",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 61186,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-actions.spec.ts",
+      "title": "real gamepad walking and running stay equipped to both sides and backward under lock-on",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 84588,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-actions.spec.ts",
+      "title": "Space permits the existing aerial sword attack and a real airborne shield block without changing damage rules",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 84144,
+          "retry": 0,
+          "report": "new-browser-report.json"
+        }
+      ],
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "new adventure to restoration with normal inputs, death, checkpoints and reloads",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 405723,
+          "retry": 0,
+          "report": "regression-browser-report.json"
+        }
+      ],
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "keyboard: equipped combo 1\u20132\u20133 follows the controller clock and preserves 1/1/2 damage",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 64365,
+          "retry": 0,
+          "report": "regression-browser-report.json"
+        }
+      ],
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "attack pause preserves the exact frame, and dodge or enemy damage keeps the equipped hero",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 69864,
+          "retry": 0,
+          "report": "regression-browser-report.json"
+        }
+      ],
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 96347,
+          "retry": 0,
+          "report": "regression-browser-report.json"
+        }
+      ],
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks",
+      "environment": "production",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "passed",
+          "durationMs": 38863,
+          "retry": 0,
+          "report": "regression-browser-report.json"
+        }
+      ],
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a missing runtime shield keeps a neutral real hero playable without partial floating equipment",
+      "environment": "development",
+      "outcome": "expected",
+      "attempts": [
+        {
+          "status": "failed",
+          "durationMs": 42536,
+          "retry": 0,
+          "report": "regression-browser-report.json"
+        },
+        {
+          "status": "passed",
+          "durationMs": 53872,
+          "retry": 0,
+          "report": "partial-retest-report.json"
+        }
+      ],
+      "report": "partial-retest-report.json"
+    }
+  ],
+  "evidence": {
+    "measurements": [
+      "actions-checks.json",
+      "regression-checks.json"
+    ],
+    "logs": [
+      "browser-new.log",
+      "browser-regression.log",
+      "browser-partial-retest.log"
+    ],
+    "gameplayScreenshots": [
+      "gameplay-hurt.png",
+      "gameplay-death.png",
+      "gameplay-interact-chest.png",
+      "gameplay-victory.png",
+      "gameplay-walk-left.png",
+      "gameplay-run-left.png",
+      "gameplay-air-attack.png",
+      "gameplay-air-block.png"
+    ]
+  },
+  "notes": [
+    "All screenshots in gameplay-* come from real inputs or enemy contact; initial encounters/progression are prepared fixtures.",
+    "Gameplay death/victory screenshots show the action in progress; terminal poses are covered by the separately labeled calibration.",
+    "Gameplay directional screenshots show left walking/running only. The browser test verifies all six combinations.",
+    "The same actual fixed-step inputs are replayed without the renderer; eight replays compare every player scalar and simulation clock.",
+    "The original missing-shield attempt read idle weight 1 before playback resumed. The corrected test waits for isPlaying and preserves the full semantic assertion; runtime and build did not change.",
+    "Full raw JSON reports and artifacts remain external in /workspace/veylun-validation/ruen-complete-actions."
+  ]
+}

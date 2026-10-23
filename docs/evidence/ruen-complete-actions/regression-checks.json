@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "scope": "Six regression cases; use five passing results from the initial run and the passing missing-shield result from the isolated retest.",
+  "sources": [
+    {
+      "report": "/workspace/veylun-validation/ruen-complete-actions/regression-browser-report.json",
+      "sha256": "9f63827469c73bc1307cff53717307b88a30d6af1ac988ffc9e570e580e31fcb",
+      "stats": {
+        "startTime": "2026-10-23T07:52:28.766Z",
+        "duration": 718760.412,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "report": "/workspace/veylun-validation/ruen-complete-actions/partial-retest-report.json",
+      "sha256": "99328d37ac13beb8bc969259d65c7f5c3cfa117e3b52c73781c467907da80189",
+      "stats": {
+        "startTime": "2026-10-23T08:06:31.117Z",
+        "duration": 54869.184,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "finalCases": {
+    "passed": 6,
+    "failed": 0,
+    "cases": [
+      {
+        "file": "tests/browser/journey.spec.ts",
+        "line": 81,
+        "title": "new adventure to restoration with normal inputs, death, checkpoints and reloads",
+        "status": "passed",
+        "durationMs": 405723,
+        "report": "regression-browser-report.json"
+      },
+      {
+        "file": "tests/browser/ruen-combat.spec.ts",
+        "line": 204,
+        "title": "keyboard: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+        "status": "passed",
+        "durationMs": 64365,
+        "report": "regression-browser-report.json"
+      },
+      {
+        "file": "tests/browser/ruen-combat.spec.ts",
+        "line": 295,
+        "title": "attack pause preserves the exact frame, and dodge or enemy damage keeps the equipped hero",
+        "status": "passed",
+        "durationMs": 69864,
+        "report": "regression-browser-report.json"
+      },
+      {
+        "file": "tests/browser/ruen-meshy.spec.ts",
+        "line": 190,
+        "title": "default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal",
+        "status": "passed",
+        "durationMs": 96347,
+        "report": "regression-browser-report.json"
+      },
+      {
+        "file": "tests/browser/ruen-meshy.spec.ts",
+        "line": 390,
+        "title": "production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks",
+        "status": "passed",
+        "durationMs": 38863,
+        "report": "regression-browser-report.json"
+      },
+      {
+        "file": "tests/browser/ruen-meshy.spec.ts",
+        "line": 419,
+        "title": "a missing runtime shield keeps a neutral real hero playable without partial floating equipment",
+        "status": "passed",
+        "durationMs": 53872,
+        "report": "partial-retest-report.json"
+      }
+    ]
+  },
+  "initialFailure": {
+    "case": {
+      "file": "tests/browser/ruen-meshy.spec.ts",
+      "line": 419,
+      "title": "a missing runtime shield keeps a neutral real hero playable without partial floating equipment",
+      "status": "failed",
+      "durationMs": 42536,
+      "report": "regression-browser-report.json"
+    },
+    "observed": "Idle clip isPlaying list was [] immediately after resume; expected [Ruen_Idle_Unarmed].",
+    "resolution": "Added expect.poll for playback readiness before the same Idle assertion; isolated missing-shield retest passed.",
+    "changeScope": "Test wait only; application and production build unchanged, as confirmed by the test owner.",
+    "artifactPreservation": "Initial failed result, screenshot and error context remain in the original report/output directory."
+  },
+  "runtimeInventory": {
+    "attachment": "equipped-runtime-inventory.json",
+    "sourceGroups": 20,
+    "runtimeGroups": 42,
+    "uniqueRuntimeGroups": 42,
+    "authoredGroups": [
+      "Ruen_Idle_Equipped",
+      "Ruen_Walk_Equipped",
+      "Ruen_Run_Equipped",
+      "Ruen_Guard_Equipped",
+      "Ruen_Block_Equipped",
+      "Ruen_Attack1_Equipped",
+      "Ruen_Attack2_Equipped",
+      "Ruen_Attack3_Equipped",
+      "Ruen_Jump_Equipped",
+      "Ruen_Fall_Equipped",
+      "Ruen_Land_Equipped",
+      "Ruen_Roll_Equipped",
+      "Ruen_Hurt_Equipped",
+      "Ruen_Death_Equipped",
+      "Ruen_Interact_Equipped",
+      "Ruen_Victory_Equipped",
+      "Ruen_Walk_Left_Equipped",
+      "Ruen_Walk_Right_Equipped",
+      "Ruen_Walk_Back_Equipped",
+      "Ruen_Run_Left_Equipped",
+      "Ruen_Run_Right_Equipped",
+      "Ruen_Run_Back_Equipped"
+    ],
+    "equipmentStatus": "ready",
+    "equipmentEnabled": true,
+    "items": [
+      {
+        "kind": "sword",
+        "path": "assets/models/ruen/equipment/runtime/azure-oathblade.glb",
+        "status": "ready",
+        "hand": "mixamorig:RightHand",
+        "uniformScale": 0.55,
+        "vertices": 13697,
+        "triangles": 19640,
+        "skeletons": 0,
+        "animationGroups": 0,
+        "materials": 1,
+        "textures": 3,
+        "textureDimensions": [
+          [
+            1024,
+            1024
+          ]
+        ]
+      },
+      {
+        "kind": "shield",
+        "path": "assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb",
+        "status": "ready",
+        "hand": "mixamorig:LeftHand",
+        "uniformScale": 0.294,
+        "vertices": 63510,
+        "triangles": 103290,
+        "skeletons": 0,
+        "animationGroups": 0,
+        "materials": 1,
+        "textures": 3,
+        "textureDimensions": [
+          [
+            1024,
+            1024
+          ]
+        ]
+      }
+    ],
+    "equipmentTrianglesTotal": 122930,
+    "console": []
+  },
+  "missingShieldFallback": {
+    "attachment": "runtime-equipment-failure.json",
+    "selectedReport": "partial-retest-report.json",
+    "injectedResponse": 503,
+    "status": "ready",
+    "representation": "meshy",
+    "equipmentStatus": "partial",
+    "equipped": false,
+    "equipmentEnabled": false,
+    "beforePlaybackPlayingClips": [
+      "Ruen_Idle_Unarmed"
+    ],
+    "afterPlaybackPlayingClips": [
+      "Ruen_Idle_Unarmed"
+    ],
+    "sourceGroups": 20,
+    "runtimeGroups": 23,
+    "unarmedGroups": [
+      "Ruen_Idle_Unarmed",
+      "Ruen_Walk_Unarmed",
+      "Ruen_Run_Unarmed"
+    ],
+    "equippedGroups": [],
+    "gear": [
+      {
+        "kind": "sword",
+        "enabled": false
+      }
+    ],
+    "armRestQuaternionDotRange": [
+      0.9999999999999998,
+      1.0000000000000002
+    ],
+    "unhandledErrors": [],
+    "expectedConsoleErrors": [
+      "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "errorClassification": "Intentional shield HTTP 503; console error is expected, not an unhandled exception."
+  },
+  "production": {
+    "requestAttachment": "production-default-requests.json",
+    "requestCount": 3,
+    "requestPaths": [
+      "/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb",
+      "/assets/models/ruen/equipment/runtime/azure-oathblade.glb",
+      "/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb"
+    ],
+    "consoleAttachment": "production-default-console.json",
+    "console": [],
+    "requestScope": "Accumulated list across default production route and provisional opt-out; route-separated counts are asserted in the test, not attached."
+  },
+  "keyboardCombo": {
+    "attachment": "equipped-combo-keyboard.json",
+    "stepSamples": 108,
+    "renderSamples": 18,
+    "hits": [
+      {
+        "combo": 1,
+        "attackTime": 0.15,
+        "damage": 1,
+        "guardianHealth": 11
+      },
+      {
+        "combo": 2,
+        "attackTime": 0.16666666666666666,
+        "damage": 1,
+        "guardianHealth": 10
+      },
+      {
+        "combo": 3,
+        "attackTime": 0.2333333333333333,
+        "damage": 2,
+        "guardianHealth": 8
+      }
+    ],
+    "profiles": [
+      {
+        "combo": 1,
+        "renderSamples": 4,
+        "clip": "Ruen_Attack1_Equipped",
+        "phases": {
+          "windup": 1,
+          "active": 1,
+          "recovery": 2
+        },
+        "attackTimeRange": [
+          0.09999999999999999,
+          0.39999999999999997
+        ],
+        "maxDiagnosticFrameClockError": 0.0,
+        "maxActualGroupFrameClockError": 0.0,
+        "allMeshy": true,
+        "maxRootPositionError": 0,
+        "maxGripError": 1.1355819031566635e-05,
+        "allGearEnabled": true,
+        "originalPlaying": []
+      },
+      {
+        "combo": 2,
+        "renderSamples": 5,
+        "clip": "Ruen_Attack2_Equipped",
+        "phases": {
+          "windup": 2,
+          "active": 2,
+          "recovery": 1
+        },
+        "attackTimeRange": [
+          0.016666666666666666,
+          0.41666666666666663
+        ],
+        "maxDiagnosticFrameClockError": 0.0,
+        "maxActualGroupFrameClockError": 0.0,
+        "allMeshy": true,
+        "maxRootPositionError": 0,
+        "maxGripError": 9.122064725843177e-06,
+        "allGearEnabled": true,
+        "originalPlaying": []
+      },
+      {
+        "combo": 3,
+        "renderSamples": 7,
+        "clip": "Ruen_Attack3_Equipped",
+        "phases": {
+          "windup": 3,
+          "active": 1,
+          "recovery": 3
+        },
+        "attackTimeRange": [
+          0,
+          0.6000000000000002
+        ],
+        "maxDiagnosticFrameClockError": 0,
+        "maxActualGroupFrameClockError": 0,
+        "allMeshy": true,
+        "maxRootPositionError": 0,
+        "maxGripError": 7.674349875419489e-06,
+        "allGearEnabled": true,
+        "originalPlaying": []
+      }
+    ],
+    "playerHealthRange": [
+      10,
+      10
+    ],
+    "consoleAttachment": "equipped-combo-keyboard-console.json",
+    "console": []
+  },
+  "combatInterruptions": {
+    "attachment": "equipped-combat-interruptions.json",
+    "stepSamples": 174,
+    "renderSamples": 32,
+    "events": {
+      "dodge": 1,
+      "hurt": 1,
+      "save": 1,
+      "sword": 3,
+      "telegraph": 1,
+      "zone": 1
+    },
+    "hurtEventHealth": [
+      9
+    ],
+    "hurtEquippedRenderCount": 3,
+    "guardAfterDamageRenderCount": 2,
+    "consoleAttachment": "equipped-combat-interruptions-console.json",
+    "console": []
+  },
+  "journey": {
+    "source": "Passed journey case stdout in regression-browser-report.json; no JSON snapshot attached.",
+    "stdout": [
+      "Journey: Brotes cleared, checkpoint 1 earned",
+      "Journey: Spirit cleared, switch and grate opened",
+      "Journey: key acquired, enclosure exited, checkpoint 2 earned",
+      "Journey: death and reload preserve progress, Guardian resets",
+      "Journey: Guardian defeated, explicit altar activation still required",
+      "Journey: victory, 79.0 simulated seconds, 1 deliberate death"
+    ],
+    "precision": "79.0 simulated seconds and one deliberate death are the test log text, not a full-precision attached measurement."
+  },
+  "passedAssertionsWithoutAttachedSnapshots": [
+    "Default gameplay requested exactly the original hero plus two optimized runtime equipment GLBs.",
+    "Idle breathing, three-way blends, stable Idle feet, traversal equipment and unchanged original clips passed in the runtime case.",
+    "Missing-shield fallback walks/runs with Unarmed clips and moves more than 0.2 world units while keeping all available gear hidden.",
+    "Production autoloads the equipped hero; provisional opt-out adds zero GLB requests; neither route exposes __veylun.",
+    "Keyboard combo hit times lie inside the controller active windows and the original animation fingerprint remains unchanged.",
+    "Attack pause preserves exact clock and pose; dodge interrupts the attack; a real Brote hit produces hurt before guard recovery.",
+    "Journey reaches restoration through normal inputs, checkpoint progression, death and reloads."
+  ]
+}

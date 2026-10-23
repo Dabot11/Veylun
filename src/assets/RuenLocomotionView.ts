@@ -11,8 +11,11 @@ import { ruenRuntimeEquipmentProfiles } from './ruenEquipmentProfile';
 import { createRuenEquippedLocomotion } from './ruenEquippedLocomotion';
 import { createRuenEquippedCombat } from './ruenEquippedCombat';
 import { createRuenEquippedTraversal, ruenEquippedTraversalProfile } from './ruenEquippedTraversal';
+import { createRuenEquippedActions, ruenEquippedActionsProfile } from './ruenEquippedActions';
+import { createRuenEquippedDirectional, ruenEquippedDirectionalProfile } from './ruenEquippedDirectional';
 import { gameConfig } from '../config/gameConfig';
 import { attacks } from '../player/combat';
+import { groundHeight } from '../world/level';
 
 type Locomotion = 'idle' | 'walk' | 'run';
 type LoadStatus = 'loading' | 'ready' | 'error';
@@ -21,9 +24,17 @@ type CombatRole = 'shield' | 'block' | 'attack1' | 'attack2' | 'attack3';
 type CombatGroups = Record<CombatRole, AnimationGroup>;
 type TraversalRole = 'jump' | 'fall' | 'land' | 'roll';
 type TraversalGroups = Record<TraversalRole, AnimationGroup>;
+type ActionRole = 'hurt' | 'death' | 'interact' | 'victory';
+type ActionGroups = Record<ActionRole, AnimationGroup>;
+type Direction = 'forward' | 'left' | 'right' | 'back';
+type DirectionalGroups = ReturnType<typeof createRuenEquippedDirectional>;
+type AirLayer = { state: 'jump' | 'fall'; frame: number; time: number };
+type CombatLowerLayer = { state: 'jump' | 'fall' | 'land' | 'interact'; frame: number; time: number };
 type PoseValue = Vector3 | Quaternion | number;
 interface PoseSnapshot { owner: Record<string, unknown>; key: string; value: PoseValue }
+interface LowerBodySample { pose: PoseSnapshot[]; support: Map<TransformNode, number> }
 const states = ['idle', 'walk', 'run'] as const;
+const zeroDirectionalWeights = (): Record<Direction, number> => ({ forward: 0, left: 0, right: 0, back: 0 });
 const zeroWeights = (): Weights => ({ idle: 0, walk: 0, run: 0 });
 const isLowerBody = (node: TransformNode): boolean => /^mixamorig:(Hips|(Left|Right)(UpLeg|Leg|Foot|ToeBase|Toe_End))$/.test(node.name);
 
@@ -106,12 +117,15 @@ export interface RuenLocomotionDiagnostics {
   combat: {
     state: CombatRole | null; clip: string | null; frame: number | null; time: number;
     phase: 'guard' | 'block' | 'windup' | 'active' | 'recovery' | null;
+    airborne: AirLayer | null; lowerBody: CombatLowerLayer | null;
     entryWeight: number; guardMoving: boolean; guardDirection: number; guardFrame: number; error: string | null;
   };
   traversal: {
     state: TraversalRole | null; clip: string | null; frame: number | null; time: number;
     phase: number; entryWeight: number; direction: number; error: string | null;
   };
+  actions: { state: ActionRole | null; clip: string | null; frame: number | null; time: number; phase: number; entryWeight: number; moving: boolean; airborne: AirLayer | null; error: string | null };
+  directional: { state: 'walk' | 'run' | null; frame: number | null; phase: number; direction: number; weights: Record<Direction, number>; error: string | null };
   clips: { name: string; isPlaying: boolean; isStarted: boolean; weight: number; speedRatio: number; frame: number }[];
 }
 
@@ -136,13 +150,33 @@ export class RuenLocomotionView {
   private traversalEntry: { from: PoseSnapshot[]; elapsed: number } | undefined;
   private traversalEntryWeight = 1;
   private traversalDirection = 0;
+  private actionGroups: ActionGroups | undefined;
+  private actionError: string | null = null;
+  private actionRole: ActionRole | null = null;
+  private actionTime = 0;
+  private actionFrame: number | null = null;
+  private actionEntry: { from: PoseSnapshot[]; elapsed: number } | undefined;
+  private actionEntryWeight = 1;
+  private actionMoving = false;
+  private directionalGroups: DirectionalGroups | undefined;
+  private directionalError: string | null = null;
+  private directionalState: 'walk' | 'run' | null = null;
+  private directionalPhase = 0;
+  private directionalAngle = 0;
+  private directionalFrame: number | null = null;
+  private directionalWeights = zeroDirectionalWeights();
+  private directionalClip: string | null = null;
+  private directionalEntry: { from: PoseSnapshot[]; elapsed: number } | undefined;
+  private airborne: AirLayer | null = null;
+  private combatLower: CombatLowerLayer | null = null;
+  private actionBlockExit: { from: PoseSnapshot[]; elapsed: number } | undefined;
   private combatError: string | null = null;
   private combatRole: CombatRole | null = null;
   private combatTime = 0;
   private combatFrame: number | null = null;
   private combatEntry: { from: PoseSnapshot[]; elapsed: number } | undefined;
   private combatEntryWeight = 1;
-  private exitTransition: { from: PoseSnapshot[]; elapsed: number } | undefined;
+  private exitTransition: { from: PoseSnapshot[]; elapsed: number; phase: number | undefined } | undefined;
   private guardElapsed = 0;
   private guardPhase = 0;
   private guardStride = 0;
@@ -170,6 +204,9 @@ export class RuenLocomotionView {
   get actualSpeed(): number { return this.speed; }
   get weights(): Weights { return { ...this.blendWeights }; }
   get activeClip(): string | null {
+    if (this.actionRole === 'interact' && this.combatRole === 'block') return this.combatGroups?.block.name ?? null;
+    if (this.actionRole) return this.actionGroups?.[this.actionRole].name ?? null;
+    if (this.directionalState) return this.directionalClip;
     if (this.traversalRole) return this.traversalGroups?.[this.traversalRole].name ?? null;
     if (this.combatRole) return this.combatGroups?.[this.combatRole].name ?? null;
     return this.target ? this.groups?.[this.target].name ?? null : null;
@@ -185,6 +222,7 @@ export class RuenLocomotionView {
         phase: this.combatRole === 'shield' ? 'guard' : this.combatRole === 'block' ? 'block' : this.combatRole ?
           this.combatTime < attacks[Number(this.combatRole.slice(-1)) - 1]!.windup ? 'windup' :
             this.combatTime < attacks[Number(this.combatRole.slice(-1)) - 1]!.activeEnd ? 'active' : 'recovery' : null,
+        airborne: this.combatRole ? this.airborne : null, lowerBody: this.combatRole ? this.combatLower ?? this.airborne : null,
         entryWeight: this.combatEntryWeight, guardMoving: this.guardMoving, guardDirection: this.guardYaw,
         guardFrame: this.guardFrame, error: this.combatError,
       },
@@ -193,7 +231,13 @@ export class RuenLocomotionView {
         phase: this.traversalRole ? this.traversalTime / ruenEquippedTraversalProfile.duration[this.traversalRole] : 0,
         entryWeight: this.traversalEntryWeight, direction: this.traversalDirection, error: this.traversalError,
       },
-      clips: this.groups ? [...Object.values(this.groups), ...Object.values(this.combatGroups ?? {}), ...Object.values(this.traversalGroups ?? {})].map(group => ({
+      actions: {
+        state: this.actionRole, clip: this.actionRole ? this.actionGroups?.[this.actionRole].name ?? null : null, frame: this.actionFrame, time: this.actionTime,
+        phase: this.actionRole ? this.actionTime / ruenEquippedActionsProfile.duration[this.actionRole] : 0,
+        entryWeight: this.actionEntryWeight, moving: this.actionMoving, airborne: this.actionRole ? this.airborne : null, error: this.actionError,
+      },
+      directional: { state: this.directionalState, frame: this.directionalFrame, phase: this.directionalPhase, direction: this.directionalAngle, weights: { ...this.directionalWeights }, error: this.directionalError },
+      clips: this.groups ? this.ownedGroups().map(group => ({
         name: group.name, isPlaying: group.isPlaying, isStarted: !!group.isStarted,
         weight: group.weight, speedRatio: group.speedRatio, frame: group.getCurrentFrame(),
       })) : [],
@@ -216,8 +260,8 @@ export class RuenLocomotionView {
     if (event.type !== 'shield' || this.seenBlockEvents.has(event)) return;
     this.seenBlockEvents.add(event);
     const p = sim.player;
-    if (this.disposed || !this.combatGroups || sim.mode !== 'playing' || p.state !== 'shield' ||
-      !p.shield || !p.grounded || p.attackTime >= 0 || p.health <= 0 || !Number.isFinite(sim.age)) return;
+    if (this.disposed || !this.combatGroups || sim.mode !== 'playing' || !(p.state === 'shield' && p.grounded || (p.state === 'land' || p.state === 'jump' || p.state === 'fall') && this.traversalGroups || p.state === 'interact' && this.actionGroups) ||
+      !p.shield || p.attackTime >= 0 || p.health <= 0 || !Number.isFinite(sim.age)) return;
     this.blockStart = { sim, player: p, age: sim.age };
   }
 
@@ -264,17 +308,31 @@ export class RuenLocomotionView {
           this.traversalError = error instanceof Error ? error.message : String(error);
           console.warn('El salto y la rodada de Ruen conservan el modelo provisional.', error);
         }
+        try {
+          this.actionGroups = createRuenEquippedActions(model, this.scene, groups);
+          model.container.animationGroups.push(...Object.values(this.actionGroups));
+        } catch (error) {
+          this.actionError = error instanceof Error ? error.message : String(error);
+          console.warn('Las acciones de Ruen conservan el modelo provisional.', error);
+        }
+        try {
+          this.directionalGroups = createRuenEquippedDirectional(model, this.scene, groups);
+          model.container.animationGroups.push(...Object.values(this.directionalGroups));
+        } catch (error) {
+          this.directionalError = error instanceof Error ? error.message : String(error);
+          console.warn('El movimiento lateral de Ruen conserva el modelo provisional.', error);
+        }
       }
       model.root.name = 'ruen-meshy-visual';
       model.root.scaling.setAll(ruenMeshyProfile.scale);
       // Keep the glTF conversion and all hand-mounted assets under this independent root.
       // Never parent it to the procedural rig's animated root.
-      for (const group of [...Object.values(groups), ...Object.values(this.combatGroups ?? {}), ...Object.values(this.traversalGroups ?? {})]) group.weight = 0;
+      for (const group of this.ownedGroups()) group.weight = 0;
       this.loaded = model; this.loadingModel = undefined; this.loadState = 'ready'; this.reason = 'awaiting-controller';
     } catch (error) {
       equipment?.dispose(); this.equipmentView = undefined;
       if (model && !model.root.isDisposed()) model.dispose();
-      this.loaded = undefined; this.loadingModel = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined;
+      this.loaded = undefined; this.loadingModel = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined; this.actionGroups = undefined; this.directionalGroups = undefined;
       if (this.disposed) return;
       this.loadState = 'error';
       this.loadError = error instanceof Error ? error.message : String(error);
@@ -308,7 +366,17 @@ export class RuenLocomotionView {
 
     this.loaded.root.position.set(p.x, p.y + this.groundOffset, p.z);
     this.loaded.root.rotation.set(0, p.yaw, 0);
-    if (reset) { this.clearCombat(); this.clearTraversal(); }
+    if (reset) { this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional(); }
+    const action: ActionRole | null = sim.mode === 'dead' ? 'death' : sim.mode === 'restoring' || sim.mode === 'won' ? 'victory' :
+      p.state === 'hurt' || p.state === 'interact' ? p.state : null;
+    if (this.actionGroups && action && Number.isFinite(action === 'death' || action === 'victory' ? sim.modeTime : p.stateTime)) {
+      this.showActions(sim, action, dt, dx, dz, distance, reset, playing); return;
+    }
+    const airGuard = !p.grounded && p.shield && p.attackTime < 0 && (p.state === 'jump' || p.state === 'fall') && Number.isFinite(p.vy);
+    const landingGuard = p.state === 'land' && p.shield && p.attackTime < 0 && Number.isFinite(p.stateTime);
+    if ((airGuard || landingGuard) && this.combatGroups && this.traversalGroups && p.health > 0 && sim.mode === 'playing') {
+      this.showCombat(sim, null, dt, dx, dz, distance, reset, playing); return;
+    }
     const traversal = p.state === 'jump' || p.state === 'fall' || p.state === 'land' || p.state === 'roll' ? p.state : null;
     const airborneTraversal = traversal === 'jump' || traversal === 'fall';
     if (this.traversalGroups && traversal && p.attackTime < 0 && p.health > 0 && sim.mode === 'playing' &&
@@ -318,8 +386,8 @@ export class RuenLocomotionView {
     }
     const attack = p.state === 'attack1' || p.state === 'attack2' || p.state === 'attack3' ? p.state : null;
     const guarding = p.state === 'shield' && p.shield && p.attackTime < 0;
-    if (this.combatGroups && p.grounded && p.health > 0 && sim.mode === 'playing' &&
-      (guarding || attack && Number.isFinite(p.attackTime) && p.attackTime >= 0 && p.combo === Number(attack.slice(-1)))) {
+    if (this.combatGroups && (p.grounded || this.traversalGroups && Number.isFinite(p.vy)) && p.health > 0 && sim.mode === 'playing' &&
+      (guarding && p.grounded || attack && Number.isFinite(p.attackTime) && p.attackTime >= 0 && p.combo === Number(attack.slice(-1)))) {
       this.showCombat(sim, attack, dt, dx, dz, distance, reset, playing);
       return;
     }
@@ -328,16 +396,20 @@ export class RuenLocomotionView {
     if (!kind || !p.grounded || p.shield || p.attackTime >= 0 || p.health <= 0 || sim.mode !== 'playing') {
       this.showFallback(`unsupported-state:${p.state}`); return;
     }
-    // Forward clips are not reused for lock-on strafing or backpedaling.
+    if (kind !== 'idle' && sim.targetId && this.directionalGroups) {
+      this.showDirectional(sim, kind, dt, distance, reset, playing); return;
+    }
+    // A directional authoring/load failure keeps the procedural fallback.
     if (kind !== 'idle' && sim.targetId && this.movementDirection &&
       this.movementDirection.x * Math.sin(p.yaw) + this.movementDirection.z * Math.cos(p.yaw) < Math.cos(Math.PI / 4)) {
       this.showFallback('unsupported-direction'); return;
     }
 
-    if (this.combatRole || this.traversalRole) {
+    if (this.combatRole || this.traversalRole || this.actionRole || this.directionalState) {
       const from = capturePose(this.groups.idle);
-      this.resetClips(); this.clearCombat(); this.clearTraversal();
-      restorePose(from); this.exitTransition = { from, elapsed: 0 };
+      const phase = this.directionalState ? this.directionalPhase : this.guardStride > 0 ? this.guardPhase : undefined;
+      this.resetClips(); this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();
+      restorePose(from); this.exitTransition = { from, elapsed: 0, phase };
     } else if (reset || this.representation !== 'meshy') this.resetClips();
     if (this.target !== kind) this.select(kind);
     this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true);
@@ -365,6 +437,11 @@ export class RuenLocomotionView {
       // During combat exit, the remaining weight blends against the exact
       // captured last combat pose used when the incoming runtime was started.
       group.weight = this.blendWeights[key] * exitWeight;
+      if (this.exitTransition && kind !== 'idle') {
+        // Keep the incoming gait's solved foot support intact. The captured
+        // gesture fades only through torso/arm channels during this exit.
+        for (const animatable of group.animatables) if (isLowerBody(animatable.target)) animatable.weight = this.blendWeights[key];
+      }
       // Idle breathes at its authored rate. Gaits advance only by actual movement.
       // Babylon uses wall time; this ratio honors the existing simulation-time cap.
       group.speedRatio = (key === 'idle' ? 1 : this.speed / ruenMeshyProfile.referenceSpeed[key]) * clockRatio;
@@ -374,6 +451,147 @@ export class RuenLocomotionView {
     }
     this.reason = !playing || clockRatio === 0 ? 'paused' : reset ? 'controller-reset' : dt === 0 ? 'no-simulation-step' :
       !animate ? 'controller-stationary' : this.transition ? 'crossfade' : kind === 'idle' ? 'idle-animation' : 'locomotion';
+  }
+
+  private ownedGroups(): AnimationGroup[] {
+    return [this.groups, this.combatGroups, this.traversalGroups, this.actionGroups, this.directionalGroups].flatMap(groups => Object.values(groups ?? {}));
+  }
+
+  private releaseAirLayer(): void {
+    if (this.airborne) this.traversalGroups?.[this.airborne.state].stop(true);
+    this.airborne = null;
+  }
+
+  private sampleAirLower(sim: Simulation): PoseSnapshot[] | undefined {
+    if (!this.traversalGroups || !Number.isFinite(sim.player.vy)) return undefined;
+    const state = sim.player.vy > 0 ? 'jump' : 'fall';
+    if (this.airborne && this.airborne.state !== state) this.releaseAirLayer();
+    const gravity = -gameConfig.player.gravity;
+    const launch = Math.sqrt(2 * gravity * gameConfig.player.jumpHeight);
+    const time = Math.max(0, Math.min(ruenEquippedTraversalProfile.duration[state], state === 'jump' ? (launch - sim.player.vy) / gravity : -sim.player.vy / gravity));
+    const group = this.traversalGroups[state];
+    this.sampleManual(group, group.from + time * group.targetedAnimations[0]!.animation.framePerSecond, 0);
+    this.airborne = { state, time, frame: group.getCurrentFrame() };
+    return capturePose(group, isLowerBody);
+  }
+
+  private showDirectional(sim: Simulation, kind: 'walk' | 'run', dt: number, distance: number, reset: boolean, playing: boolean): void {
+    if (!this.groups || !this.directionalGroups || !this.loaded) return;
+    if (reset || this.representation !== 'meshy' || this.directionalState !== kind) {
+      const source = this.target && this.target !== 'idle' ? this.groups[this.target] : undefined;
+      const phase = reset ? 0 : this.directionalState ? this.directionalPhase : source?.isStarted ? (source.getCurrentFrame() - source.from) / (source.to - source.from) : 0;
+      const from = !reset && this.representation === 'meshy' ? capturePose(this.groups.idle, node => !isLowerBody(node)) : undefined;
+      this.resetClips(); this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();
+      this.directionalState = kind; this.directionalPhase = phase;
+      this.directionalEntry = from ? { from, elapsed: 0 } : undefined;
+    }
+    if (this.movementDirection) {
+      const { x, z } = this.movementDirection;
+      this.directionalAngle = Math.atan2(x * Math.cos(sim.player.yaw) - z * Math.sin(sim.player.yaw), x * Math.sin(sim.player.yaw) + z * Math.cos(sim.player.yaw));
+    }
+    const amount = Math.abs(this.directionalAngle) / (Math.PI / 2), side = this.directionalAngle < 0 ? 'left' : 'right';
+    this.directionalWeights = zeroDirectionalWeights();
+    this.directionalWeights[side] = amount <= 1 ? amount : 2 - amount;
+    this.directionalWeights[amount <= 1 ? 'forward' : 'back'] = amount <= 1 ? 1 - amount : amount - 1;
+    const clips: Record<Direction, AnimationGroup> = {
+      forward: this.groups[kind],
+      left: this.directionalGroups[`${kind}Left`], right: this.directionalGroups[`${kind}Right`], back: this.directionalGroups[`${kind}Back`],
+    };
+    const directions: Direction[] = ['forward', 'left', 'right', 'back'];
+    // Forward and directional sources can differ in duration; use their
+    // weighted stride distances while keeping a common foot-cycle phase.
+    const cycleDistance = directions.reduce((sum, direction) => {
+      const clip = clips[direction], duration = (clip.to - clip.from) / clip.targetedAnimations[0]!.animation.framePerSecond;
+      return sum + this.directionalWeights[direction] * duration * ruenEquippedDirectionalProfile.referenceSpeed[kind];
+    }, 0);
+    if (dt > 0 && this.speed > 0.01) this.directionalPhase = (this.directionalPhase + distance / cycleDistance) % 1;
+    for (const direction of directions) if (this.directionalWeights[direction] <= 1e-8) { clips[direction].weight = 0; clips[direction].stop(true); }
+    const feet = [...this.captureSupport().keys()];
+    const expectedHeights = new Map(feet.map(node => [node, 0]));
+    let accumulated: PoseSnapshot[] | undefined, total = 0, dominant = -1;
+    for (const direction of directions) {
+      const weight = this.directionalWeights[direction]; if (weight <= 1e-8) continue;
+      const clip = clips[direction];
+      this.sampleManual(clip, clip.from + this.directionalPhase * (clip.to - clip.from), weight);
+      for (const foot of feet) expectedHeights.set(foot, expectedHeights.get(foot)! + foot.computeWorldMatrix(true).getTranslation().y * weight);
+      if (accumulated) blendFromPose(accumulated, weight / (total + weight));
+      total += weight; accumulated = capturePose(clip);
+      if (weight > dominant) { dominant = weight; this.directionalClip = clip.name; this.directionalFrame = clip.getCurrentFrame(); }
+    }
+    // Quaternion blending does not preserve the sources' solved foot contact.
+    // Correct only the pelvis height to retain their expected support envelope.
+    this.preserveSupport(expectedHeights);
+    if (this.directionalEntry) {
+      this.directionalEntry.elapsed += dt;
+      const progress = this.directionalEntry.elapsed / 0.08;
+      blendFromPose(this.directionalEntry.from, smoothstep(progress));
+      if (progress >= 1) this.directionalEntry = undefined;
+    }
+    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true); this.equipmentView?.setEnabled(true);
+    this.representation = 'meshy'; this.applyVisibility(sim);
+    this.reason = !playing ? 'paused' : this.speed <= 0.01 ? 'controller-stationary' : 'directional-locomotion';
+  }
+
+  private showActions(sim: Simulation, role: ActionRole, dt: number, dx: number, dz: number, distance: number, reset: boolean, playing: boolean): void {
+    if (!this.groups || !this.actionGroups || !this.loaded) return;
+    const p = sim.player, duration = ruenEquippedActionsProfile.duration[role];
+    const savedVictory = role === 'victory' && sim.mode === 'won' && p.state !== 'victory';
+    const clock = savedVictory ? duration : role === 'death' || role === 'victory' ? sim.modeTime : p.stateTime;
+    const time = Math.max(0, Math.min(duration, clock));
+    if (reset || this.representation !== 'meshy' || this.actionRole !== role || time < this.actionTime - 1e-8) {
+      const from = !reset && this.representation === 'meshy' ? capturePose(this.groups.idle, node => !isLowerBody(node)) : undefined;
+      const pendingBlock = role === 'interact' ? this.blockStart : undefined;
+      this.resetClips(); this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();
+      this.blockStart = pendingBlock;
+      this.actionRole = role; this.actionEntry = from ? { from, elapsed: 0 } : undefined;
+    }
+    const mobile = role === 'hurt' || role === 'interact';
+    const gait = this.speed > 2.5 ? 'run' : 'walk';
+    const block = this.blockStart, blockGroup = this.combatGroups?.block;
+    const blockTime = block ? sim.age - block.age : -1;
+    const blocking = role === 'interact' && p.shield && blockGroup && block && block.sim === sim && block.player === p &&
+      blockTime >= 0 && blockTime < (blockGroup.to - blockGroup.from) / blockGroup.targetedAnimations[0]!.animation.framePerSecond;
+    if (!blocking) this.blockStart = undefined;
+    if (!blocking && this.combatRole === 'block') {
+      this.actionBlockExit = { from: capturePose(this.groups.idle, node => !isLowerBody(node)), elapsed: 0 };
+      blockGroup?.stop(true); if (blockGroup) blockGroup.weight = 0;
+      this.combatRole = null; this.combatTime = 0; this.combatFrame = null; this.combatLower = null; this.blockStart = undefined;
+    }
+    const airPose = mobile && !p.grounded ? this.sampleAirLower(sim) : undefined;
+    if (!airPose) this.releaseAirLayer();
+    const steps = mobile && p.grounded ? this.sampleGuardSteps(sim, dt, dx, dz, distance, gait) : undefined;
+    const group = this.actionGroups[role];
+    this.sampleManual(group, group.from + time * group.targetedAnimations[0]!.animation.framePerSecond, 1);
+    this.actionTime = time; this.actionFrame = group.getCurrentFrame(); this.actionMoving = mobile && p.grounded && this.speed > 0.01;
+    this.actionEntryWeight = 1;
+    if (this.actionEntry) {
+      const progress = time / (role === 'hurt' ? 0.035 : 0.06);
+      this.actionEntryWeight = smoothstep(progress); blendFromPose(this.actionEntry.from, this.actionEntryWeight);
+      if (progress >= 1) this.actionEntry = undefined;
+    }
+    if (blocking) {
+      const gesture = capturePose(group), lower = capturePose(group, isLowerBody);
+      this.sampleManual(blockGroup, blockGroup.from + blockTime * blockGroup.targetedAnimations[0]!.animation.framePerSecond, 1);
+      this.combatEntryWeight = smoothstep(blockTime / 0.035);
+      blendFromPose(gesture, this.combatEntryWeight); restorePose(lower);
+      group.weight = 0; this.combatRole = 'block'; this.combatTime = blockTime; this.combatFrame = blockGroup.getCurrentFrame();
+      this.combatLower = { state: 'interact', frame: this.actionFrame!, time }; this.actionBlockExit = undefined;
+    } else if (this.actionBlockExit) {
+      this.actionBlockExit.elapsed += dt;
+      const progress = this.actionBlockExit.elapsed / 0.05;
+      blendFromPose(this.actionBlockExit.from, smoothstep(progress));
+      if (progress >= 1) this.actionBlockExit = undefined;
+    }
+    if (steps) this.applyGuardSteps(steps, gait);
+    if (airPose) restorePose(airPose);
+    if (role === 'death') {
+      // Death freezes controller physics, even above a ledge. Let only the
+      // visible collapse settle to the floor while preserving root motion.
+      const drop = Math.max(0, p.y - groundHeight(p.x, p.z)) * smoothstep(time / ruenEquippedActionsProfile.holdFrom.death);
+      this.shiftHipsWorld(-drop);
+    }
+    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true); this.equipmentView?.setEnabled(true);
+    this.representation = 'meshy'; this.applyVisibility(sim); this.reason = !playing ? 'paused' : blocking ? 'block-reaction' : `action:${role}`;
   }
 
   private showTraversal(sim: Simulation, role: TraversalRole, dt: number, reset: boolean, playing: boolean): void {
@@ -392,7 +610,7 @@ export class RuenLocomotionView {
       const preserveContact = role === 'land' || role === 'roll';
       const from = !reset && this.representation === 'meshy' ?
         capturePose(this.groups.idle, node => !preserveContact || !isLowerBody(node)) : undefined;
-      this.resetClips(); this.clearCombat(); this.clearTraversal();
+      this.resetClips(); this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();
       this.traversalEntry = from ? { from, elapsed: 0 } : undefined;
       this.traversalRole = role;
     }
@@ -421,6 +639,22 @@ export class RuenLocomotionView {
     this.reason = !playing ? 'paused' : `traversal:${role}`;
   }
 
+  private captureSupport(): Map<TransformNode, number> {
+    return new Map((this.loaded?.container.transformNodes ?? []).filter(node => /^mixamorig:(Left|Right)(Foot|ToeBase|Toe_End)$/.test(node.name))
+      .map(node => [node, node.computeWorldMatrix(true).getTranslation().y]));
+  }
+
+  private preserveSupport(support: Map<TransformNode, number>): void {
+    const lift = Math.max(0, ...[...support].map(([foot, height]) => height - foot.computeWorldMatrix(true).getTranslation().y));
+    if (lift > 1e-8) this.shiftHipsWorld(lift);
+  }
+
+  private shiftHipsWorld(y: number): void {
+    const hips = this.loaded?.container.transformNodes.find(node => node.name === 'mixamorig:Hips');
+    const parent = hips?.parent as TransformNode | null;
+    if (hips && parent) hips.position.addInPlace(Vector3.TransformNormal(new Vector3(0, y, 0), Matrix.Invert(parent.computeWorldMatrix(true))));
+  }
+
   /** Rotate a sampled pelvis in world Y, respecting the reflected glTF parent. */
   private turnHips(direction: number): void {
     const hips = this.loaded?.container.transformNodes.find(node => node.name === 'mixamorig:Hips');
@@ -437,7 +671,7 @@ export class RuenLocomotionView {
     dt: number, dx: number, dz: number, distance: number, reset: boolean, playing: boolean,
   ): void {
     if (!this.groups || !this.combatGroups || !this.loaded) return;
-    this.clearTraversal();
+    this.clearTraversal(); this.clearActions(); this.clearDirectional();
     const p = sim.player;
     const wasGuard = this.combatRole === 'shield' || this.combatRole === 'block';
     if (!attack && !wasGuard) {
@@ -470,8 +704,19 @@ export class RuenLocomotionView {
       this.combatRole = role;
     }
     const group = this.combatGroups[role];
-    let lowerPose: PoseSnapshot[] | undefined;
-    if (!attack) lowerPose = this.sampleGuardSteps(sim, dt, dx, dz, distance);
+    let lowerPose: LowerBodySample | undefined;
+    const landing = !attack && p.state === 'land' && this.traversalGroups;
+    if (!landing && this.combatLower?.state === 'land') this.traversalGroups?.land.stop(true);
+    this.combatLower = null;
+    const airPose = !landing && !p.grounded ? this.sampleAirLower(sim) : undefined;
+    let landPose: PoseSnapshot[] | undefined;
+    if (landing) {
+      this.releaseAirLayer();
+      const land = this.traversalGroups!.land, landTime = Math.max(0, Math.min(ruenEquippedTraversalProfile.duration.land, p.stateTime));
+      this.sampleManual(land, land.from + landTime * land.targetedAnimations[0]!.animation.framePerSecond, 0);
+      landPose = capturePose(land, isLowerBody); this.combatLower = { state: 'land', frame: land.getCurrentFrame(), time: landTime };
+    } else if (p.grounded) this.releaseAirLayer();
+    if (!attack && p.grounded && !landing) lowerPose = this.sampleGuardSteps(sim, dt, dx, dz, distance);
     this.sampleManual(group, group.from + time * group.targetedAnimations[0]!.animation.framePerSecond, 1);
     if (lowerPose) this.applyGuardSteps(lowerPose);
     this.combatTime = time; this.combatFrame = group.getCurrentFrame();
@@ -485,6 +730,9 @@ export class RuenLocomotionView {
       blendFromPose(this.combatEntry.from, this.combatEntryWeight);
       if (progress >= 1) this.combatEntry = undefined;
     }
+    // Restore the complete airborne support pose after upper-body blending.
+    if (airPose) restorePose(airPose);
+    if (landPose) restorePose(landPose);
     this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true); this.equipmentView?.setEnabled(true);
     this.representation = 'meshy'; this.applyVisibility(sim);
     this.reason = !playing ? 'paused' : role === 'shield' ? 'guard' : role === 'block' ? 'block-reaction' : 'combat';
@@ -498,9 +746,10 @@ export class RuenLocomotionView {
     group.goToFrame(Math.max(group.from, Math.min(group.to, frame)));
   }
 
-  private sampleGuardSteps(sim: Simulation, dt: number, dx: number, dz: number, distance: number): PoseSnapshot[] | undefined {
+  private sampleGuardSteps(sim: Simulation, dt: number, dx: number, dz: number, distance: number, kind: 'walk' | 'run' = 'walk'): LowerBodySample | undefined {
     if (!this.groups) return undefined;
-    const walk = this.groups.walk;
+    const walk = this.groups[kind];
+    this.groups[kind === 'walk' ? 'run' : 'walk'].stop(true);
     this.guardMoving = this.speed > 0.01;
     this.guardStride = Math.max(0, Math.min(1, this.guardStride + (this.guardMoving ? 1 : -1) * dt / 0.12));
     if (this.guardMoving && dt > 0) {
@@ -510,16 +759,16 @@ export class RuenLocomotionView {
       const delta = Math.atan2(Math.sin(direction - this.guardYaw), Math.cos(direction - this.guardYaw));
       this.guardYaw += delta * (1 - Math.exp(-dt * 12));
       const duration = (walk.to - walk.from) / walk.targetedAnimations[0]!.animation.framePerSecond;
-      const phase = distance / (ruenMeshyProfile.referenceSpeed.walk * duration) * (backwards ? -1 : 1);
+      const phase = distance / (ruenMeshyProfile.referenceSpeed[kind] * duration) * (backwards ? -1 : 1);
       this.guardPhase = ((this.guardPhase + phase) % 1 + 1) % 1;
     }
     this.guardFrame = walk.from + this.guardPhase * (walk.to - walk.from);
     if (this.guardStride === 0) { walk.stop(true); return undefined; }
     this.sampleManual(walk, this.guardFrame, 0);
-    return capturePose(walk, isLowerBody);
+    return { pose: capturePose(walk, isLowerBody), support: this.captureSupport() };
   }
 
-  private applyGuardSteps(lower: PoseSnapshot[]): void {
+  private applyGuardSteps(lower: LowerBodySample, kind: 'walk' | 'run' = 'walk'): void {
     if (!this.loaded || !this.groups) return;
     const hips = this.loaded.container.transformNodes.find(node => node.name === 'mixamorig:Hips');
     const spine = this.loaded.container.transformNodes.find(node => node.name === 'mixamorig:Spine');
@@ -529,9 +778,11 @@ export class RuenLocomotionView {
     // The glTF parent contains a reflection; conjugating rotation matrices keeps
     // directional turns correct without decomposing that reflected parent.
     const upperWorld = spine.computeWorldMatrix(true).clone();
-    const base = capturePose(this.groups.walk, isLowerBody);
-    restorePose(lower); blendFromPose(base, this.guardStride);
+    const base = capturePose(this.groups[kind], isLowerBody), support = this.captureSupport();
+    for (const [foot, height] of support) support.set(foot, height + ((lower.support.get(foot) ?? height) - height) * this.guardStride);
+    restorePose(lower.pose); blendFromPose(base, this.guardStride);
     this.turnHips(this.guardYaw * this.guardStride);
+    this.preserveSupport(support);
     const upperLocal = upperWorld.multiply(Matrix.Invert(hips.computeWorldMatrix(true)));
     upperLocal.decompose(spine.scaling, spine.rotationQuaternion, spine.position);
     spine.rotationQuaternion.normalize();
@@ -543,6 +794,15 @@ export class RuenLocomotionView {
     for (const item of this.equipmentView?.models ?? []) for (const mesh of item.model.container.meshes) mesh.visibility = visibility;
   }
 
+  private clearActions(): void {
+    this.actionRole = null; this.actionTime = 0; this.actionFrame = null; this.actionEntry = undefined; this.actionEntryWeight = 1; this.actionMoving = false; this.actionBlockExit = undefined;
+  }
+
+  private clearDirectional(): void {
+    this.directionalState = null; this.directionalPhase = this.directionalAngle = 0; this.directionalFrame = null;
+    this.directionalWeights = zeroDirectionalWeights(); this.directionalClip = null; this.directionalEntry = undefined;
+  }
+
   private clearTraversal(): void {
     this.traversalRole = null; this.traversalTime = 0; this.traversalFrame = null;
     this.traversalEntry = undefined; this.traversalEntryWeight = 1; this.traversalDirection = 0;
@@ -551,7 +811,7 @@ export class RuenLocomotionView {
   private clearCombat(): void {
     this.combatRole = null; this.combatTime = 0; this.combatFrame = null; this.combatEntry = undefined; this.combatEntryWeight = 1;
     this.blockStart = undefined; this.guardElapsed = this.guardPhase = this.guardStride = this.guardYaw = this.guardFrame = 0;
-    this.guardMoving = false;
+    this.guardMoving = false; this.combatLower = null;
   }
 
   private select(kind: Locomotion): void {
@@ -561,7 +821,7 @@ export class RuenLocomotionView {
       this.blendWeights = zeroWeights(); this.blendWeights[kind] = 1;
       incoming.weight = this.exitTransition ? 0 : 1;
       incoming.start(true, 0);
-      if (this.exitTransition) seekForBlend(incoming, incoming.from);
+      if (this.exitTransition) seekForBlend(incoming, incoming.from + (kind === 'idle' ? 0 : this.exitTransition.phase ?? 0) * (incoming.to - incoming.from));
       else incoming.goToFrame(incoming.from);
     } else {
       if (!incoming.isStarted) {
@@ -582,14 +842,15 @@ export class RuenLocomotionView {
 
   private resetClips(): void {
     this.loaded?.player.stopAll();
-    if (this.groups) for (const group of [...Object.values(this.groups), ...Object.values(this.combatGroups ?? {}), ...Object.values(this.traversalGroups ?? {})]) group.weight = 0;
+    for (const group of this.ownedGroups()) group.weight = 0;
+    this.airborne = null;
     this.blendWeights = zeroWeights(); this.target = null; this.transition = undefined;
     this.exitTransition = undefined;
   }
 
   private showFallback(reason: string): void {
     this.loaded?.root.setEnabled(false); this.equipmentView?.setEnabled(false);
-    this.resetClips(); this.clearCombat(); this.clearTraversal();
+    this.resetClips(); this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();
     this.fallback.root.setEnabled(true);
     this.representation = 'fallback'; this.reason = reason;
   }
@@ -599,7 +860,7 @@ export class RuenLocomotionView {
     this.disposed = true;
     this.equipmentView?.dispose(); this.equipmentView = undefined;
     this.loadingModel?.dispose(); this.loadingModel = undefined;
-    this.loaded?.dispose(); this.loaded = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined; this.clearCombat(); this.clearTraversal();
+    this.loaded?.dispose(); this.loaded = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined; this.actionGroups = undefined; this.directionalGroups = undefined; this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();
     if (!this.fallback.root.isDisposed()) this.fallback.root.setEnabled(true);
   }
 }

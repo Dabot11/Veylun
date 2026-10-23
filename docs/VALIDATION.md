@@ -1,5 +1,30 @@
 # Validación ejecutada
 
+## Acciones restantes: validadas; publicación pendiente
+
+Aprobaron typecheck, build y **234 pruebas unitarias en 20 archivos** en 5.67 s.
+El build terminó en 861 ms y conserva el aviso conocido sobre chunks grandes.
+Se mantienen los cinco GLB y los 20 clips originales; el conjunto tiene
+22 clips propios, 42 grupos en gameplay y 43 en el visor `actions-v1`.
+
+La calibración aislada revisó 523 poses a 60 Hz de los diez clips nuevos,
+sin errores de página. Tras corregir los contactos iniciales de capa y pies,
+la calibración del adaptador aprobó 915 muestras de diez escenarios: ningún
+fallback, desplazamiento adicional de raíz ni penetración superior a la
+tolerancia de 0.01. El mínimo respecto al suelo fue −0.0007373 unidades.
+Son auditorías de contacto; no equivalen a comprobar los controles.
+
+Aprobaron **13 casos seleccionados de 51**, con 11 de desarrollo y dos de
+producción: siete nuevos y seis regresiones. Doce aprobaron al primer intento.
+El caso de escudo ausente leyó `isPlaying` antes de reanudarse la reproducción;
+se corrigió la espera del test, se conservó su aserción y aprobó la repetición
+aislada. La aplicación y el build no cambiaron. El recorrido completo
+`journey` aprobó con 79.0 s simulados y una muerte deliberada.
+
+**Publicación pendiente.** La fuente pública vigente sigue siendo `b83b0f36`.
+[Alcance](RUEN_COMPLETE_ACTIONS.md) ·
+[Evidencia y correcciones](evidence/ruen-complete-actions/README.md).
+
 ## Salto y voltereta equipados: validado y publicado
 
 Aprobaron typecheck, build y **197 pruebas unitarias en 18 archivos** en 4.56 s.
@@ -361,8 +386,9 @@ el mando Xbox es simulado, no hardware conectado.
 
 Ruen y su espada/escudo usan los GLB reales recibidos y copias optimizadas del
 equipo. Las pruebas cargan esos archivos; también se conservan fixtures
-sintéticos para fallos y rigs incompatibles. Enemigos, escenario y acciones
-aún sin adaptar mantienen recursos provisionales. Siguen pendientes la
+sintéticos para fallos y rigs incompatibles. Enemigos y escenario mantienen
+recursos provisionales; el rig alternativo de Ruen queda como respaldo ante
+errores o selección explícita. Siguen pendientes la
 revisión artística con el usuario, la dificultad y la duración con jugadores.
 
 El acceso directo a `dabot11.github.io` está bloqueado por la política de la red
