@@ -187,7 +187,7 @@ function expectBlendWeights(samples: TestWindow['meshBlendSamples']) {
   }
 }
 
-test('default Ruen breathes with reduced equipment, blends walking and running, and preserves action fallbacks', async ({ page }, info) => {
+test('default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal', async ({ page }, info) => {
   test.setTimeout(480000);
   const errors = collectErrors(page);
   const requests: string[] = [];
@@ -206,8 +206,8 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
     return { hero: view.model!.report, groups: view.model!.container.animationGroups.map(group => group.name), equipment: view.equipment!.report };
   });
   expect(inventory.hero.animationGroups).toHaveLength(20);
-  expect(inventory.groups).toHaveLength(28);
-  expect(new Set(inventory.groups).size).toBe(28);
+  expect(inventory.groups).toHaveLength(32);
+  expect(new Set(inventory.groups).size).toBe(32);
   expect(inventory.equipment.items).toHaveLength(2);
   const triangleCount = inventory.equipment.items.reduce((sum, item) => sum + item.inventory!.meshes.reduce((total, mesh) => total + mesh.triangles, 0), 0);
   expect(triangleCount).toBeGreaterThan(10000);
@@ -286,9 +286,10 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
     await page.keyboard.down(key);
     await expect.poll(async () => (await state(page)).state, { intervals: [25, 50, 100] }).toMatch(pattern);
     const action = await state(page);
-    expect(action.diagnostics?.representation).toBe('fallback');
+    expect(action.diagnostics?.representation).toBe('meshy');
+    expect(action.diagnostics?.traversal.state).toMatch(pattern);
     expect(action.diagnostics!.clips.every(clip => !clip.isPlaying)).toBe(true);
-    expectGearAttached(await equipmentPose(page), false);
+    expectGearAttached(await equipmentPose(page));
     await page.keyboard.up(key);
     await expect.poll(async () => (await state(page)).state, { timeout: 10000 }).toBe('idle');
     await expect.poll(async () => (await state(page)).grounded).toBe(true);

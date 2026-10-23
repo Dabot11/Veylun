@@ -10,6 +10,8 @@ import { RuenEquipmentPreview, type RuenEquipmentDiagnostics } from './RuenEquip
 import { ruenRuntimeEquipmentProfiles } from './ruenEquipmentProfile';
 import { createRuenEquippedLocomotion } from './ruenEquippedLocomotion';
 import { createRuenEquippedCombat } from './ruenEquippedCombat';
+import { createRuenEquippedTraversal, ruenEquippedTraversalProfile } from './ruenEquippedTraversal';
+import { gameConfig } from '../config/gameConfig';
 import { attacks } from '../player/combat';
 
 type Locomotion = 'idle' | 'walk' | 'run';
@@ -17,10 +19,13 @@ type LoadStatus = 'loading' | 'ready' | 'error';
 type Weights = Record<Locomotion, number>;
 type CombatRole = 'shield' | 'block' | 'attack1' | 'attack2' | 'attack3';
 type CombatGroups = Record<CombatRole, AnimationGroup>;
+type TraversalRole = 'jump' | 'fall' | 'land' | 'roll';
+type TraversalGroups = Record<TraversalRole, AnimationGroup>;
 type PoseValue = Vector3 | Quaternion | number;
 interface PoseSnapshot { owner: Record<string, unknown>; key: string; value: PoseValue }
 const states = ['idle', 'walk', 'run'] as const;
 const zeroWeights = (): Weights => ({ idle: 0, walk: 0, run: 0 });
+const isLowerBody = (node: TransformNode): boolean => /^mixamorig:(Hips|(Left|Right)(UpLeg|Leg|Foot|ToeBase|Toe_End))$/.test(node.name);
 
 function capturePose(group: AnimationGroup, include: (target: TransformNode) => boolean = () => true): PoseSnapshot[] {
   return group.targetedAnimations.filter(({ target }) => include(target)).map(({ target, animation }) => {
@@ -103,6 +108,10 @@ export interface RuenLocomotionDiagnostics {
     phase: 'guard' | 'block' | 'windup' | 'active' | 'recovery' | null;
     entryWeight: number; guardMoving: boolean; guardDirection: number; guardFrame: number; error: string | null;
   };
+  traversal: {
+    state: TraversalRole | null; clip: string | null; frame: number | null; time: number;
+    phase: number; entryWeight: number; direction: number; error: string | null;
+  };
   clips: { name: string; isPlaying: boolean; isStarted: boolean; weight: number; speedRatio: number; frame: number }[];
 }
 
@@ -119,6 +128,14 @@ export class RuenLocomotionView {
   private disposed = false;
   private groups: Record<Locomotion, AnimationGroup> | undefined;
   private combatGroups: CombatGroups | undefined;
+  private traversalGroups: TraversalGroups | undefined;
+  private traversalError: string | null = null;
+  private traversalRole: TraversalRole | null = null;
+  private traversalTime = 0;
+  private traversalFrame: number | null = null;
+  private traversalEntry: { from: PoseSnapshot[]; elapsed: number } | undefined;
+  private traversalEntryWeight = 1;
+  private traversalDirection = 0;
   private combatError: string | null = null;
   private combatRole: CombatRole | null = null;
   private combatTime = 0;
@@ -152,7 +169,11 @@ export class RuenLocomotionView {
   get error(): string | undefined { return this.loadError; }
   get actualSpeed(): number { return this.speed; }
   get weights(): Weights { return { ...this.blendWeights }; }
-  get activeClip(): string | null { return this.combatRole ? this.combatGroups?.[this.combatRole].name ?? null : this.target ? this.groups?.[this.target].name ?? null : null; }
+  get activeClip(): string | null {
+    if (this.traversalRole) return this.traversalGroups?.[this.traversalRole].name ?? null;
+    if (this.combatRole) return this.combatGroups?.[this.combatRole].name ?? null;
+    return this.target ? this.groups?.[this.target].name ?? null : null;
+  }
   get diagnostics(): RuenLocomotionDiagnostics {
     return {
       status: this.loadState, representation: this.representation, reason: this.reason,
@@ -167,7 +188,12 @@ export class RuenLocomotionView {
         entryWeight: this.combatEntryWeight, guardMoving: this.guardMoving, guardDirection: this.guardYaw,
         guardFrame: this.guardFrame, error: this.combatError,
       },
-      clips: this.groups ? [...Object.values(this.groups), ...Object.values(this.combatGroups ?? {})].map(group => ({
+      traversal: {
+        state: this.traversalRole, clip: this.traversalRole ? this.activeClip : null, frame: this.traversalFrame, time: this.traversalTime,
+        phase: this.traversalRole ? this.traversalTime / ruenEquippedTraversalProfile.duration[this.traversalRole] : 0,
+        entryWeight: this.traversalEntryWeight, direction: this.traversalDirection, error: this.traversalError,
+      },
+      clips: this.groups ? [...Object.values(this.groups), ...Object.values(this.combatGroups ?? {}), ...Object.values(this.traversalGroups ?? {})].map(group => ({
         name: group.name, isPlaying: group.isPlaying, isStarted: !!group.isStarted,
         weight: group.weight, speedRatio: group.speedRatio, frame: group.getCurrentFrame(),
       })) : [],
@@ -231,17 +257,24 @@ export class RuenLocomotionView {
           this.combatError = error instanceof Error ? error.message : String(error);
           console.warn('El combate de Ruen conserva el modelo provisional.', error);
         }
+        try {
+          this.traversalGroups = createRuenEquippedTraversal(model, this.scene, groups);
+          model.container.animationGroups.push(...Object.values(this.traversalGroups));
+        } catch (error) {
+          this.traversalError = error instanceof Error ? error.message : String(error);
+          console.warn('El salto y la rodada de Ruen conservan el modelo provisional.', error);
+        }
       }
       model.root.name = 'ruen-meshy-visual';
       model.root.scaling.setAll(ruenMeshyProfile.scale);
       // Keep the glTF conversion and all hand-mounted assets under this independent root.
       // Never parent it to the procedural rig's animated root.
-      for (const group of [...Object.values(groups), ...Object.values(this.combatGroups ?? {})]) group.weight = 0;
+      for (const group of [...Object.values(groups), ...Object.values(this.combatGroups ?? {}), ...Object.values(this.traversalGroups ?? {})]) group.weight = 0;
       this.loaded = model; this.loadingModel = undefined; this.loadState = 'ready'; this.reason = 'awaiting-controller';
     } catch (error) {
       equipment?.dispose(); this.equipmentView = undefined;
       if (model && !model.root.isDisposed()) model.dispose();
-      this.loaded = undefined; this.loadingModel = undefined; this.groups = undefined; this.combatGroups = undefined;
+      this.loaded = undefined; this.loadingModel = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined;
       if (this.disposed) return;
       this.loadState = 'error';
       this.loadError = error instanceof Error ? error.message : String(error);
@@ -275,7 +308,14 @@ export class RuenLocomotionView {
 
     this.loaded.root.position.set(p.x, p.y + this.groundOffset, p.z);
     this.loaded.root.rotation.set(0, p.yaw, 0);
-    if (reset) this.clearCombat();
+    if (reset) { this.clearCombat(); this.clearTraversal(); }
+    const traversal = p.state === 'jump' || p.state === 'fall' || p.state === 'land' || p.state === 'roll' ? p.state : null;
+    const airborneTraversal = traversal === 'jump' || traversal === 'fall';
+    if (this.traversalGroups && traversal && p.attackTime < 0 && p.health > 0 && sim.mode === 'playing' &&
+      (airborneTraversal ? !p.grounded && Number.isFinite(p.vy) : Number.isFinite(p.stateTime) && p.stateTime >= 0)) {
+      this.showTraversal(sim, traversal, dt, reset, playing);
+      return;
+    }
     const attack = p.state === 'attack1' || p.state === 'attack2' || p.state === 'attack3' ? p.state : null;
     const guarding = p.state === 'shield' && p.shield && p.attackTime < 0;
     if (this.combatGroups && p.grounded && p.health > 0 && sim.mode === 'playing' &&
@@ -294,9 +334,9 @@ export class RuenLocomotionView {
       this.showFallback('unsupported-direction'); return;
     }
 
-    if (this.combatRole) {
+    if (this.combatRole || this.traversalRole) {
       const from = capturePose(this.groups.idle);
-      this.resetClips(); this.clearCombat();
+      this.resetClips(); this.clearCombat(); this.clearTraversal();
       restorePose(from); this.exitTransition = { from, elapsed: 0 };
     } else if (reset || this.representation !== 'meshy') this.resetClips();
     if (this.target !== kind) this.select(kind);
@@ -336,11 +376,68 @@ export class RuenLocomotionView {
       !animate ? 'controller-stationary' : this.transition ? 'crossfade' : kind === 'idle' ? 'idle-animation' : 'locomotion';
   }
 
+  private showTraversal(sim: Simulation, role: TraversalRole, dt: number, reset: boolean, playing: boolean): void {
+    if (!this.groups || !this.traversalGroups || !this.loaded) return;
+    const p = sim.player, duration = ruenEquippedTraversalProfile.duration[role];
+    const gravity = -gameConfig.player.gravity;
+    const launchSpeed = Math.sqrt(2 * gravity * gameConfig.player.jumpHeight);
+    // stateTime is not reset at the jump/fall boundary. Vertical velocity is
+    // the simulation's authoritative ascent/descent clock, including ledges.
+    const controllerTime = role === 'jump' ? (launchSpeed - p.vy) / gravity : role === 'fall' ? -p.vy / gravity : p.stateTime;
+    const time = Math.max(0, Math.min(duration, controllerTime));
+    const changed = this.traversalRole !== role || time < this.traversalTime - 1e-8;
+    if (reset || this.representation !== 'meshy' || changed) {
+      // The authored crouch/support solve keeps the feet above the floor.
+      // Blending its pelvis or legs independently would break that contact.
+      const preserveContact = role === 'land' || role === 'roll';
+      const from = !reset && this.representation === 'meshy' ?
+        capturePose(this.groups.idle, node => !preserveContact || !isLowerBody(node)) : undefined;
+      this.resetClips(); this.clearCombat(); this.clearTraversal();
+      this.traversalEntry = from ? { from, elapsed: 0 } : undefined;
+      this.traversalRole = role;
+    }
+    const group = this.traversalGroups[role];
+    this.sampleManual(group, group.from + time * group.targetedAnimations[0]!.animation.framePerSecond, 1);
+    this.traversalTime = time; this.traversalFrame = group.getCurrentFrame();
+    this.traversalDirection = 0;
+    if (role === 'roll') {
+      // Lock-on can rotate p.yaw while the committed dodge keeps rollX/rollZ.
+      // Rotate only the animated pelvis; the exterior root stays authoritative.
+      const heading = Number.isFinite(p.rollX) && Number.isFinite(p.rollZ) && Math.hypot(p.rollX, p.rollZ) > 1e-8 ?
+        Math.atan2(p.rollX, p.rollZ) : p.yaw;
+      this.traversalDirection = Math.atan2(Math.sin(heading - p.yaw), Math.cos(heading - p.yaw));
+      this.turnHips(this.traversalDirection);
+    }
+    this.traversalEntryWeight = 1;
+    if (this.traversalEntry) {
+      this.traversalEntry.elapsed += dt;
+      const progress = role === 'fall' ? this.traversalEntry.elapsed / 0.06 : time / (role === 'land' ? 0.035 : 0.05);
+      this.traversalEntryWeight = smoothstep(progress);
+      blendFromPose(this.traversalEntry.from, this.traversalEntryWeight);
+      if (progress >= 1) this.traversalEntry = undefined;
+    }
+    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true); this.equipmentView?.setEnabled(true);
+    this.representation = 'meshy'; this.applyVisibility(sim);
+    this.reason = !playing ? 'paused' : `traversal:${role}`;
+  }
+
+  /** Rotate a sampled pelvis in world Y, respecting the reflected glTF parent. */
+  private turnHips(direction: number): void {
+    const hips = this.loaded?.container.transformNodes.find(node => node.name === 'mixamorig:Hips');
+    const parent = hips?.parent as TransformNode | null;
+    if (!hips?.rotationQuaternion || !parent) return;
+    const parentBasis = parent.computeWorldMatrix(true).clone(); parentBasis.setTranslation(Vector3.Zero());
+    const turn = parentBasis.multiply(Matrix.RotationY(direction)).multiply(Matrix.Invert(parentBasis));
+    const localRotation = Matrix.Compose(Vector3.One(), hips.rotationQuaternion, Vector3.Zero()).multiply(turn);
+    hips.rotationQuaternion.copyFrom(Quaternion.FromRotationMatrix(localRotation).normalize());
+  }
+
   private showCombat(
     sim: Simulation, attack: 'attack1' | 'attack2' | 'attack3' | null,
     dt: number, dx: number, dz: number, distance: number, reset: boolean, playing: boolean,
   ): void {
     if (!this.groups || !this.combatGroups || !this.loaded) return;
+    this.clearTraversal();
     const p = sim.player;
     const wasGuard = this.combatRole === 'shield' || this.combatRole === 'block';
     if (!attack && !wasGuard) {
@@ -419,7 +516,7 @@ export class RuenLocomotionView {
     this.guardFrame = walk.from + this.guardPhase * (walk.to - walk.from);
     if (this.guardStride === 0) { walk.stop(true); return undefined; }
     this.sampleManual(walk, this.guardFrame, 0);
-    return capturePose(walk, node => /^mixamorig:(Hips|(Left|Right)(UpLeg|Leg|Foot|ToeBase|Toe_End))$/.test(node.name));
+    return capturePose(walk, isLowerBody);
   }
 
   private applyGuardSteps(lower: PoseSnapshot[]): void {
@@ -432,12 +529,9 @@ export class RuenLocomotionView {
     // The glTF parent contains a reflection; conjugating rotation matrices keeps
     // directional turns correct without decomposing that reflected parent.
     const upperWorld = spine.computeWorldMatrix(true).clone();
-    const base = capturePose(this.groups.walk, node => /^mixamorig:(Hips|(Left|Right)(UpLeg|Leg|Foot|ToeBase|Toe_End))$/.test(node.name));
+    const base = capturePose(this.groups.walk, isLowerBody);
     restorePose(lower); blendFromPose(base, this.guardStride);
-    const parentBasis = parent.computeWorldMatrix(true).clone(); parentBasis.setTranslation(Vector3.Zero());
-    const turn = parentBasis.multiply(Matrix.RotationY(this.guardYaw * this.guardStride)).multiply(Matrix.Invert(parentBasis));
-    const localRotation = Matrix.Compose(Vector3.One(), hips.rotationQuaternion, Vector3.Zero()).multiply(turn);
-    hips.rotationQuaternion.copyFrom(Quaternion.FromRotationMatrix(localRotation).normalize());
+    this.turnHips(this.guardYaw * this.guardStride);
     const upperLocal = upperWorld.multiply(Matrix.Invert(hips.computeWorldMatrix(true)));
     upperLocal.decompose(spine.scaling, spine.rotationQuaternion, spine.position);
     spine.rotationQuaternion.normalize();
@@ -447,6 +541,11 @@ export class RuenLocomotionView {
     const visibility = sim.player.invulnerable > 0 && Math.sin(sim.age * 35) > 0 ? 0.4 : 1;
     for (const mesh of this.loaded?.container.meshes ?? []) mesh.visibility = visibility;
     for (const item of this.equipmentView?.models ?? []) for (const mesh of item.model.container.meshes) mesh.visibility = visibility;
+  }
+
+  private clearTraversal(): void {
+    this.traversalRole = null; this.traversalTime = 0; this.traversalFrame = null;
+    this.traversalEntry = undefined; this.traversalEntryWeight = 1; this.traversalDirection = 0;
   }
 
   private clearCombat(): void {
@@ -483,14 +582,14 @@ export class RuenLocomotionView {
 
   private resetClips(): void {
     this.loaded?.player.stopAll();
-    if (this.groups) for (const group of [...Object.values(this.groups), ...Object.values(this.combatGroups ?? {})]) group.weight = 0;
+    if (this.groups) for (const group of [...Object.values(this.groups), ...Object.values(this.combatGroups ?? {}), ...Object.values(this.traversalGroups ?? {})]) group.weight = 0;
     this.blendWeights = zeroWeights(); this.target = null; this.transition = undefined;
     this.exitTransition = undefined;
   }
 
   private showFallback(reason: string): void {
     this.loaded?.root.setEnabled(false); this.equipmentView?.setEnabled(false);
-    this.resetClips(); this.clearCombat();
+    this.resetClips(); this.clearCombat(); this.clearTraversal();
     this.fallback.root.setEnabled(true);
     this.representation = 'fallback'; this.reason = reason;
   }
@@ -500,7 +599,7 @@ export class RuenLocomotionView {
     this.disposed = true;
     this.equipmentView?.dispose(); this.equipmentView = undefined;
     this.loadingModel?.dispose(); this.loadingModel = undefined;
-    this.loaded?.dispose(); this.loaded = undefined; this.groups = undefined; this.combatGroups = undefined; this.clearCombat();
+    this.loaded?.dispose(); this.loaded = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined; this.clearCombat(); this.clearTraversal();
     if (!this.fallback.root.isDisposed()) this.fallback.root.setEnabled(true);
   }
 }

@@ -1,0 +1,40 @@
+[WebServer] (node:23557) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:23570) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 18 tests using 1 worker
+
+(node:23594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/18] tests/browser/bootstrap.spec.ts:6:1 › new game, keyboard movement, jump, roll, camera, pause and responsive HUD
+[2/18] tests/browser/bootstrap.spec.ts:26:1 › corrupt saves are handled without crashing or enabling Continue
+[3/18] tests/browser/bootstrap.spec.ts:31:1 › saved checkpoint, key and boss completion persist; new game requires confirmation
+[4/18] tests/browser/bootstrap.spec.ts:40:1 › synthetic standard Xbox is detected, starts game, moves and pauses on a single edge
+[5/18] tests/browser/ruen-combat-preview.spec.ts:107:1 › combat preview opens paused and deforms the real skin with five independent equipped clips
+[6/18] tests/browser/ruen-combat-preview.spec.ts:186:1 › production combat preview exposes its clips and comparison controls without development hooks
+[7/18] tests/browser/ruen-combat.spec.ts:203:3 › keyboard: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage
+[8/18] tests/browser/ruen-combat.spec.ts:203:3 › mouse: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage
+[9/18] tests/browser/ruen-combat.spec.ts:203:3 › gamepad: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage
+[10/18] tests/browser/ruen-combat.spec.ts:254:1 › real shield input blocks a Brote hit and keeps equipped guard while moving under lock-on
+[11/18] tests/browser/ruen-combat.spec.ts:294:1 › attack pause preserves the exact frame, dodge keeps equipment, and enemy damage uses the safe fallback
+[12/18] tests/browser/ruen-meshy.spec.ts:64:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector
+[13/18] tests/browser/ruen-meshy.spec.ts:190:1 › default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal
+[14/18] tests/browser/ruen-meshy.spec.ts:311:1 › actual collision displacement freezes Meshy even while the controller requests movement
+[15/18] tests/browser/ruen-meshy.spec.ts:346:1 › a failed real model request retains the existing playable Ruen
+[16/18] tests/browser/ruen-meshy.spec.ts:372:1 › explicit provisional opt-out keeps the old Ruen without requesting the Meshy master
+[17/18] tests/browser/ruen-meshy.spec.ts:390:1 › production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks
+[18/18] tests/browser/ruen-meshy.spec.ts:419:1 › a missing runtime shield keeps a neutral real hero playable without partial floating equipment
+  Slow test file: tests/browser/ruen-combat.spec.ts (5.6m)
+  Slow test file: tests/browser/ruen-meshy.spec.ts (5.4m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  18 passed (15.2m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

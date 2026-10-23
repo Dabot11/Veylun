@@ -5,9 +5,19 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
+## Salto y voltereta validados localmente
+
+La etapa actual crea cuatro clips propios: subida del salto, caída, aterrizaje
+y voltereta. El controlador conserva la altura, la gravedad y la dirección
+de esquiva; las poses siguen sus datos sin añadir otro desplazamiento. Se
+mantienen 0.12 s de aterrizaje, 0.45 s de voltereta y 0.25 s de invulnerabilidad.
+Los cuatro grupos cubren 160 canales a 60 fps. Typecheck, build y 197 pruebas
+unitarias aprobaron, además de 22 casos seleccionados de navegador y la
+calibración de contacto. Publicación pendiente: [alcance de movimiento](RUEN_GAME_TRAVERSAL.md).
+
 ## Combate equipado publicado
 
-La etapa actual crea **guardia, reacción al bloqueo y los tres golpes del combo**
+La versión `f828d841` incorpora **guardia, reacción al bloqueo y los tres golpes del combo**
 sobre el esqueleto real. Cada clip se define mediante keyframes de huesos; no
 requiere reemplazar el modelo ni descargar animaciones externas. Los tiempos
 se toman de `src/player/combat.ts`, manteniendo daño, alcance y movimiento de
@@ -90,11 +100,11 @@ sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
 
 1. **Idle y locomoción equipada, publicado:** escudo reducido, copias ligeras,
    agarres y transiciones al detenerse, caminar y correr.
-2. **Guardia, bloqueo y combo completo, etapa actual:** crear la postura
-   sostenida, la reacción de impacto y los tres ataques con las ventanas
-   existentes. Validar poses, continuidad y ejecución desde los controles.
-3. **Salto y esquiva:** separar impulso, aire y aterrizaje, y adaptar la rodada
-   a su duración y desplazamiento actuales, conservando física e invulnerabilidad.
+2. **Guardia, bloqueo y combo completo, publicado:** postura sostenida,
+   reacción de impacto y tres ataques con las ventanas de combate existentes.
+3. **Salto y voltereta, etapa actual:** separar subida, caída y aterrizaje,
+   y adaptar la rodada a su duración y dirección actuales, conservando física
+   e invulnerabilidad.
 4. **Daño, muerte y demás acciones:** reemplazar sus variantes provisionales
    tras comprobar interrupciones y transiciones.
 

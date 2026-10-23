@@ -19,6 +19,7 @@ interface RenderSample {
   age: number; state: string; combo: number; attackTime: number; health: number; hp: number[];
   position: number[]; target: string | null; representation: string; combat: CombatDiagnostic;
   weights: number[]; originalPlaying: string[]; rootError: number; groupFrame: number | null; arms: number[][];
+  traversal: RuenLocomotionView['diagnostics']['traversal'];
   gear: { kind: string; enabled: boolean; parent: string | undefined; gripError: number; scale: number[] }[];
 }
 interface StepSample {
@@ -90,7 +91,7 @@ async function collectEvidence(page: Page): Promise<void> {
       const sample: RenderSample = {
         age: sim.age, state: p.state, combo: p.combo, attackTime: p.attackTime, health: p.health,
         hp: sim.enemies.map(enemy => enemy.hp), position: [p.x, p.y, p.z], target: sim.targetId,
-        representation: diagnostics.representation, combat: diagnostics.combat,
+        representation: diagnostics.representation, combat: diagnostics.combat, traversal: diagnostics.traversal,
         groupFrame: model.container.animationGroups.find(group => group.name === diagnostics.combat.clip)?.getCurrentFrame() ?? null,
         arms: model.container.transformNodes.filter(node => /mixamorig:(Left|Right)(Arm|ForeArm|Hand)$/.test(node.name))
           .map(node => node.rotationQuaternion!.asArray()),
@@ -290,7 +291,7 @@ test('real shield input blocks a Brote hit and keeps equipped guard while moving
   for (const sample of evidence.renders.filter(sample => sample.combat.state)) expectEquipped(sample);
 });
 
-test('attack pause preserves the exact frame, and dodge or enemy damage cancels into safe fallbacks', async ({ page }, info) => {
+test('attack pause preserves the exact frame, dodge keeps equipment, and enemy damage uses the safe fallback', async ({ page }, info) => {
   const errors = collectErrors(page);
   await startTrial(page);
   await page.evaluate(() => {
@@ -337,7 +338,7 @@ test('attack pause preserves the exact frame, and dodge or enemy damage cancels 
   await expect.poll(() => page.evaluate(() => (window as TestWindow).__veylun.sim.player.state)).toBe('idle');
 
   // Hold guard while a normal dodge press interrupts another attack. Guard must
-  // be restored when the provisional roll finishes; it must not retain a sword pose.
+  // be restored when the equipped roll finishes; it must not retain an attack pose.
   await page.evaluate(() => new Promise<void>((resolve, reject) => {
     const w = window as TestWindow, deadline = performance.now() + 30000;
     window.dispatchEvent(new KeyboardEvent('keydown', { code: 'KeyJ', bubbles: true }));
@@ -389,11 +390,18 @@ test('attack pause preserves the exact frame, and dodge or enemy damage cancels 
     const samples = evidence.renders.filter(sample => sample.state === state);
     expect(samples.length).toBeGreaterThan(0);
     for (const sample of samples) {
-      expect(sample.representation).toBe('fallback');
       expect(sample.combat.state).toBeNull();
       expect(sample.attackTime).toBe(-1);
       expect(sample.combo).toBe(0);
-      expect(sample.gear.every(item => !item.enabled)).toBe(true);
+      if (state === 'roll') {
+        expectEquipped(sample);
+        expect(sample.traversal.state).toBe('roll');
+        expect(sample.traversal.clip).toBe('Ruen_Roll_Equipped');
+      } else {
+        expect(sample.representation).toBe('fallback');
+        expect(sample.traversal.state).toBeNull();
+        expect(sample.gear.every(item => !item.enabled)).toBe(true);
+      }
     }
   }
   const hurt = evidence.steps.find(step => step.events.some(event => event.type === 'hurt'))!;

@@ -14,6 +14,8 @@ import { RuenEquipmentPreview, type RuenEquipmentDiagnostics } from '../../src/a
 import { createRuenEquippedLocomotion } from '../../src/assets/ruenEquippedLocomotion';
 import { createRuenEquippedCombat, ruenEquippedCombatProfile } from '../../src/assets/ruenEquippedCombat';
 import { attacks } from '../../src/player/combat';
+import { createRuenEquippedTraversal, ruenEquippedTraversalProfile } from '../../src/assets/ruenEquippedTraversal';
+import { gameConfig } from '../../src/config/gameConfig';
 import { RuenLocomotionView, ruenMeshyProfile } from '../../src/assets/RuenLocomotionView';
 import { ruenRuntimeEquipmentProfiles } from '../../src/assets/ruenEquipmentProfile';
 
@@ -24,6 +26,9 @@ vi.mock('../../src/assets/inspectModel', async importOriginal => ({
 vi.mock('../../src/assets/ruenEquippedLocomotion', () => ({ createRuenEquippedLocomotion: vi.fn() }));
 vi.mock('../../src/assets/ruenEquippedCombat', async importOriginal => ({
   ...await importOriginal<typeof import('../../src/assets/ruenEquippedCombat')>(), createRuenEquippedCombat: vi.fn(),
+}));
+vi.mock('../../src/assets/ruenEquippedTraversal', async importOriginal => ({
+  ...await importOriginal<typeof import('../../src/assets/ruenEquippedTraversal')>(), createRuenEquippedTraversal: vi.fn(),
 }));
 vi.mock('../../src/assets/RuenEquipmentPreview', () => ({ RuenEquipmentPreview: vi.fn() }));
 
@@ -108,13 +113,34 @@ function fixture(options: { names?: string[]; equipmentStatus?: RuenEquipmentDia
     }
     return combatGroups as ReturnType<typeof createRuenEquippedCombat>;
   });
+  const traversalGroups: Partial<ReturnType<typeof createRuenEquippedTraversal>> = {};
+  vi.mocked(createRuenEquippedTraversal).mockImplementationOnce((_model, _scene, locomotion) => {
+    expect(model.root.scaling.asArray()).toEqual([1, 1, 1]);
+    for (const kind of ['jump', 'fall', 'land', 'roll'] as const) {
+      const group = new AnimationGroup(`Ruen_${kind[0]!.toUpperCase() + kind.slice(1)}_Equipped`, scene);
+      const duration = ruenEquippedTraversalProfile.duration[kind];
+      for (const { target, animation } of locomotion.idle.targetedAnimations) {
+        const clone = animation.clone(true); clone.framePerSecond = 60;
+        const value = target === hand ? Quaternion.RotationAxis(Vector3.Right(), 1.1) : animation.getKeys()[0]!.value;
+        const peak = target === joint && animation.targetProperty === 'position.y' ? -0.2 :
+          target === leg ? Quaternion.RotationAxis(Vector3.Right(), 0.6) : value;
+        clone.setKeys([{ frame: 0, value }, { frame: duration * 30, value: peak }, { frame: duration * 60, value }]);
+        if (kind === 'roll' && target === joint && animation.targetProperty === 'rotationQuaternion') {
+          clone.setKeys([0, 0.25, 0.5, 0.75, 1].map(phase => ({ frame: duration * 60 * phase, value: Quaternion.RotationAxis(Vector3.Right(), Math.PI * 2 * phase) })));
+        }
+        group.addTargetedAnimation(clone, target);
+      }
+      traversalGroups[kind] = group;
+    }
+    return traversalGroups as ReturnType<typeof createRuenEquippedTraversal>;
+  });
   vi.mocked(loadInspectionModel).mockResolvedValueOnce(model);
   const view = new RuenLocomotionView(scene, fallback);
   const sim = new Simulation();
   const advance = (seconds: number, z: number, x = 0) => {
     sim.age += seconds; sim.player.z += z; sim.player.x += x; view.update(sim, true);
   };
-  return { scene, fallback, container, conversion, joint, spine, leg, hand, mesh, model, gear, gearMesh, groups, combatGroups, rest, view, sim, advance };
+  return { scene, fallback, container, conversion, joint, spine, leg, hand, mesh, model, gear, gearMesh, groups, combatGroups, traversalGroups, rest, view, sim, advance };
 }
 
 afterEach(() => {
@@ -144,7 +170,7 @@ describe('equipped Meshy locomotion visual adapter', () => {
     expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
     originalGroups.forEach((group, index) => expect(group.targetedAnimations[0]!.animation.getKeys()).toEqual(originalKeys[index]));
     expect(container.animationGroups.slice(0, 4)).toEqual(originalGroups);
-    expect(container.animationGroups).toHaveLength(12); expect(model.report.animationGroups).toHaveLength(4);
+    expect(container.animationGroups).toHaveLength(16); expect(model.report.animationGroups).toHaveLength(4);
   });
 
   it('opens in a paused equipped Idle and advances breathing only while the simulation plays', async () => {
@@ -273,7 +299,7 @@ describe('equipped Meshy locomotion visual adapter', () => {
   it('preserves action fallbacks, hides equipment, and never changes simulation or procedural transforms', async () => {
     const { view, model, fallback, gear, sim, advance } = fixture();
     await view.load(); sim.player.state = 'run'; view.update(sim, true); advance(0.1, 0.4);
-    for (const state of ['jump', 'fall', 'land', 'roll', 'attack1', 'attack2', 'attack3', 'shield', 'hurt', 'death', 'interact', 'victory'] as const) {
+    for (const state of ['jump', 'fall', 'attack1', 'attack2', 'attack3', 'shield', 'hurt', 'death', 'interact', 'victory'] as const) {
       sim.player.state = state; fallback.root.rotation.x = 1.3;
       const before = structuredClone(sim.player); view.update(sim, true);
       expect(sim.player).toEqual(before); expect(view.diagnostics.representation).toBe('fallback');
@@ -511,5 +537,168 @@ describe('equipped Meshy combat visual adapter', () => {
     const owned = Object.values(ready.combatGroups).map(group => vi.spyOn(group, 'dispose'));
     ready.view.dispose(); ready.view.dispose(); owned.forEach(dispose => expect(dispose).toHaveBeenCalledOnce());
     expect(ready.scene.animationGroups).toHaveLength(0); expect(ready.view.diagnostics.combat.state).toBeNull();
+  });
+});
+
+describe('equipped Meshy traversal visual adapter', () => {
+  const gravity = -gameConfig.player.gravity;
+  const launchSpeed = Math.sqrt(2 * gravity * gameConfig.player.jumpHeight);
+
+  it('follows a real jump through ascent, descent and landing while the shield remains held', async () => {
+    const { view, sim, scene, model, gear } = fixture();
+    await view.load(); view.update(sim, true); scene._animate(0);
+    const observed = new Set<string>();
+    for (let step = 0; step < 70; step++) {
+      sim.step(1 / 60, { x: 0, z: 0, jump: step === 0, shield: true });
+      const before = structuredClone(sim.player), events = structuredClone(sim.events);
+      view.update(sim, true, 0.25); scene._animate(80);
+      const role = view.diagnostics.traversal.state;
+      if (role) {
+        observed.add(role); expect(view.diagnostics.representation).toBe('meshy'); expect(gear.diagnostics.enabled).toBe(true);
+        expect(view.diagnostics.combat.state).toBeNull(); expect(view.weights).toEqual({ idle: 0, walk: 0, run: 0 });
+        const time = role === 'jump' ? (launchSpeed - sim.player.vy) / gravity : role === 'fall' ? -sim.player.vy / gravity : sim.player.stateTime;
+        expect(view.diagnostics.traversal.time).toBeCloseTo(Math.max(0, Math.min(ruenEquippedTraversalProfile.duration[role], time)), 8);
+        expect(view.diagnostics.traversal.frame).toBeCloseTo(view.diagnostics.traversal.time * 60, 8);
+        expect(view.diagnostics.clips.filter(clip => clip.isPlaying)).toHaveLength(0);
+      }
+      expect(model.root.position.asArray()).toEqual([sim.player.x, sim.player.y, sim.player.z]);
+      expect(model.root.rotation.y).toBe(sim.player.yaw); expect(sim.player).toEqual(before); expect(sim.events).toEqual(events);
+    }
+    expect([...observed]).toEqual(['jump', 'fall', 'land']);
+    expect(view.diagnostics.traversal.state).toBeNull(); expect(view.diagnostics.combat.state).toBe('shield');
+  });
+
+  it('uses descending velocity for a ledge fall with a stale state timer and holds the settled fall pose', async () => {
+    const { view, sim, scene, joint, traversalGroups } = fixture();
+    await view.load(); view.update(sim, true); scene._animate(0);
+    sim.player.state = 'fall'; sim.player.grounded = false; sim.player.stateTime = 999; sim.player.vy = -gravity * 0.12;
+    sim.age += 0.1; view.update(sim, true); scene._animate(1000);
+    expect(view.diagnostics.traversal.time).toBeCloseTo(0.12); expect(view.diagnostics.traversal.phase).toBeCloseTo(0.4);
+    const pose = joint.position.clone(); view.update(sim, false); scene._animate(2000);
+    expect(traversalGroups.fall!.getCurrentFrame()).toBeCloseTo(7.2); expect(joint.position.equalsWithEpsilon(pose)).toBe(true);
+    sim.player.vy = -gravity * 2; sim.age += 0.1; view.update(sim, true); scene._animate(2000);
+    expect(view.diagnostics.traversal.phase).toBe(1); expect(traversalGroups.fall!.getCurrentFrame()).toBe(18);
+    view.update(sim, true); scene._animate(2000); expect(traversalGroups.fall!.getCurrentFrame()).toBe(18);
+  });
+
+  it.each(['land', 'roll'] as const)('keeps %s on the real hero over an edge and freezes its exact controller frame in pause', async role => {
+    const { view, sim, scene, traversalGroups, model, joint } = fixture();
+    await view.load(); view.update(sim, true); scene._animate(0);
+    const duration = ruenEquippedTraversalProfile.duration[role];
+    sim.player.state = role; sim.player.grounded = false; sim.player.stateTime = duration / 2; sim.player.shield = true;
+    sim.age += 0.1; view.update(sim, true, 0.01); scene._animate(1000);
+    expect(view.diagnostics.traversal.state).toBe(role); expect(view.diagnostics.traversal.phase).toBe(0.5);
+    expect(view.diagnostics.traversal.entryWeight).toBe(1); expect(view.actualSpeed).toBe(0);
+    expect(traversalGroups[role]!.isPlaying).toBe(false); expect(traversalGroups[role]!.getCurrentFrame()).toBeCloseTo(duration * 30);
+    const position = joint.position.clone(), rotation = joint.rotationQuaternion!.clone();
+    view.update(sim, false); scene._animate(4000);
+    expect(joint.position.equalsWithEpsilon(position)).toBe(true); expect(Math.abs(Quaternion.Dot(joint.rotationQuaternion!, rotation))).toBeCloseTo(1);
+    expect(model.root.position.y).toBe(sim.player.y);
+    sim.player.stateTime = duration; sim.age += 0.1; view.update(sim, true); scene._animate(1000);
+    expect(view.diagnostics.traversal.phase).toBe(1); expect(traversalGroups[role]!.getCurrentFrame()).toBeCloseTo(duration * 60);
+  });
+
+  it.each([[0, 1, 0], [Math.PI / 2, 0, -1], [-0.7, -1, 1]] as const)('turns the full roll toward its committed direction without changing root yaw %s', async (yaw, rollX, rollZ) => {
+    const { view, sim, scene, model, joint, conversion } = fixture({ directionalRig: true });
+    await view.load(); sim.player.yaw = yaw; sim.targetId = 'sprout-1'; view.update(sim, true); scene._animate(0);
+    sim.player.state = 'roll'; sim.player.rollX = rollX; sim.player.rollZ = rollZ;
+    const direction = new Vector3(rollX, 0, rollZ).normalize();
+    let firstDirection = 0;
+    for (const phase of [0.25, 0.5, 0.75, 1]) {
+      sim.player.stateTime = phase * 0.45; sim.age += 0.1; const before = structuredClone(sim.player);
+      view.update(sim, true); scene._animate(1000);
+      const up = Vector3.TransformNormal(Vector3.Up(), joint.computeWorldMatrix(true)).normalize();
+      if (phase === 0.25 || phase === 0.75) {
+        const facing = Vector3.Dot(up, direction); expect(Math.abs(facing)).toBeCloseTo(1, 6);
+        if (phase === 0.25) firstDirection = facing; else expect(facing * firstDirection).toBeCloseTo(-1, 6);
+      } else expect(up.y).toBeCloseTo(phase === 0.5 ? -1 : 1, 6);
+      expect(view.diagnostics.traversal.phase).toBeCloseTo(phase);
+      expect(view.diagnostics.traversal.entryWeight).toBe(1); expect(sim.player).toEqual(before);
+      expect(model.root.rotation.y).toBe(yaw); expect(conversion.scaling.z).toBe(-1);
+    }
+    sim.player.yaw += 0.3; sim.player.stateTime = 0.45 * 0.25; sim.age += 0.1; view.update(sim, true); scene._animate(0);
+    const up = Vector3.TransformNormal(Vector3.Up(), joint.computeWorldMatrix(true)).normalize();
+    expect(Math.abs(Vector3.Dot(up, direction))).toBeCloseTo(1, 6); expect(model.root.rotation.y).toBe(sim.player.yaw);
+  });
+
+  it.each(['land', 'roll'] as const)('preserves authored lower-body contact during %s entry while blending the upper body', async role => {
+    const { view, sim, scene, joint, leg, hand } = fixture({ directionalRig: true });
+    await view.load(); view.update(sim, true); scene._animate(0);
+    const time = role === 'land' ? 0.02 : 1 / 30;
+    const duration = ruenEquippedTraversalProfile.duration[role];
+    sim.player.state = role; sim.player.stateTime = time; sim.age += time;
+    view.update(sim, true); scene._animate(0);
+    const weight = view.diagnostics.traversal.entryWeight;
+    expect(weight).toBeGreaterThan(0); expect(weight).toBeLessThan(1);
+    // These channels together define the authored foot-support pose. Any
+    // partial entry blend of the pelvis or legs invalidates that solve.
+    expect(joint.position.y).toBeCloseTo(-0.2 * time / (duration / 2), 8);
+    const expectedPelvis = Quaternion.RotationAxis(Vector3.Right(), role === 'roll' ? Math.PI * 2 * time / duration : 0);
+    expect(Math.abs(Quaternion.Dot(joint.rotationQuaternion!, expectedPelvis))).toBeCloseTo(1, 8);
+    const expectedLeg = Quaternion.RotationAxis(Vector3.Right(), 0.6 * time / (duration / 2));
+    expect(Math.abs(Quaternion.Dot(leg.rotationQuaternion!, expectedLeg))).toBeCloseTo(1, 8);
+    const expectedHand = Quaternion.RotationAxis(Vector3.Right(), 0.7 + (1.1 - 0.7) * weight);
+    expect(Math.abs(Quaternion.Dot(hand.rotationQuaternion!, expectedHand))).toBeCloseTo(1, 8);
+    expect(hand.rotationQuaternion!.equalsWithEpsilon(Quaternion.RotationAxis(Vector3.Right(), 1.1))).toBe(false);
+  });
+
+  it('gives roll the existing .45s duration and leaves invulnerability and damage decisions in Simulation', async () => {
+    const { view, sim, scene } = fixture(); await view.load(); view.update(sim, true);
+    sim.step(1 / 60, { x: 0, z: 0, dodge: true }); view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.traversal.state).toBe('roll'); expect(view.diagnostics.traversal.frame).toBe(0);
+    for (let i = 0; i < 14; i++) { sim.step(1 / 60, { x: 0, z: 0 }); view.update(sim, true); }
+    expect(sim.receiveDamage(1, sim.player, false)).toBe('ignored');
+    sim.step(1 / 60, { x: 0, z: 0 }); sim.step(1 / 60, { x: 0, z: 0 });
+    view.update(sim, true); expect(view.diagnostics.traversal.frame).toBeCloseTo(sim.player.stateTime * 60);
+    expect(sim.receiveDamage(1, sim.player, false)).toBe('hurt');
+    view.update(sim, true); expect(view.diagnostics.traversal.state).toBeNull(); expect(view.diagnostics.representation).toBe('fallback');
+    sim.player.state = 'roll'; sim.player.stateTime = 0.44; sim.player.invulnerable = 0; sim.player.grounded = true;
+    sim.step(1 / 60, { x: 0, z: 0 }); view.update(sim, true);
+    expect(sim.player.state).toBe('idle'); expect(view.diagnostics.traversal.state).toBeNull();
+  });
+
+  it('clears traversal on attack, hurt, respawn and teleport, and blends its last pose back to locomotion', async () => {
+    const { view, sim, scene, traversalGroups, joint, groups } = fixture(); await view.load(); view.update(sim, true); scene._animate(0);
+    sim.player.state = 'land'; sim.player.stateTime = 0.06; sim.age += 0.1; view.update(sim, true); scene._animate(0);
+    const landingY = joint.position.y;
+    sim.player.state = 'idle'; view.update(sim, true); scene._animate(0);
+    expect(view.diagnostics.traversal.state).toBeNull(); expect(joint.position.y).toBeCloseTo(landingY);
+    sim.age += 0.05; view.update(sim, true); scene._animate(50);
+    expect(groups.idle!.weight).toBeCloseTo(0.5); expect(joint.position.y).toBeCloseTo(landingY / 2);
+    sim.age += 0.05; view.update(sim, true); scene._animate(50); expect(joint.position.y).toBeCloseTo(0);
+    sim.player.state = 'roll'; sim.player.stateTime = 0.2; sim.age += 0.1; view.update(sim, true);
+    sim.player.state = 'attack1'; sim.player.combo = 1; sim.player.attackTime = 0.2; sim.age += 0.1; view.update(sim, true);
+    expect(view.diagnostics.traversal.state).toBeNull(); expect(view.diagnostics.combat.state).toBe('attack1');
+    expect(traversalGroups.roll!.isStarted).toBe(false);
+    sim.player.attackTime = -1; sim.player.state = 'roll'; sim.player.stateTime = 0.2; sim.age += 0.1; view.update(sim, true);
+    expect(view.diagnostics.combat.state).toBeNull(); expect(view.diagnostics.traversal.state).toBe('roll');
+    sim.player.state = 'hurt'; view.update(sim, true); expect(view.diagnostics.traversal.state).toBeNull();
+    sim.player.state = 'roll'; sim.player.stateTime = 0.2; sim.age += 0.1; view.update(sim, true);
+    sim.respawn(); view.update(sim, true); scene._animate(0); expect(view.diagnostics.traversal.state).toBeNull();
+    expect(joint.position.y).toBeCloseTo(0); expect(view.weights).toEqual({ idle: 1, walk: 0, run: 0 });
+    sim.player.state = 'roll'; sim.player.stateTime = 0.01; sim.player.z += 40; sim.age += 0.1; view.update(sim, true);
+    expect(view.diagnostics.traversal.frame).toBeCloseTo(0.6); expect(view.diagnostics.traversal.entryWeight).toBe(1);
+  });
+
+  it.each(['partial', 'error'] as const)('retains procedural traversal when equipment is %s', async equipmentStatus => {
+    const { view, sim, gear, model } = fixture({ equipmentStatus }); await view.load(); view.update(sim, true);
+    expect(createRuenEquippedTraversal).not.toHaveBeenCalled(); expect(model.container.animationGroups).toHaveLength(7);
+    for (const role of ['jump', 'fall', 'land', 'roll'] as const) {
+      sim.player.state = role; sim.player.grounded = false; sim.player.stateTime = 0.1; view.update(sim, true);
+      expect(view.diagnostics.traversal.state).toBeNull(); expect(view.diagnostics.representation).toBe('fallback'); expect(gear.diagnostics.enabled).toBe(false);
+    }
+  });
+
+  it('isolates traversal authoring errors from combat and disposes every traversal group exactly once', async () => {
+    const failed = fixture(); vi.mocked(createRuenEquippedTraversal).mockReset().mockImplementationOnce(() => { throw new Error('invalid traversal rig'); });
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {}); await failed.view.load();
+    expect(failed.view.status).toBe('ready'); expect(failed.view.diagnostics.traversal.error).toBe('invalid traversal rig'); expect(warn).toHaveBeenCalledOnce();
+    failed.sim.player.state = 'roll'; failed.sim.player.stateTime = 0.1; failed.view.update(failed.sim, true);
+    expect(failed.view.diagnostics.representation).toBe('fallback');
+    failed.sim.player.state = 'shield'; failed.sim.player.shield = true; failed.view.update(failed.sim, true);
+    expect(failed.view.diagnostics.combat.state).toBe('shield');
+    const ready = fixture(); await ready.view.load(); const owned = Object.values(ready.traversalGroups).map(group => vi.spyOn(group, 'dispose'));
+    ready.view.dispose(); ready.view.dispose(); owned.forEach(dispose => expect(dispose).toHaveBeenCalledOnce());
+    expect(ready.scene.animationGroups).toHaveLength(0); expect(ready.view.diagnostics.traversal.state).toBeNull();
   });
 });
