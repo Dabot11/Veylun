@@ -1,0 +1,122 @@
+{
+  "repository": "https://github.com/Dabot11/Veylun",
+  "pullRequest": "https://github.com/Dabot11/Veylun/pull/6",
+  "featureCommit": "a0384329a161faf414aba265c88ade1f37c1d975",
+  "sourceCommit": "b83b0f365e84555de195466c9d6f2c8aaad79dcf",
+  "ghPagesCommit": "df6b2d858e945fdd893b0be42a0e1a01426f1a51",
+  "builtAt": "2026-10-23T06:50:54.272Z",
+  "gameUrl": "https://dabot11.github.io/Veylun/?v=b83b0f36",
+  "previewUrl": "https://dabot11.github.io/Veylun/?inspect=ruen&motion=traversal-v1&v=b83b0f36",
+  "workflowRun": {
+    "id": 39914027016,
+    "url": "https://github.com/Dabot11/Veylun/actions/runs/39914027016",
+    "status": "completed",
+    "conclusion": "success",
+    "updatedAt": "2026-10-23T06:51:49Z",
+    "jobs": [
+      {
+        "id": 120283351907,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39914027016,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Upload artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          }
+        ]
+      },
+      {
+        "id": 120283458663,
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39914027016,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      },
+      {
+        "id": 120283458919,
+        "name": "report-build-status",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39914027016,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Report Build Status",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ]
+  },
+  "deploymentMarker": {
+    "url": "https://raw.githubusercontent.com/Dabot11/Veylun/df6b2d858e945fdd893b0be42a0e1a01426f1a51/deployment.json",
+    "sourceCommit": "b83b0f365e84555de195466c9d6f2c8aaad79dcf",
+    "builtAt": "2026-10-23T06:50:54.272Z"
+  },
+  "verificationScope": "Local development and production browser checks; exact gh-pages deployment marker and successful GitHub Pages workflow. The public game host was not directly browser-tested because executor network policy did not allow that host.",
+  "documentationClosure": "Documentation-only follow-up commits do not change the deployed source tree or require another build."
+}

@@ -1,6 +1,6 @@
 # Validación ejecutada
 
-## Salto y voltereta equipados: validado localmente
+## Salto y voltereta equipados: validado y publicado
 
 Aprobaron typecheck, build y **197 pruebas unitarias en 18 archivos** en 4.56 s.
 La etapa añade subida, caída, aterrizaje y voltereta sobre el rig real, sin
@@ -18,7 +18,13 @@ comparaba su posición con Idle. La aplicación y el build no cambiaron. Las
 
 La selección no repite la suite completa de 44 casos, `journey` ni los
 encuentros de enemigos restantes. Incluye caída sin impulso desde una altura
-preparada. Publicación pendiente. [Alcance](RUEN_GAME_TRAVERSAL.md) ·
+preparada. Publicación confirmada por
+[Actions 39914027016](https://github.com/Dabot11/Veylun/actions/runs/39914027016),
+tras integrar el [PR #6](https://github.com/Dabot11/Veylun/pull/6): fuente
+`b83b0f365e84555de195466c9d6f2c8aaad79dcf`, árbol idéntico al probado
+`a0384329a161faf414aba265c88ade1f37c1d975`, build de `gh-pages`
+`df6b2d858e945fdd893b0be42a0e1a01426f1a51`.
+[Alcance](RUEN_GAME_TRAVERSAL.md) ·
 [Evidencia](evidence/ruen-game-traversal/README.md).
 
 ## Guardia, bloqueo y combo equipado: validado y publicado

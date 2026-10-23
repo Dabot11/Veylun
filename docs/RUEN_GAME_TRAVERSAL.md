@@ -1,10 +1,10 @@
 # Salto y voltereta de Ruen
 
-Estado: **validado localmente con 197 unitarias y 22 casos seleccionados de navegador; publicación pendiente**.
+Estado: **validado y publicado desde `b83b0f36`, con 197 unitarias y 22 casos seleccionados de navegador**.
 Esta etapa adapta subida, caída, aterrizaje y voltereta al Ruen real con espada
-y escudo. La versión pública vigente es `f828d841`, con Idle, locomoción y
-combate equipados; sus 173 unitarias y 40 casos de navegador no son resultados
-de esta adaptación nueva.
+y escudo. Amplía la versión anterior `f828d841`, con Idle, locomoción y combate
+equipados; sus 173 unitarias y 40 casos de navegador permanecen como resultados
+de aquella etapa.
 
 ## Movimiento y animación
 
@@ -41,6 +41,8 @@ originales del master permanecen intactos.
 Las animaciones nuevas se crean en memoria. El escudo mantiene escala 0.294,
 el 70% del montaje inicial, y la espada mantiene 0.55.
 
+Abre [el juego publicado](https://dabot11.github.io/Veylun/?v=b83b0f36) o el
+[visor de movimiento](https://dabot11.github.io/Veylun/?inspect=ruen&motion=traversal-v1&v=b83b0f36).
 La ruta local es `?inspect=ruen&motion=traversal-v1`. Incluye el master
 y las copias del equipo que usa el juego. Permite revisar **Salto · subida**,
 **Caída**, **Aterrizaje** y **Voltereta**, además de los clips propios anteriores.
@@ -54,7 +56,8 @@ incorporan al archivo master.
 
 Para comparar de forma reversible, abre `/?ruen=provisional`: carga el rig
 anterior sin solicitar los GLB reales. Quita el parámetro para volver a Ruen
-equipado. Esta opción no cambia archivos ni el guardado.
+equipado. Esta opción no cambia archivos ni el guardado. La reversión del
+PR #6 y la base anterior se detallan en el [registro de despliegue](DEPLOYMENT.md).
 
 ## Validación y límites
 
@@ -79,5 +82,6 @@ la aplicación y el build.
 
 Es una selección de la suite de 44 casos: no repite `journey` ni los encuentros
 de enemigos restantes. La caída se prueba sin impulso desde una altura
-preparada. La publicación sigue pendiente.
+preparada. [Actions 39914027016](https://github.com/Dabot11/Veylun/actions/runs/39914027016)
+confirmó la publicación de `b83b0f36`.
 [Evidencia actual](evidence/ruen-game-traversal/README.md).

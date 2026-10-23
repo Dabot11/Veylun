@@ -5,7 +5,7 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
-## Salto y voltereta validados localmente
+## Salto y voltereta publicados
 
 La etapa actual crea cuatro clips propios: subida del salto, caída, aterrizaje
 y voltereta. El controlador conserva la altura, la gravedad y la dirección
@@ -13,7 +13,7 @@ de esquiva; las poses siguen sus datos sin añadir otro desplazamiento. Se
 mantienen 0.12 s de aterrizaje, 0.45 s de voltereta y 0.25 s de invulnerabilidad.
 Los cuatro grupos cubren 160 canales a 60 fps. Typecheck, build y 197 pruebas
 unitarias aprobaron, además de 22 casos seleccionados de navegador y la
-calibración de contacto. Publicación pendiente: [alcance de movimiento](RUEN_GAME_TRAVERSAL.md).
+calibración de contacto. Publicado desde `b83b0f36`, con confirmación de Actions: [alcance de movimiento](RUEN_GAME_TRAVERSAL.md).
 
 ## Combate equipado publicado
 
@@ -102,9 +102,8 @@ sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
    agarres y transiciones al detenerse, caminar y correr.
 2. **Guardia, bloqueo y combo completo, publicado:** postura sostenida,
    reacción de impacto y tres ataques con las ventanas de combate existentes.
-3. **Salto y voltereta, etapa actual:** separar subida, caída y aterrizaje,
-   y adaptar la rodada a su duración y dirección actuales, conservando física
-   e invulnerabilidad.
+3. **Salto y voltereta, publicado:** subida, caída y aterrizaje separados,
+   con rodada que conserva duración, dirección, física e invulnerabilidad.
 4. **Daño, muerte y demás acciones:** reemplazar sus variantes provisionales
    tras comprobar interrupciones y transiciones.
 

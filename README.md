@@ -35,21 +35,25 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
-## Salto y voltereta: validados localmente
+## Salto y voltereta: publicados
 
 La nueva etapa adapta subida, caída, aterrizaje y voltereta con espada y escudo.
 Mantiene la física del salto, la voltereta con Shift y el escudo al 70% del
 tamaño inicial. Aprobaron typecheck, build, **197 pruebas unitarias y 22 casos
 seleccionados de navegador**. La calibración de contacto durante transiciones
-también aprobó. La publicación sigue pendiente. [Alcance de la etapa](docs/RUEN_GAME_TRAVERSAL.md).
+también aprobó. La fuente vigente es **`b83b0f36`**, publicada tras el
+[PR #6](https://github.com/Dabot11/Veylun/pull/6) y confirmada por Actions.
+[Jugar](https://dabot11.github.io/Veylun/?v=b83b0f36) ·
+[Ver salto y voltereta](https://dabot11.github.io/Veylun/?inspect=ruen&motion=traversal-v1&v=b83b0f36) ·
+[Alcance de la etapa](docs/RUEN_GAME_TRAVERSAL.md).
 
-## Animaciones de combate: publicadas
+## Etapa anterior: animaciones de combate
 
-La versión publicada adapta la guardia, la reacción de bloqueo y los tres golpes
+La versión anterior incorporó la guardia, la reacción de bloqueo y los tres golpes
 del combo al Ruen real con espada y escudo. El escudo conserva su reducción
 del 30%. Las animaciones se crean sobre su esqueleto y siguen los tiempos de
 combate existentes. Aprobaron typecheck, build, **173 pruebas unitarias y
-40 casos únicos de navegador**. La fuente publicada es **`f828d841`**, tras
+40 casos únicos de navegador**. Esa fuente fue **`f828d841`**, tras
 integrar el [PR #5](https://github.com/Dabot11/Veylun/pull/5); Actions confirmó
 el despliegue. [Jugar](https://dabot11.github.io/Veylun/?v=f828d841) ·
 [Ver las animaciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=combat-v1&v=f828d841) ·
@@ -71,8 +75,8 @@ las copias jugables y el alcance de las animaciones.
 
 Ruen respira al detenerse y mantiene el equipo al caminar y correr, con
 transiciones de 0.2 s. Guardia, bloqueo y combo también usan el modelo real.
-En la versión publicada, salto, esquiva, daño y las demás acciones aún sin
-adaptar conservan el rig provisional. Si una pieza del
+Salto, caída, aterrizaje y voltereta también usan el modelo real. Daño y las
+demás acciones aún sin adaptar conservan el rig provisional. Si una pieza del
 equipo no carga, queda disponible el Ruen real sin equipo, con Idle y locomoción.
 `/?ruen=meshy` sigue siendo un alias y `/?ruen=provisional` carga el rig anterior.
 

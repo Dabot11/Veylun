@@ -55,8 +55,8 @@ y comprueba los hashes de los originales. La reducción de tamaño del escudo
 es un ajuste exterior de 0.42 a 0.294; no está horneada en ninguna malla.
 [Inventario comparativo](docs/evidence/ruen-game-equipment/runtime-inventory.json).
 
-Idle y locomoción se publicaron desde `50210a9c`; el combate amplía esa base
-en la fuente vigente `f828d841`. Ver el
+Idle y locomoción se publicaron desde `50210a9c`; el combate amplió esa base
+en `f828d841`. La fuente vigente `b83b0f36` añade salto y voltereta. Ver el
 [registro de despliegue](docs/DEPLOYMENT.md).
 
 ## Animación
@@ -68,7 +68,7 @@ Los 20 originales permanecen separados; son 32 grupos en gameplay y 33 en el
 visor de movimiento, que añade el Idle neutro. Los cuatro nuevos grupos son
 `Ruen_Jump_Equipped`, `Ruen_Fall_Equipped`, `Ruen_Land_Equipped` y
 `Ruen_Roll_Equipped`. Aprobaron typecheck, build, 197 unitarias y 22 casos
-seleccionados de navegador. Publicación pendiente: [alcance de movimiento](docs/RUEN_GAME_TRAVERSAL.md).
+seleccionados de navegador. Publicado desde `b83b0f36`: [alcance de movimiento](docs/RUEN_GAME_TRAVERSAL.md).
 
 La versión publicada crea `Ruen_Guard_Equipped`, `Ruen_Block_Equipped` y
 `Ruen_Attack1_Equipped` a `Ruen_Attack3_Equipped` sobre el rig real. Sus 160

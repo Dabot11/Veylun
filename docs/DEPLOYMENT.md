@@ -8,7 +8,45 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Publicación vigente: guardia, bloqueo y combo equipado
+## Publicación vigente: salto y voltereta equipados
+
+El 23 de octubre de 2026, fecha de America/Monterrey, se integró el
+[PR #6](https://github.com/Dabot11/Veylun/pull/6) y se publicó la fuente
+`b83b0f365e84555de195466c9d6f2c8aaad79dcf`. Su árbol coincide exactamente con
+la revisión probada `a0384329a161faf414aba265c88ade1f37c1d975`. El commit de
+`gh-pages` es `df6b2d858e945fdd893b0be42a0e1a01426f1a51`; su `deployment.json`
+remoto confirma esa fuente y el build de `2026-10-23T06:50:54.272Z`.
+[Actions 39914027016](https://github.com/Dabot11/Veylun/actions/runs/39914027016)
+terminó con **Success**, actualizado a las `2026-10-23T06:51:49Z`. Build,
+deploy, report-build-status y el paso Deploy to GitHub Pages aprobaron.
+
+[Jugar](https://dabot11.github.io/Veylun/?v=b83b0f36) incorpora subida, caída,
+aterrizaje y voltereta con **Shift**, conservando la espada y el escudo reducido
+al 70% de su tamaño inicial. El [visor de movimiento](https://dabot11.github.io/Veylun/?inspect=ruen&motion=traversal-v1&v=b83b0f36)
+permite revisar los cuatro clips propios. La física y la invulnerabilidad
+mantienen sus reglas; daño y las demás acciones sin adaptar siguen usando
+el rig provisional.
+
+Aprobaron typecheck, build, **197 unitarias y 22 casos seleccionados de
+navegador** (15 de desarrollo y siete de producción). Shift se repitió tras
+corregir sólo un filtro de su test; la aplicación y el build permanecieron
+intactos. Esta selección no repite la suite completa de 44 casos ni `journey`
+y los encuentros restantes. [Evidencia](evidence/ruen-game-traversal/README.md).
+
+La publicación se confirmó mediante Actions y el marcador remoto del commit;
+el dominio público no se abrió en navegador por las restricciones de red.
+Desarrollo y producción se probaron localmente.
+[Verificación de despliegue](evidence/ruen-game-traversal/deployment-verification.json) ·
+[Log de publicación](evidence/ruen-game-traversal/deploy.log).
+Los cambios documentales posteriores no modifican el build publicado.
+
+Para comparar sin modificar archivos ni guardado, usar `?ruen=provisional` y
+retirar el parámetro para volver al modelo real. Para retirar esta etapa del
+sitio, crear una reversión del **PR #6**, cuyo merge es `b83b0f365e84555de195466c9d6f2c8aaad79dcf`
+y cuyo primer padre es `9c71a8e586a47cb1282ca85400d540ddff705c37`; revisar los
+cambios y publicar el nuevo commit. Esa base conserva el combate anterior.
+
+## Publicación anterior: guardia, bloqueo y combo equipado
 
 El 22 de octubre de 2026, fecha de America/Monterrey, se integró el
 [PR #5](https://github.com/Dabot11/Veylun/pull/5) y se publicó la fuente

@@ -1,6 +1,6 @@
 # Evidencia de salto y voltereta equipados
 
-**197 unitarias y 22 casos seleccionados de navegador aprobados; publicación pendiente.**
+**197 unitarias y 22 casos seleccionados de navegador aprobados; publicado desde `b83b0f36`.**
 
 [Alcance de la etapa](../../RUEN_GAME_TRAVERSAL.md).
 
@@ -71,4 +71,21 @@ la suite completa de 44 casos ni el recorrido `journey` y los encuentros de
 enemigos restantes; sus resultados anteriores se conservan como históricos.
 Las pruebas se ejecutaron en servidores locales con Chromium y renderizado
 de software; no miden FPS en el equipo del usuario ni prueban hardware Xbox.
-La publicación sigue pendiente.
+
+## Publicación
+
+El [PR #6](https://github.com/Dabot11/Veylun/pull/6) integró la revisión probada
+`a0384329a161faf414aba265c88ade1f37c1d975`. La fuente publicada
+`b83b0f365e84555de195466c9d6f2c8aaad79dcf` tiene exactamente el mismo árbol.
+El commit de `gh-pages` es `df6b2d858e945fdd893b0be42a0e1a01426f1a51`; su
+marcador remoto confirma esa fuente y el build de `2026-10-23T06:50:54.272Z`.
+[Actions 39914027016](https://github.com/Dabot11/Veylun/actions/runs/39914027016)
+terminó con **Success**, actualizado a las `2026-10-23T06:51:49Z`, con todos
+los jobs y el paso de despliegue aprobados.
+[Verificación](deployment-verification.json) · [Log de publicación](deploy.log).
+
+La confirmación remota usa Actions y el marcador del commit. El dominio
+público no se abrió en navegador por la restricción de red; desarrollo y
+producción se probaron localmente. Los cambios documentales posteriores no
+modifican ese build. La reversión del PR #6 y su base anterior están en el
+[registro de despliegue](../../DEPLOYMENT.md).

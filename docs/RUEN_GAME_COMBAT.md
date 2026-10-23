@@ -103,6 +103,6 @@ confirmó la publicación de `f828d841`; [registro de despliegue](DEPLOYMENT.md)
 Las 152 unitarias y 33 de navegador de `50210a9c` pertenecen
 a la versión anterior. [Evidencia actual](evidence/ruen-game-combat/README.md).
 
-La siguiente etapa, [salto y voltereta](RUEN_GAME_TRAVERSAL.md), está validada
-localmente y pendiente de publicación. Después siguen daño y las
+La etapa posterior, [salto y voltereta](RUEN_GAME_TRAVERSAL.md), está validada
+y publicada desde `b83b0f36`. Después siguen daño y las
 demás acciones, manteniendo sus tiempos y reglas actuales.
