@@ -8,7 +8,52 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Publicación vigente: salto y voltereta equipados
+## Publicación vigente: acciones completas de Ruen
+
+El 23 de octubre de 2026, fecha de America/Monterrey, se integró el
+[PR #7](https://github.com/Dabot11/Veylun/pull/7). La fuente de publicación es
+`f0402306009e6b4362232d959574e61219939b2e`, con árbol idéntico al feature
+`07d8e61813af8210e9b148f9ad06ec157da7abc7`. El commit subido a `gh-pages` es
+`4556fc5393c0b3018e04af8bb79f9cce063ec7bc`, con build de
+`2026-10-23T08:12:55.072Z`.
+[Actions 39923103610](https://github.com/Dabot11/Veylun/actions/runs/39923103610)
+terminó con **Success** a las `2026-10-23T08:13:50Z`. Build, deploy,
+report-build-status y el paso Deploy to GitHub Pages aprobaron. El marcador
+remoto `deployment.json` del commit confirma la fuente y la fecha del build.
+
+[Juego](https://dabot11.github.io/Veylun/?v=f0402306) ·
+[Visor de acciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=actions-v1&v=f0402306).
+Esta etapa completa daño, muerte, interacción, victoria, locomoción lateral
+hacia ambos lados y hacia atrás, además del combate compuesto con salto,
+caída, aterrizaje e interacción. Conserva el modelo, los cinco GLB, los
+20 clips originales, las reglas del juego y el escudo al 70%. El visor abre
+Daño en pausa; el conjunto tiene 22 clips propios, 42 grupos en juego y 43
+en el visor, que añade el Idle neutro.
+
+Aprobaron typecheck, build, **234 unitarias y 13 casos seleccionados de 51**
+de navegador (11 de desarrollo y dos de producción). Doce aprobaron al primer
+intento; el caso de escudo ausente aprobó al corregir la espera de reproducción
+del test, sin modificar la aplicación ni el build. Se incluyó el recorrido
+completo `journey`. Tras la validación sólo se retiró una línea vacía final
+de `ruenPoseAuthoring.ts`, sin cambiar código ejecutable; la
+[evidencia](evidence/ruen-complete-actions/README.md) conserva los manifiestos
+probado y final.
+
+Desarrollo y producción se probaron localmente. La publicación se confirmó
+mediante Actions y el marcador remoto del commit; el dominio público no se
+abrió en navegador por las restricciones de red.
+[Verificación](evidence/ruen-complete-actions/deployment-verification.json) ·
+[Log de publicación](evidence/ruen-complete-actions/deploy.log). Los cambios
+documentales posteriores no requieren otro build ni modifican el publicado.
+
+Para comparar sin modificar archivos ni guardado, usar `?ruen=provisional` y
+retirar el parámetro para volver al modelo real. Para retirar esta etapa del
+sitio, crear una reversión del **PR #7**, cuyo merge es
+`f0402306009e6b4362232d959574e61219939b2e` y cuyo primer padre es
+`cc15be7e3320d2af99c70977f1bf76310146db4a`; revisar y publicar el nuevo commit.
+Esa base conserva salto, voltereta y el combate de la publicación anterior.
+
+## Publicación anterior: salto y voltereta equipados
 
 El 23 de octubre de 2026, fecha de America/Monterrey, se integró el
 [PR #6](https://github.com/Dabot11/Veylun/pull/6) y se publicó la fuente

@@ -35,23 +35,26 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
-## Acciones restantes: validadas; publicación pendiente
+## Acciones completas: publicadas
 
 La nueva etapa cubre daño, muerte, interacción, victoria, locomoción lateral
 y hacia atrás, y combate compuesto con salto, caída, aterrizaje e interacción.
 Todos los estados existentes usan el modelo real con equipo cuando la carga
 es correcta. Aprobaron **234 unitarias y 13 casos seleccionados de navegador**,
 además de typecheck, build y calibración de contacto.
-[Alcance y evidencia](docs/RUEN_COMPLETE_ACTIONS.md). La versión pública
-vigente continúa siendo `b83b0f36` hasta el próximo despliegue.
+La versión vigente es **`f0402306`**, publicada tras el
+[PR #7](https://github.com/Dabot11/Veylun/pull/7) y confirmada por Actions.
+[Jugar](https://dabot11.github.io/Veylun/?v=f0402306) ·
+[Ver las acciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=actions-v1&v=f0402306) ·
+[Alcance y evidencia](docs/RUEN_COMPLETE_ACTIONS.md).
 
-## Salto y voltereta: publicados
+## Etapa anterior: salto y voltereta publicados
 
 La versión publicada adapta subida, caída, aterrizaje y voltereta con espada y escudo.
 Mantiene la física del salto, la voltereta con Shift y el escudo al 70% del
 tamaño inicial. Aprobaron typecheck, build, **197 pruebas unitarias y 22 casos
 seleccionados de navegador**. La calibración de contacto durante transiciones
-también aprobó. La fuente vigente es **`b83b0f36`**, publicada tras el
+también aprobó. Esa fuente fue **`b83b0f36`**, publicada tras el
 [PR #6](https://github.com/Dabot11/Veylun/pull/6) y confirmada por Actions.
 [Jugar](https://dabot11.github.io/Veylun/?v=b83b0f36) ·
 [Ver salto y voltereta](https://dabot11.github.io/Veylun/?inspect=ruen&motion=traversal-v1&v=b83b0f36) ·

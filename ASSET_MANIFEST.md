@@ -20,7 +20,7 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 | ID | Implementación | Escala inicial | Materiales y articulación | Estado |
 |---|---|---|---|---|
 | ruen | `createRuen` en `src/assets/ruen.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas facetadas. Cadera, cabeza, hombros, codos, piernas, rodillas, capa, espada y escudo | 3D procedural provisional, primera revisión artística |
-| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips originales | Idle, locomoción y combate equipados publicados; master intacto |
+| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips originales | Todos los estados existentes equipados y publicados; master intacto |
 | ruen-azure-sword | GLB Azure Oathblade en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:RightHand` | Master del visor intacto; montaje validado localmente |
 | ruen-azure-shield | GLB Aegis of the Azure en `public/assets/models/ruen/equipment/` | Escala exterior 0.294; 30% menor que 0.42 | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:LeftHand` | Master del visor intacto; montaje validado localmente |
 | ruen-azure-sword-runtime | `public/assets/models/ruen/equipment/runtime/azure-oathblade.glb` | Escala exterior 0.55, dentro del root de Ruen | Copia de 19,640 triángulos; PBR y tres texturas 1024² | Integrada en gameplay; validación local aprobada |
@@ -57,12 +57,13 @@ es un ajuste exterior de 0.42 a 0.294; no está horneada en ninguna malla.
 [Inventario comparativo](docs/evidence/ruen-game-equipment/runtime-inventory.json).
 
 Idle y locomoción se publicaron desde `50210a9c`; el combate amplió esa base
-en `f828d841`. La fuente vigente `b83b0f36` añade salto y voltereta. Ver el
+en `f828d841`, y `b83b0f36` añadió salto y voltereta. La fuente vigente
+`f0402306` completa las acciones existentes. Ver el
 [registro de despliegue](docs/DEPLOYMENT.md).
 
 ## Animación
 
-**Validado; publicación pendiente:** cuatro clips de daño,
+**Validado y publicado desde `f0402306`:** cuatro clips de daño,
 muerte, interacción y victoria, seis variantes de caminar/correr hacia
 izquierda, derecha y atrás, y composición de combate con clips existentes.
 El conjunto suma 22 clips propios y 42 grupos en gameplay; el visor

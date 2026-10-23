@@ -1,0 +1,121 @@
+{
+  "sourceCommit": "f0402306009e6b4362232d959574e61219939b2e",
+  "featureCommit": "07d8e61813af8210e9b148f9ad06ec157da7abc7",
+  "featureAndMergedTreeIdentical": true,
+  "pullRequest": "https://github.com/Dabot11/Veylun/pull/7",
+  "ghPagesCommit": "4556fc5393c0b3018e04af8bb79f9cce063ec7bc",
+  "deploymentMarker": {
+    "sourceCommit": "f0402306009e6b4362232d959574e61219939b2e",
+    "builtAt": "2026-10-23T08:12:55.072Z"
+  },
+  "markerUrl": "https://raw.githubusercontent.com/Dabot11/Veylun/4556fc5393c0b3018e04af8bb79f9cce063ec7bc/deployment.json",
+  "workflow": {
+    "id": 39923103610,
+    "url": "https://github.com/Dabot11/Veylun/actions/runs/39923103610",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "4556fc5393c0b3018e04af8bb79f9cce063ec7bc",
+    "updatedAt": "2026-10-23T08:13:50Z",
+    "jobs": [
+      {
+        "id": 120312833375,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39923103610,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Upload artifact",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Post Checkout",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          }
+        ]
+      },
+      {
+        "id": 120312949818,
+        "name": "report-build-status",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39923103610,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Report Build Status",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      },
+      {
+        "id": 120312949941,
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 39923103610,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Deploy to GitHub Pages",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ]
+  },
+  "gameUrl": "https://dabot11.github.io/Veylun/?v=f0402306",
+  "inspectorUrl": "https://dabot11.github.io/Veylun/?inspect=ruen&motion=actions-v1&v=f0402306",
+  "verification": "GitHub connector verified the exact gh-pages commit marker and successful build/deploy/report jobs. Direct public-site browser access is restricted in this environment; development and production browser checks ran locally."
+}

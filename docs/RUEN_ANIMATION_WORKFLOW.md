@@ -5,14 +5,16 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
-## Acciones restantes: validadas; publicación pendiente
+## Acciones completas publicadas
 
 La etapa actual adapta daño, muerte, interacción, victoria y seis variantes
 de locomoción lateral/hacia atrás. También compone ataques y defensa con
 salto/caída, defensa con aterrizaje y bloqueo temporal con interacción. Las
 poses usan keyframes sobre el mismo esqueleto y conservan las reglas del
 juego. Aprobaron 234 unitarias, 13 casos seleccionados de navegador, typecheck,
-build y la calibración de contacto. La publicación sigue pendiente.
+build y la calibración de contacto. Publicado desde `f0402306`, tras el
+[PR #7](https://github.com/Dabot11/Veylun/pull/7), con confirmación de
+[Actions](https://github.com/Dabot11/Veylun/actions/runs/39923103610).
 [Alcance de las acciones](RUEN_COMPLETE_ACTIONS.md).
 
 ## Salto y voltereta publicados
@@ -115,9 +117,8 @@ sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
    reacción de impacto y tres ataques con las ventanas de combate existentes.
 3. **Salto y voltereta, publicado:** subida, caída y aterrizaje separados,
    con rodada que conserva duración, dirección, física e invulnerabilidad.
-4. **Acciones restantes, validadas:** daño, muerte, interacción, victoria,
-   locomoción lateral/hacia atrás y composición de combate. Publicación
-   pendiente.
+4. **Acciones restantes, publicadas:** daño, muerte, interacción, victoria,
+   locomoción lateral/hacia atrás y composición de combate.
 
 La duración de cada acción se ajusta a `Simulation` y a los tiempos de combate;
 no alargamos ni cambiamos las reglas para acomodar un clip. La simulación sigue

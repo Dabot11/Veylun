@@ -1,10 +1,12 @@
 # Acciones restantes de Ruen
 
-Estado: **validado; publicación pendiente**. Todos los
+Estado: **validado y publicado desde `f0402306`**. Todos los
 estados existentes tienen representación con el rig real y su equipo cuando
 la carga es correcta. Aprobaron 234 unitarias, 13 casos seleccionados de
-navegador, typecheck, build y calibración de contacto. La versión pública
-vigente sigue siendo `b83b0f36`.
+navegador, typecheck, build y calibración de contacto. El
+[PR #7](https://github.com/Dabot11/Veylun/pull/7) integra la etapa y
+[Actions](https://github.com/Dabot11/Veylun/actions/runs/39923103610) confirma
+la publicación. [Registro y reversión](DEPLOYMENT.md).
 
 ## Estados y tiempos
 
@@ -36,6 +38,8 @@ Los cuatro clips de acciones y las seis variantes direccionales amplían el
 conjunto a **22 clips propios**, creados en memoria. Con los originales son
 **42 grupos en gameplay**. El visor añade el Idle neutro y tiene **43**.
 
+Abre [el juego](https://dabot11.github.io/Veylun/?v=f0402306) o el
+[visor de acciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=actions-v1&v=f0402306).
 La ruta local es `?inspect=ruen&motion=actions-v1`; comienza en
 **Daño**, pausada. Permite revisar las acciones junto con los clips propios
 anteriores. La reproducción del visor no aplica daño, interacción, victoria

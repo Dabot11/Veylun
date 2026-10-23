@@ -6,7 +6,8 @@ y escudo. Amplía la versión anterior `f828d841`, con Idle, locomoción y comba
 equipados; sus 173 unitarias y 40 casos de navegador permanecen como resultados
 de aquella etapa.
 
-La [etapa posterior de acciones](RUEN_COMPLETE_ACTIONS.md) compone ataques
+La [etapa posterior de acciones](RUEN_COMPLETE_ACTIONS.md), publicada desde
+`f0402306`, compone ataques
 y defensa con salto/caída, y guardia/bloqueo con aterrizaje. Sus comprobaciones
 y estado de publicación se registran por separado.
 

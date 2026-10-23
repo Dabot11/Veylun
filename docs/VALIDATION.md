@@ -1,6 +1,6 @@
 # Validación ejecutada
 
-## Acciones restantes: validadas; publicación pendiente
+## Acciones completas: validadas y publicadas
 
 Aprobaron typecheck, build y **234 pruebas unitarias en 20 archivos** en 5.67 s.
 El build terminó en 861 ms y conserva el aviso conocido sobre chunks grandes.
@@ -21,7 +21,14 @@ se corrigió la espera del test, se conservó su aserción y aprobó la repetici
 aislada. La aplicación y el build no cambiaron. El recorrido completo
 `journey` aprobó con 79.0 s simulados y una muerte deliberada.
 
-**Publicación pendiente.** La fuente pública vigente sigue siendo `b83b0f36`.
+Publicación confirmada por
+[Actions 39923103610](https://github.com/Dabot11/Veylun/actions/runs/39923103610),
+tras integrar el [PR #7](https://github.com/Dabot11/Veylun/pull/7). Fuente
+`f0402306009e6b4362232d959574e61219939b2e`, con árbol idéntico al feature
+`07d8e61813af8210e9b148f9ad06ec157da7abc7`; build de `gh-pages`
+`4556fc5393c0b3018e04af8bb79f9cce063ec7bc`. Tras las pruebas sólo se retiró
+una línea vacía final de `ruenPoseAuthoring.ts`, sin cambiar código ejecutable.
+La evidencia conserva ambos manifiestos. [Registro de despliegue](DEPLOYMENT.md).
 [Alcance](RUEN_COMPLETE_ACTIONS.md) ·
 [Evidencia y correcciones](evidence/ruen-complete-actions/README.md).
 

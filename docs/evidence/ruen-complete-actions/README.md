@@ -1,8 +1,8 @@
 # Evidencia de las acciones restantes de Ruen
 
-Estado: **validado; publicación pendiente**.
-[Alcance de la etapa](../../RUEN_COMPLETE_ACTIONS.md). La fuente pública
-vigente continúa siendo `b83b0f36`.
+Estado: **validado y publicado desde `f0402306`**.
+[Alcance de la etapa](../../RUEN_COMPLETE_ACTIONS.md) ·
+[Registro de despliegue](../../DEPLOYMENT.md).
 
 La revisión cubre daño, muerte, interacción, victoria, seis variantes de
 caminar/correr hacia los lados y atrás, ataques/defensa en el aire, defensa
@@ -59,7 +59,7 @@ ya era `ready` y el peso Idle era 1. Se añadió una espera de reproducción,
 conservando la aserción de `Ruen_Idle_Unarmed` y todas las comprobaciones de
 respaldo; sólo se repitió ese caso. La aplicación, los activos y el build
 permanecieron intactos. El [manifiesto de 97 archivos](source-manifest.sha256)
-registra la fuente final. Logs: [nuevos](browser-new.log),
+registra la fuente probada. Logs: [nuevos](browser-new.log),
 [regresiones](browser-regression.log) y [repetición](browser-partial-retest.log).
 
 El [resumen de regresiones](regression-checks.json) registra el respaldo sin
@@ -88,3 +88,22 @@ sitio público se distinguen de estos resultados locales.
 El manifiesto probado se conserva en `source-manifest.sha256`. Después de la
 validación se retiró únicamente una línea vacía final de `ruenPoseAuthoring.ts`;
 [el manifiesto final](final-source-manifest.sha256) registra ese ajuste de formato.
+
+## Publicación
+
+El [PR #7](https://github.com/Dabot11/Veylun/pull/7) se integró en la fuente
+`f0402306009e6b4362232d959574e61219939b2e`, cuyo árbol coincide con el feature
+`07d8e61813af8210e9b148f9ad06ec157da7abc7`. El build subido a `gh-pages` es
+`4556fc5393c0b3018e04af8bb79f9cce063ec7bc`, creado el
+`2026-10-23T08:12:55.072Z`.
+[Actions 39923103610](https://github.com/Dabot11/Veylun/actions/runs/39923103610)
+terminó con **Success**; build, deploy, report-build-status y Deploy to GitHub
+Pages aprobaron. El marcador remoto del commit confirma fuente y fecha.
+[Verificación](deployment-verification.json) · [Log](deploy.log).
+
+[Jugar](https://dabot11.github.io/Veylun/?v=f0402306) ·
+[Visor de acciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=actions-v1&v=f0402306).
+La verificación pública usa Actions y el marcador remoto; el dominio no se
+abrió en navegador por las restricciones de red. Las pruebas de desarrollo
+y producción fueron locales. Los cambios documentales posteriores conservan
+este build.
