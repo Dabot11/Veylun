@@ -35,39 +35,45 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
+## Ruen equipado: validado localmente
+
+Esta revisión integra Idle, caminar y correr con espada y escudo en la ruta
+normal `/`. Typecheck, build, **152 pruebas unitarias y 33 de navegador**
+aprobaron. La publicación está pendiente; la versión pública sigue siendo
+`15a6a6c`, que muestra el equipo sólo en el visor. Consulta el
+[registro de despliegue](docs/DEPLOYMENT.md).
+
+El escudo queda al **70% de su tamaño anterior**: una reducción uniforme del
+30% alrededor del asa, sin mover el punto de agarre. El juego carga copias
+optimizadas de espada y escudo: **7.61 MB y 122,930 triángulos** entre ambas.
+Los tres archivos originales se conservan intactos. El
+[detalle de la integración](docs/RUEN_GAME_EQUIPMENT.md) distingue los masters,
+las copias jugables y el alcance de las animaciones.
+
+Ruen respira al detenerse y mantiene el equipo al caminar y correr, con
+transiciones de 0.2 s. Salto, esquiva, ataques, defensa y las demás acciones
+conservan el rig provisional hasta adaptar sus animaciones. Si una pieza del
+equipo no carga, queda disponible el Ruen real sin equipo, con Idle y locomoción.
+`/?ruen=meshy` sigue siendo un alias y `/?ruen=provisional` carga el rig anterior.
+
 ## Visor de Ruen / Meshy
 
-Disponible en GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
-o [abrir el visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-La versión publicada es `15a6a6c` de `main`, con carga automática y reposo estático en el juego;
-consulta el [registro de despliegue](docs/DEPLOYMENT.md).
+[Visor original](https://dabot11.github.io/Veylun/?inspect=ruen) ·
+[Idle neutro](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1) ·
+[Idle con equipo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1&equipment=azure).
+Los enlaces públicos muestran la última publicación registrada arriba.
 
-El master real de Meshy está en
-`public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb`,
-descargado intacto del release `ruen-modelo-prueba` y verificado por SHA-256.
 Con Vite iniciado, `/?inspect=ruen` carga el master automáticamente y queda
 pausado. **Recargar modelo original** permite volver a cargarlo; también puedes
-abrir un GLB local. El visor incluye selector de clip, reproducir/pausar,
-velocidad, tres vistas e inventario JSON, sin simulación ni acceso al guardado.
+abrir un GLB local. Hay selector de clip, reproducir/pausar, velocidad, tres
+vistas e inventario JSON, sin simulación ni acceso al guardado.
 
-En esta revisión, `/` carga Meshy automáticamente; `/?ruen=meshy` es un alias
-y `/?ruen=provisional` permite volver al rig anterior. Ruen permanece visible
-en reposo con la pose base exacta del GLB, estática, sin clip Idle ni respiración
-añadida. Walking/Running son los únicos clips conectados; las otras acciones
-mantienen el rig provisional. La transición reposo↔locomoción dura 0.2 s.
-El master tiene 20 clips y el arte final sigue pendiente. Consulta el
-[informe de inspección](docs/RUEN_MESHY_INSPECTION.md) y la
-[galería del modelo real](docs/evidence/ruen-meshy/README.md).
-
-La [guía de creación de animaciones](docs/RUEN_ANIMATION_WORKFLOW.md) describe
-el Idle propio, exclusivo del visor, y las siguientes etapas.
-[Ver Idle v1](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1):
-pulsar **Reproducir**; el modelo y el clip se cargan automáticamente.
-
-La [prueba de Idle con equipo](https://dabot11.github.io/Veylun/?inspect=ruen&motion=idle-v1&equipment=azure) añade los GLB
-de espada y escudo al Idle del visor. Carga los tres modelos automáticamente
-y permite comparar con el Idle sin equipo. Pasó las pruebas locales y está
-publicada. Consulta la [ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
+El visor conserva los GLB originales completos y los 20 clips del master;
+la variante `equipment=azure` permite comparar el Idle con y sin equipo.
+En esta revisión también usa el escudo reducido un 30%. La ruta neutra no
+descarga las armas. Consulta el [informe del master](docs/RUEN_MESHY_INSPECTION.md),
+la [ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md) y la
+[guía de animaciones](docs/RUEN_ANIMATION_WORKFLOW.md).
 
 ## Recorrido
 
@@ -148,12 +154,13 @@ Se revisaron **24 referencias PNG de personajes**, seis por cada uno, más la
 imagen del santuario visible en el chat. Los originales están separados en
 `design/references/` y no se descargan con el juego.
 
-Ruen usa el GLB real de Meshy mediante `RuenLocomotionView`: pose base estática
-en reposo, Walking/Running y fallback para las demás acciones. Los tres enemigos
-y el rig alternativo de Ruen siguen siendo **3D procedurales provisionales**;
-simplifican notablemente las ilustraciones. La carga por defecto de Meshy pasó
-las pruebas locales y está publicada. El arte final sigue pendiente. `VisualOverrides` conserva la vía
-genérica de carga desde `assetCatalog.ts` para futuras sustituciones.
+Ruen usa el GLB real de Meshy mediante `RuenLocomotionView`. Esta revisión
+integra Idle y locomoción con equipo optimizado; el resto de acciones conserva
+el rig provisional. Los tres enemigos y el rig alternativo de Ruen siguen
+siendo **3D procedurales provisionales**; simplifican las ilustraciones.
+El arte final y el rendimiento en el equipo del usuario siguen pendientes.
+`VisualOverrides` conserva la vía genérica de carga desde `assetCatalog.ts`
+para futuras sustituciones.
 
 La primera revisión de Ruen añade cabello de mechones afinados, capa con
 emblema dorsal, equipo más definido y articulación de codos y rodillas. El claro
@@ -161,6 +168,12 @@ incorpora anillos de piedra, helechos, flores, musgo y sombras del dosel cercano
 Detalles y comprobaciones en `docs/ART_PASS.md`.
 
 ## Pruebas
+
+La revisión del Idle equipado dentro del juego aprobó typecheck, build,
+**152 pruebas unitarias en 16 archivos y 33 de navegador**. La suite completa
+de navegador terminó en 28.7 minutos sin omisiones ni reintentos. El estado,
+las capturas y la evidencia actual se registran en
+[RUEN_GAME_EQUIPMENT](docs/RUEN_GAME_EQUIPMENT.md) y [VALIDATION](docs/VALIDATION.md).
 
 Pruebas de lógica: `npm test`. Incluyen un recorrido completo con comandos de
 movimiento, ataques e interacción, sin conceder daño ni objetos en esa prueba.
@@ -190,7 +203,7 @@ en 12 archivos y 26 pruebas de navegador**, en una ejecución de 18.6 minutos
 sin reintentos; typecheck y build correctos. Incluye 17 casos del MVP, tres del
 visor con fixture sintético y seis de integración: cuatro cargan el master,
 uno comprueba descarga abortada y otro opt-out sin descarga. Ver el
-[log actual](docs/evidence/ruen-meshy/default-idle-browser.log).
+[log histórico](docs/evidence/ruen-meshy/default-idle-browser.log).
 
 Para ejecutar las pruebas:
 

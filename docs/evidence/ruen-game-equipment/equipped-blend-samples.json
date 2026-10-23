@@ -1,0 +1,88 @@
+{
+  "idleToWalk": [
+    {
+      "idle": 1,
+      "walk": 0,
+      "run": 0,
+      "started": [
+        "Ruen_Idle_Equipped"
+      ]
+    },
+    {
+      "idle": 0.4999999999999982,
+      "walk": 0.5000000000000018,
+      "run": 0,
+      "started": [
+        "Ruen_Idle_Equipped",
+        "Ruen_Walk_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 1,
+      "run": 0,
+      "started": [
+        "Ruen_Walk_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 1,
+      "run": 0,
+      "started": [
+        "Ruen_Walk_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 1,
+      "run": 0,
+      "started": [
+        "Ruen_Walk_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 1,
+      "run": 0,
+      "started": [
+        "Ruen_Walk_Equipped"
+      ]
+    }
+  ],
+  "walkToRun": [
+    {
+      "idle": 0,
+      "walk": 1,
+      "run": 0,
+      "started": [
+        "Ruen_Walk_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 0.5000000000000027,
+      "run": 0.49999999999999734,
+      "started": [
+        "Ruen_Walk_Equipped",
+        "Ruen_Run_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 0,
+      "run": 1,
+      "started": [
+        "Ruen_Run_Equipped"
+      ]
+    },
+    {
+      "idle": 0,
+      "walk": 0,
+      "run": 1,
+      "started": [
+        "Ruen_Run_Equipped"
+      ]
+    }
+  ]
+}

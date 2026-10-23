@@ -1,0 +1,419 @@
+{
+  "tool": "Blender 4.3.2",
+  "texture_size": 1024,
+  "jpeg_quality": 90,
+  "method": "Decimate collapse on independent copies; original surface normals transferred by nearest-face interpolation; normal texture baked from original shading to the reduced UV tangent basis and stored losslessly as PNG; preserved UVs/color/metal-roughness; textures1024, color/metal-roughness JPEG90; no geometry compression/decoder.",
+  "coordinate_system": "Original glTF +Y up, identity exterior transform; no baked mount scaling or grip adjustment.",
+  "assets": [
+    {
+      "kind": "sword",
+      "decimation_ratio": 0.09,
+      "source_unchanged": true,
+      "max_bound_delta": 0.00023648887872695923,
+      "grip_raw_gltf": [
+        -0.000373,
+        0.65,
+        -0.000586
+      ],
+      "grip_to_surface": {
+        "source": 0.03317174315452576,
+        "runtime": 0.0330926813185215,
+        "absolute_delta": 7.90618360042572e-05
+      },
+      "source": {
+        "path": "public/assets/models/ruen/equipment/Meshy_AI_Azure_Oathblade_1022220336_texture.glb",
+        "bytes": 14817508,
+        "sha256": "111ea36ba748b0ff3d49651411cbb94bdd4bf4ca3f1728337be5d6b271e1e04d",
+        "vertices": 118713,
+        "triangles": 218230,
+        "bounds": {
+          "min": [
+            -0.24562600255012512,
+            -0.9510319828987122,
+            -0.08559200167655945
+          ],
+          "max": [
+            0.24529500305652618,
+            0.9493489861488342,
+            0.08469299972057343
+          ]
+        },
+        "materials": [
+          {
+            "pbrMetallicRoughness": {
+              "baseColorFactor": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "metallicFactor": 1.0,
+              "roughnessFactor": 1.0,
+              "baseColorTexture": {
+                "index": 0,
+                "texCoord": 0
+              },
+              "metallicRoughnessTexture": {
+                "index": 1,
+                "texCoord": 0
+              }
+            },
+            "normalTexture": {
+              "index": 2,
+              "texCoord": 0
+            },
+            "alphaMode": "OPAQUE",
+            "doubleSided": true
+          }
+        ],
+        "images": [
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              2048,
+              2048
+            ],
+            "bytes": 3927183
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              2048,
+              2048
+            ],
+            "bytes": 1755419
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              2048,
+              2048
+            ],
+            "bytes": 2715001
+          }
+        ],
+        "material_semantics": [
+          {
+            "base_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "metal": 1.0,
+            "roughness": 1.0,
+            "alpha_mode": "OPAQUE",
+            "double_sided": true,
+            "normal_scale": 1,
+            "texture_roles": [
+              "baseColorTexture",
+              "metallicRoughnessTexture",
+              "normalTexture"
+            ]
+          }
+        ],
+        "animations": 0,
+        "skins": 0,
+        "extensions_used": [],
+        "extensions_required": []
+      },
+      "runtime": {
+        "path": "public/assets/models/ruen/equipment/runtime/azure-oathblade.glb",
+        "bytes": 2622456,
+        "sha256": "a0f95310dcf9ef8f70055f261e482768f1864528e35f788476e19ae6ba2d844b",
+        "vertices": 13697,
+        "triangles": 19640,
+        "bounds": {
+          "min": [
+            -0.24567359685897827,
+            -0.9509237408638,
+            -0.08582849055528641
+          ],
+          "max": [
+            0.24511171877384186,
+            0.9494626522064209,
+            0.08487863093614578
+          ]
+        },
+        "materials": [
+          {
+            "doubleSided": true,
+            "name": "Material_0.001",
+            "normalTexture": {
+              "index": 0
+            },
+            "pbrMetallicRoughness": {
+              "baseColorTexture": {
+                "index": 1
+              },
+              "metallicRoughnessTexture": {
+                "index": 2
+              }
+            }
+          }
+        ],
+        "images": [
+          {
+            "mime_type": "image/png",
+            "dimensions": [
+              1024,
+              1024
+            ],
+            "bytes": 1525194
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              1024,
+              1024
+            ],
+            "bytes": 390685
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              1024,
+              1024
+            ],
+            "bytes": 148694
+          }
+        ],
+        "material_semantics": [
+          {
+            "base_color": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "metal": 1,
+            "roughness": 1,
+            "alpha_mode": "OPAQUE",
+            "double_sided": true,
+            "normal_scale": 1,
+            "texture_roles": [
+              "baseColorTexture",
+              "metallicRoughnessTexture",
+              "normalTexture"
+            ]
+          }
+        ],
+        "animations": 0,
+        "skins": 0,
+        "extensions_used": [],
+        "extensions_required": []
+      }
+    },
+    {
+      "kind": "shield",
+      "decimation_ratio": 0.15,
+      "source_unchanged": true,
+      "max_bound_delta": 0.00018098950386047363,
+      "grip_raw_gltf": [
+        -0.000351,
+        0.125,
+        -0.275346
+      ],
+      "grip_to_surface": {
+        "source": 0.03809782862663269,
+        "runtime": 0.03806488215923309,
+        "absolute_delta": 3.294646739959717e-05
+      },
+      "source": {
+        "path": "public/assets/models/ruen/equipment/Meshy_AI_Aegis_of_the_Azure_St_1022222231_texture.glb",
+        "bytes": 29661132,
+        "sha256": "b639b29cd66260064cac6ea13f26764dd8c23e561b92da4440ce4e8b77ac7e23",
+        "vertices": 365780,
+        "triangles": 688602,
+        "bounds": {
+          "min": [
+            -0.7166860103607178,
+            -0.950780987739563,
+            -0.316430002450943
+          ],
+          "max": [
+            0.7156609892845154,
+            0.9507529735565186,
+            0.32098400592803955
+          ]
+        },
+        "materials": [
+          {
+            "pbrMetallicRoughness": {
+              "baseColorFactor": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+              ],
+              "metallicFactor": 1.0,
+              "roughnessFactor": 1.0,
+              "baseColorTexture": {
+                "index": 0,
+                "texCoord": 0
+              },
+              "metallicRoughnessTexture": {
+                "index": 1,
+                "texCoord": 0
+              }
+            },
+            "normalTexture": {
+              "index": 2,
+              "texCoord": 0
+            },
+            "alphaMode": "OPAQUE",
+            "doubleSided": true
+          }
+        ],
+        "images": [
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              2048,
+              2048
+            ],
+            "bytes": 4405073
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              2048,
+              2048
+            ],
+            "bytes": 2304375
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              2048,
+              2048
+            ],
+            "bytes": 2981156
+          }
+        ],
+        "material_semantics": [
+          {
+            "base_color": [
+              1.0,
+              1.0,
+              1.0,
+              1.0
+            ],
+            "metal": 1.0,
+            "roughness": 1.0,
+            "alpha_mode": "OPAQUE",
+            "double_sided": true,
+            "normal_scale": 1,
+            "texture_roles": [
+              "baseColorTexture",
+              "metallicRoughnessTexture",
+              "normalTexture"
+            ]
+          }
+        ],
+        "animations": 0,
+        "skins": 0,
+        "extensions_used": [],
+        "extensions_required": []
+      },
+      "runtime": {
+        "path": "public/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb",
+        "bytes": 4986372,
+        "sha256": "0f06cabf8ae2c29f84475eb365a2b0bcf2d4bbd203c78cdb084586d137657bdf",
+        "vertices": 63510,
+        "triangles": 103290,
+        "bounds": {
+          "min": [
+            -0.7166128158569336,
+            -0.9507977366447449,
+            -0.3162490129470825
+          ],
+          "max": [
+            0.7157314419746399,
+            0.9508549571037292,
+            0.32093819975852966
+          ]
+        },
+        "materials": [
+          {
+            "doubleSided": true,
+            "name": "Material_0.001",
+            "normalTexture": {
+              "index": 0
+            },
+            "pbrMetallicRoughness": {
+              "baseColorTexture": {
+                "index": 1
+              },
+              "metallicRoughnessTexture": {
+                "index": 2
+              }
+            }
+          }
+        ],
+        "images": [
+          {
+            "mime_type": "image/png",
+            "dimensions": [
+              1024,
+              1024
+            ],
+            "bytes": 1697072
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              1024,
+              1024
+            ],
+            "bytes": 443369
+          },
+          {
+            "mime_type": "image/jpeg",
+            "dimensions": [
+              1024,
+              1024
+            ],
+            "bytes": 192128
+          }
+        ],
+        "material_semantics": [
+          {
+            "base_color": [
+              1,
+              1,
+              1,
+              1
+            ],
+            "metal": 1,
+            "roughness": 1,
+            "alpha_mode": "OPAQUE",
+            "double_sided": true,
+            "normal_scale": 1,
+            "texture_roles": [
+              "baseColorTexture",
+              "metallicRoughnessTexture",
+              "normalTexture"
+            ]
+          }
+        ],
+        "animations": 0,
+        "skins": 0,
+        "extensions_used": [],
+        "extensions_required": []
+      }
+    }
+  ],
+  "totals": {
+    "source": {
+      "bytes": 44478640,
+      "vertices": 484493,
+      "triangles": 906832
+    },
+    "runtime": {
+      "bytes": 7608828,
+      "vertices": 77207,
+      "triangles": 122930
+    }
+  }
+}

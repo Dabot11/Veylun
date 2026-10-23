@@ -5,11 +5,26 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
+## Integración jugable validada localmente
+
+La etapa actual lleva **Idle, caminar y correr con espada y escudo** a la ruta
+normal del juego. El escudo se reduce uniformemente un 30%; las armas usan
+copias ligeras y los originales se conservan. Typecheck, build, 152 pruebas
+unitarias y 33 de navegador aprobaron. Publicación pendiente:
+[alcance actual](RUEN_GAME_EQUIPMENT.md).
+
+Los grupos `Ruen_Idle_Equipped`, `Ruen_Walk_Equipped` y `Ruen_Run_Equipped`
+comparten el conjunto completo de canales para mezclar poses durante 0.2 s.
+Idle conserva el ciclo de respiración; las variantes de locomoción conservan
+el cuerpo, pelvis y piernas de los clips importados y adaptan los agarres de
+brazos, manos y dedos. La simulación sigue controlando desplazamiento y daño.
+Si no carga todo el equipo, se utiliza una variante sin armas con Idle neutro.
+
 ## Primer prototipo: Idle propio v1
 
-Estado: **prototipo exclusivo del visor, validado técnicamente y publicado**.
-El juego publicado sigue usando la pose base estática al detenerse. Este trabajo
-no añade todavía una animación Idle al gameplay ni modifica los 20 clips del master.
+Estado histórico: **prototipo del visor validado y publicado en `43fa18c`**.
+Esa revisión no añadía Idle al gameplay. La integración jugable se prepara en
+la etapa actual, sin modificar los 20 clips del master.
 
 La primera versión se define con claves creadas aquí mediante **Babylon.js**:
 
@@ -21,7 +36,7 @@ La primera versión se define con claves creadas aquí mediante **Babylon.js**:
 
 La intención es sugerir una respiración suave conservando el apoyo de los pies.
 La continuidad del loop y las poses de frente, lado y espalda se comprobaron.
-La aprobación artística y las transiciones dentro del juego siguen pendientes.
+Las transiciones dentro del juego se revisan en la etapa actual.
 No se presenta como una animación exportada desde Blender: las claves de esta
 versión se construyen por código sobre el rig existente.
 
@@ -48,9 +63,10 @@ el momento del ciclo, la velocidad y el estado de reproducción. Elegir un
 clip original oculta el equipo y restaura los canales de la pose equipada.
 
 Los 20 clips originales permanecen separados de estas dos variantes propias.
-La ruta sin `equipment=azure` mantiene el prototipo neutro anterior. El equipo
-y la pose equipada sólo se cargan en esta prueba del visor: todavía no se
-conectan a locomoción, defensa ni daño. [Archivos y alcance de la prueba](RUEN_EQUIPMENT_PREVIEW.md).
+La ruta sin `equipment=azure` mantiene el prototipo neutro anterior. El visor
+conserva los masters completos; la integración jugable usa copias optimizadas
+con la misma referencia de agarre. Defensa y daño siguen fuera de esta etapa.
+[Archivos y alcance del visor](RUEN_EQUIPMENT_PREVIEW.md).
 
 Tras el ajuste final aprobaron typecheck, build, 142 pruebas unitarias en
 15 archivos y 10 casos únicos de navegador, repartidos en dos ejecuciones
@@ -58,19 +74,14 @@ sin reintentos. [Evidencia y registros](evidence/ruen-equipment/README.md).
 
 ## Orden de trabajo
 
-1. **Idle:** revisar respiración, estabilidad y loop; después probar la transición
-   con Walking/Running sin un salto de pose.
-2. **Salto:** separar impulso, aire y aterrizaje. La física determina cuándo se
-   despega y toca el suelo; la pose acompaña esos estados.
-3. **Esquiva:** adaptar la postura a la duración y desplazamiento de la esquiva
-   actual, manteniendo sus colisiones e invulnerabilidad.
-4. **Guardia y bloqueo:** crear una postura sostenida y una reacción de impacto
-   que respeten la defensa y el arco frontal existentes.
-5. **Espada y escudo:** revisar el montaje inicial en el visor y ajustar
-   agarre/orientación; comprobar manos, cuerpo y capa antes de extenderlo
-   a locomoción y acciones del juego.
-6. **Golpes:** crear poses y transiciones para los ataques del MVP, haciendo
-   coincidir el movimiento de la espada con sus ventanas de impacto existentes.
+1. **Idle y locomoción equipada, etapa actual:** reducir el escudo, comprobar las
+   copias ligeras, agarres y transiciones al detenerse, caminar y correr.
+2. **Guardia y bloqueo:** crear postura sostenida y reacción de impacto que
+   respeten la defensa y el arco frontal existentes.
+3. **Primer ataque de espada:** adaptar la pose a las ventanas de impacto del
+   MVP; después extender la coreografía a los otros golpes del combo.
+4. **Salto y esquiva:** separar impulso, aire y aterrizaje, y adaptar la rodada
+   a su duración y desplazamiento actuales, conservando física e invulnerabilidad.
 
 La duración de cada acción se ajusta a `Simulation` y a los tiempos de combate;
 no alargamos ni cambiamos las reglas para acomodar un clip. La simulación sigue
@@ -105,4 +116,5 @@ registros están en la [evidencia del prototipo](evidence/ruen-idle-v1/README.md
 La publicación se confirmó mediante Actions; el dominio público no se pudo
 abrir desde la red de este entorno. Los resultados anteriores del juego se conservan
 en el [informe de Meshy](RUEN_MESHY_INSPECTION.md); no se presentan como pruebas
-de integración del nuevo Idle en gameplay.
+de integración del Idle equipado en gameplay. Los resultados de esa etapa se
+registrarán en la [evidencia jugable](evidence/ruen-game-equipment/README.md).

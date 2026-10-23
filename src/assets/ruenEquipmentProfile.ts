@@ -25,8 +25,15 @@ export const ruenEquipmentProfiles: readonly RuenEquipmentProfile[] = [
   {
     kind: 'shield', label: 'Aegis of the Azure',
     path: 'assets/models/ruen/equipment/Meshy_AI_Aegis_of_the_Azure_St_1022222231_texture.glb',
-    hand: 'mixamorig:LeftHand', uniformScale: 0.42,
+    // Uniform 30% reduction around the grip: the handle stays in the palm.
+    hand: 'mixamorig:LeftHand', uniformScale: 0.42 * 0.7,
     grip: [0.000351, 0.125, -0.275346], handOffset: [0, 0.05, 0],
     rotation: [-1.4497777416, 2.0538441591, 1.0377765256],
   },
 ];
+
+/** The game uses optimized copies with the same origin, axes and grip points. */
+export const ruenRuntimeEquipmentProfiles: readonly RuenEquipmentProfile[] = ruenEquipmentProfiles.map(profile => ({
+  ...profile,
+  path: `assets/models/ruen/equipment/runtime/${profile.kind === 'sword' ? 'azure-oathblade' : 'aegis-of-the-azure'}.glb`,
+}));

@@ -1,0 +1,444 @@
+{
+  "stats": {
+    "startTime": "2026-10-23T01:56:10.631Z",
+    "duration": 1720844.0920000002,
+    "expected": 33,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "file": "asset-inspector.spec.ts",
+      "title": "inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 3540,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "asset-inspector.spec.ts",
+      "title": "bad local GLB reports failure and allows a later real loader retry with the synthetic fixture",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1629,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "asset-inspector.spec.ts",
+      "title": "production inspector automatically loads and reloads the repository URL without autoplay",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1658,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "new game, keyboard movement, jump, roll, camera, pause and responsive HUD",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 58201,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "corrupt saves are handled without crashing or enabling Continue",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 16709,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "saved checkpoint, key and boss completion persist; new game requires confirmation",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 40942,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "synthetic standard Xbox is detected, starts game, moves and pauses on a single edge",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 68256,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "keyboard: three real attack presses hit and defeat a nearby enemy",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 15504,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "mouse: three real attack presses hit and defeat a nearby enemy",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 14146,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "gamepad: three real attack presses hit and defeat a nearby enemy",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 16268,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "combat.spec.ts",
+      "title": "active Brote: lock, block the charge, then counterattack without losing health",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 25099,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "guardian.spec.ts",
+      "title": "completed sanctuary reload hides defeated enemies and a new adventure resets the light",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 12734,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "guardian.spec.ts",
+      "title": "keyboard: block, counter, escape the slam, defeat the Guardian and restore the altar",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 78078,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "guardian.spec.ts",
+      "title": "gamepad: block, counter, escape the slam, defeat the Guardian and restore the altar",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 76362,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "new adventure to restoration with normal inputs, death, checkpoints and reloads",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 361597,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "unavailable storage keeps session Continue and restart confirmation; new game clears old notices",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 50497,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "journey.spec.ts",
+      "title": "controls before starting do not create a save; restoration can pause and resume safely",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 31990,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-equipment-preview.spec.ts",
+      "title": "real equipment follows the hands through Idle, toggles cleanly, and releases on model replacement",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 160014,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-equipment-preview.spec.ts",
+      "title": "a failed sword leaves neutral Idle usable and retry replaces partial equipment without reloading Ruen",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 36454,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-equipment-preview.spec.ts",
+      "title": "production opens equipped Idle and comparison controls without development hooks",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 76557,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "authored Idle previews on the real master with a closed breathing loop and stationary feet",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 47631,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "an incompatible synthetic rig keeps its original clips available without adding a false Idle",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 1875,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-idle-preview.spec.ts",
+      "title": "production loads the real Idle preview and controls it without development hooks",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 14157,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 28715,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "default Ruen breathes with reduced equipment, blends walking and running, and preserves action fallbacks",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 101151,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "actual collision displacement freezes Meshy even while the controller requests movement",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 56691,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a failed real model request retains the existing playable Ruen",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 15654,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "explicit provisional opt-out keeps the old Ruen without requesting the Meshy master",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 8959,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 52541,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a missing runtime shield keeps a neutral real hero playable without partial floating equipment",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 68800,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "scenarios.spec.ts",
+      "title": "rendered gameplay responds to controls and victory requires the altar interaction",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 27655,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "spirit.spec.ts",
+      "title": "keyboard: read the spell, block, approach, defeat the Spirit and activate its switch",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 77244,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "spirit.spec.ts",
+      "title": "gamepad: read the spell, block, approach, defeat the Spirit and activate its switch",
+      "status": "expected",
+      "attempts": 1,
+      "results": [
+        {
+          "status": "passed",
+          "durationMs": 71742,
+          "retry": 0
+        }
+      ]
+    }
+  ],
+  "renderer": "Chromium with --enable-unsafe-swiftshader",
+  "workers": 1,
+  "scope": "Local development and production servers; not a hardware FPS benchmark."
+}

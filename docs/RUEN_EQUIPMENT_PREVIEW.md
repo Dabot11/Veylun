@@ -1,13 +1,14 @@
 # Ruen: prueba de Idle con espada y escudo
 
-Estado: **montaje revisado visualmente, pruebas locales aprobadas y versión publicada**.
-Esta variante sirve para revisar la postura de Ruen sosteniendo los modelos
-reales entregados. Se muestra sólo en el visor y no modifica el combate.
+Estado: **visor publicado en `15a6a6c`; reducción del escudo y etapa jugable en validación**.
+Este visor permite revisar la postura usando los modelos originales completos.
+La etapa actual reduce el escudo un 30% y prepara Idle, caminar y correr con
+copias ligeras dentro del juego. [Integración jugable](RUEN_GAME_EQUIPMENT.md).
 
 ![Ruen con Azure Oathblade y Aegis of the Azure en el visor](images/ruen-equipped-idle.png)
 
-Captura real del navegador, en tres cuartos. Se revisaron también las vistas
-frontal, lateral y trasera, con el modelo, rig y equipo originales.
+Captura histórica real del navegador, anterior a reducir el escudo un 30%.
+Corresponde al prototipo publicado en `15a6a6c`; no representa el tamaño nuevo.
 
 ## Abrir la prueba
 
@@ -24,7 +25,7 @@ de la postura equipada. Si falla la carga de una pieza, queda disponible el
 Idle sin equipo y el botón **Reintentar carga del equipo**.
 
 La ruta `?inspect=ruen&motion=idle-v1` conserva la prueba neutra anterior y no
-descarga espada ni escudo. El juego mantiene su comportamiento actual.
+descarga espada ni escudo. La integración jugable se valida por separado.
 
 ## Archivos originales
 
@@ -52,7 +53,10 @@ La espada usa `mixamorig:RightHand`; el escudo, `mixamorig:LeftHand`. Los nodos
 de montaje siguen esos joints reales y mantienen la conversión glTF debajo.
 Escala, orientación y posición se aplican fuera de los archivos importados.
 El mango y el asa posterior existen en las mallas originales: no se crean
-piezas sustitutas.
+piezas sustitutas. El escudo usa ahora escala exterior **0.294**, frente a
+0.42 en el prototipo anterior: 70% del tamaño, alrededor del mismo punto de
+agarre. El cambio se aplica al visor y a las copias jugables; no modifica la
+geometría de los archivos.
 
 `Ruen_Idle_Armed_v1` dura cuatro segundos a 30 FPS. Reutiliza las dos curvas
 de respiración del Idle neutro y añade claves constantes para brazos, manos
@@ -62,23 +66,26 @@ inventario en el informe JSON del visor.
 
 Los dos objetos suman 906,832 triángulos y añaden 44.48 MB a la carga inicial
 de esta ruta. Es una prueba con los originales completos; todavía no hay una
-medición de rendimiento en el equipo del usuario. Una futura optimización
-debe generar copias independientes y conservar estos masters.
+medición de rendimiento en el equipo del usuario. El juego usa copias distintas
+de 7.61 MB y 122,930 triángulos en total, documentadas en el
+[inventario de distribución](evidence/ruen-game-equipment/runtime-inventory.json).
 
-La calibración en navegador terminó sin errores de aplicación. Se comprobó
+En la revisión anterior, la calibración terminó sin errores de aplicación. Se comprobó
 la orientación de ambos objetos usando los agarres medidos en las mallas;
-la aprobación artística del usuario sigue pendiente. Tras el ajuste final
+el usuario pidió después reducir el escudo un 30%. En la revisión anterior
 aprobaron typecheck, build, **142 pruebas unitarias en 15 archivos y 10 casos
 únicos de navegador**. Los casos pasaron en dos ejecuciones sin reintentos:
 nueve en 6.1 minutos y uno en 28.5 segundos. Se usaron servidores locales de
 desarrollo y producción; no es una medición de FPS ni una comprobación del sitio remoto.
 [Capturas de las tres vistas e inventario](evidence/ruen-equipment/README.md).
 
-Publicado desde `15a6a6c`, tras integrar el [PR #3](https://github.com/Dabot11/Veylun/pull/3).
+El prototipo anterior se publicó desde `15a6a6c`, tras integrar el [PR #3](https://github.com/Dabot11/Veylun/pull/3).
 [Actions 39868086193](https://github.com/Dabot11/Veylun/actions/runs/39868086193)
 confirmó **Success**. La verificación pública se hizo mediante Actions; el
 dominio del sitio no está accesible desde la red de este entorno.
 
-Queda aprobar el encaje visual, comprobar las transiciones jugables e integrar el
-equipo en locomoción, guardia y golpes antes de activarlo dentro del juego.
-La pose del visor no define eventos de daño ni sustituye animaciones de combate.
+La validación local del escudo reducido y de las transiciones jugables aprobó
+con 33 casos de navegador y 152 pruebas unitarias; [evidencia actual](evidence/ruen-game-equipment/README.md).
+La publicación de esta revisión sigue pendiente.
+Guardia, golpes y las demás acciones se adaptarán en etapas posteriores. La
+pose del visor no define eventos de daño ni sustituye animaciones de combate.

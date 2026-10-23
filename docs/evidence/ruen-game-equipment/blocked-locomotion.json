@@ -1,0 +1,131 @@
+{
+  "blocked": {
+    "state": "run",
+    "grounded": true,
+    "x": 1.3962853761304646e-16,
+    "y": -3.2289652880371995e-18,
+    "z": -10,
+    "vx": 5.790156067165378e-16,
+    "vz": -4.728021231261707,
+    "diagnostics": {
+      "status": "ready",
+      "representation": "meshy",
+      "reason": "controller-stationary",
+      "speed": 5.707509923220465e-16,
+      "weights": {
+        "idle": 0.5000000000000002,
+        "walk": 0,
+        "run": 0.4999999999999998
+      },
+      "equipped": true,
+      "equipment": {
+        "status": "ready",
+        "enabled": true,
+        "items": [
+          {
+            "kind": "sword",
+            "status": "ready",
+            "error": null
+          },
+          {
+            "kind": "shield",
+            "status": "ready",
+            "error": null
+          }
+        ]
+      },
+      "clips": [
+        {
+          "name": "Ruen_Idle_Equipped",
+          "isPlaying": false,
+          "isStarted": true,
+          "weight": 0.5000000000000002,
+          "speedRatio": 0.3661662394719714,
+          "frame": 0
+        },
+        {
+          "name": "Ruen_Walk_Equipped",
+          "isStarted": false,
+          "weight": 0,
+          "speedRatio": 1.7415812044454984e-16,
+          "frame": 0
+        },
+        {
+          "name": "Ruen_Run_Equipped",
+          "isPlaying": false,
+          "isStarted": true,
+          "weight": 0.4999999999999998,
+          "speedRatio": 5.224743613336495e-17,
+          "frame": 0
+        }
+      ]
+    }
+  },
+  "stillBlocked": {
+    "state": "run",
+    "grounded": true,
+    "x": 2.5666959538338843e-16,
+    "y": -5.9355861499051895e-18,
+    "z": -10,
+    "vx": 5.872944315921775e-16,
+    "vz": -4.795622966565338,
+    "diagnostics": {
+      "status": "ready",
+      "representation": "meshy",
+      "reason": "controller-stationary",
+      "speed": 5.86791859873273e-16,
+      "weights": {
+        "idle": 0.5000000000000002,
+        "walk": 0,
+        "run": 0.4999999999999998
+      },
+      "equipped": true,
+      "equipment": {
+        "status": "ready",
+        "enabled": true,
+        "items": [
+          {
+            "kind": "sword",
+            "status": "ready",
+            "error": null
+          },
+          {
+            "kind": "shield",
+            "status": "ready",
+            "error": null
+          }
+        ]
+      },
+      "clips": [
+        {
+          "name": "Ruen_Idle_Equipped",
+          "isPlaying": false,
+          "isStarted": true,
+          "weight": 0.5000000000000002,
+          "speedRatio": 0.34199726402145214,
+          "frame": 0
+        },
+        {
+          "name": "Ruen_Walk_Equipped",
+          "isStarted": false,
+          "weight": 0,
+          "speedRatio": 1.6723434218893227e-16,
+          "frame": 0
+        },
+        {
+          "name": "Ruen_Run_Equipped",
+          "isPlaying": false,
+          "isStarted": true,
+          "weight": 0.4999999999999998,
+          "speedRatio": 5.0170302656679675e-17,
+          "frame": 0
+        }
+      ]
+    }
+  },
+  "anchor": {
+    "x": 3.154270300901151e-16,
+    "z": -10,
+    "targetDistance": 1.1183118964197547e-07
+  }
+}

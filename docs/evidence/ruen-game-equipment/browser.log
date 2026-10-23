@@ -1,0 +1,68 @@
+[WebServer] (node:4907) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 33 tests using 1 worker
+
+(node:4944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/33] tests/browser/asset-inspector.spec.ts:32:1 › inspector autoload stays isolated, loads a synthetic skin, and plays one clip at a time
+[2/33] tests/browser/asset-inspector.spec.ts:94:1 › bad local GLB reports failure and allows a later real loader retry with the synthetic fixture
+[3/33] tests/browser/asset-inspector.spec.ts:117:1 › production inspector automatically loads and reloads the repository URL without autoplay
+[4/33] tests/browser/bootstrap.spec.ts:6:1 › new game, keyboard movement, jump, roll, camera, pause and responsive HUD
+[5/33] tests/browser/bootstrap.spec.ts:26:1 › corrupt saves are handled without crashing or enabling Continue
+[6/33] tests/browser/bootstrap.spec.ts:31:1 › saved checkpoint, key and boss completion persist; new game requires confirmation
+[7/33] tests/browser/bootstrap.spec.ts:40:1 › synthetic standard Xbox is detected, starts game, moves and pauses on a single edge
+[8/33] tests/browser/combat.spec.ts:13:3 › keyboard: three real attack presses hit and defeat a nearby enemy
+[9/33] tests/browser/combat.spec.ts:13:3 › mouse: three real attack presses hit and defeat a nearby enemy
+[10/33] tests/browser/combat.spec.ts:13:3 › gamepad: three real attack presses hit and defeat a nearby enemy
+[11/33] tests/browser/combat.spec.ts:70:1 › active Brote: lock, block the charge, then counterattack without losing health
+[12/33] tests/browser/guardian.spec.ts:15:1 › completed sanctuary reload hides defeated enemies and a new adventure resets the light
+[13/33] tests/browser/guardian.spec.ts:39:3 › keyboard: block, counter, escape the slam, defeat the Guardian and restore the altar
+[14/33] tests/browser/guardian.spec.ts:39:3 › gamepad: block, counter, escape the slam, defeat the Guardian and restore the altar
+[15/33] tests/browser/journey.spec.ts:81:1 › new adventure to restoration with normal inputs, death, checkpoints and reloads
+tests/browser/journey.spec.ts:81:1 › new adventure to restoration with normal inputs, death, checkpoints and reloads
+Journey: Brotes cleared, checkpoint 1 earned
+
+Journey: Spirit cleared, switch and grate opened
+
+Journey: key acquired, enclosure exited, checkpoint 2 earned
+
+Journey: death and reload preserve progress, Guardian resets
+
+Journey: Guardian defeated, explicit altar activation still required
+
+Journey: victory, 78.7 simulated seconds, 1 deliberate death
+
+[16/33] tests/browser/journey.spec.ts:125:1 › unavailable storage keeps session Continue and restart confirmation; new game clears old notices
+[17/33] tests/browser/journey.spec.ts:148:1 › controls before starting do not create a save; restoration can pause and resume safely
+[18/33] tests/browser/ruen-equipment-preview.spec.ts:115:1 › real equipment follows the hands through Idle, toggles cleanly, and releases on model replacement
+[19/33] tests/browser/ruen-equipment-preview.spec.ts:242:1 › a failed sword leaves neutral Idle usable and retry replaces partial equipment without reloading Ruen
+[20/33] tests/browser/ruen-equipment-preview.spec.ts:283:1 › production opens equipped Idle and comparison controls without development hooks
+[21/33] tests/browser/ruen-idle-preview.spec.ts:77:1 › authored Idle previews on the real master with a closed breathing loop and stationary feet
+[22/33] tests/browser/ruen-idle-preview.spec.ts:179:1 › an incompatible synthetic rig keeps its original clips available without adding a false Idle
+[23/33] tests/browser/ruen-idle-preview.spec.ts:200:1 › production loads the real Idle preview and controls it without development hooks
+[24/33] tests/browser/ruen-meshy.spec.ts:64:1 › real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector
+[25/33] tests/browser/ruen-meshy.spec.ts:190:1 › default Ruen breathes with reduced equipment, blends walking and running, and preserves action fallbacks
+[26/33] tests/browser/ruen-meshy.spec.ts:310:1 › actual collision displacement freezes Meshy even while the controller requests movement
+[27/33] tests/browser/ruen-meshy.spec.ts:345:1 › a failed real model request retains the existing playable Ruen
+[28/33] tests/browser/ruen-meshy.spec.ts:371:1 › explicit provisional opt-out keeps the old Ruen without requesting the Meshy master
+[29/33] tests/browser/ruen-meshy.spec.ts:389:1 › production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks
+[30/33] tests/browser/ruen-meshy.spec.ts:418:1 › a missing runtime shield keeps a neutral real hero playable without partial floating equipment
+[31/33] tests/browser/scenarios.spec.ts:6:1 › rendered gameplay responds to controls and victory requires the altar interaction
+[32/33] tests/browser/spirit.spec.ts:8:3 › keyboard: read the spell, block, approach, defeat the Spirit and activate its switch
+[33/33] tests/browser/spirit.spec.ts:8:3 › gamepad: read the spell, block, approach, defeat the Spirit and activate its switch
+  Slow test file: tests/browser/journey.spec.ts (7.4m)
+  Slow test file: tests/browser/ruen-meshy.spec.ts (5.5m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  33 passed (28.7m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice
