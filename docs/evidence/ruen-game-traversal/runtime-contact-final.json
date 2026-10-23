@@ -1,0 +1,1042 @@
+[
+  {
+    "action": "dodge",
+    "step": 0,
+    "state": "roll",
+    "time": 0,
+    "minRelativeY": -1.4244598769835639e-8,
+    "entry": 0
+  },
+  {
+    "action": "dodge",
+    "step": 1,
+    "state": "roll",
+    "time": 0.016666666666666666,
+    "minRelativeY": -0.0005838927610655395,
+    "entry": 0.25925925925925924
+  },
+  {
+    "action": "dodge",
+    "step": 2,
+    "state": "roll",
+    "time": 0.03333333333333333,
+    "minRelativeY": -0.000629119292436614,
+    "entry": 0.7407407407407407
+  },
+  {
+    "action": "dodge",
+    "step": 3,
+    "state": "roll",
+    "time": 0.05,
+    "minRelativeY": -0.0003887218060242975,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 4,
+    "state": "roll",
+    "time": 0.06666666666666667,
+    "minRelativeY": 0.00047880638346613213,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 5,
+    "state": "roll",
+    "time": 0.08333333333333333,
+    "minRelativeY": 0.018079663838337146,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 6,
+    "state": "roll",
+    "time": 0.09999999999999999,
+    "minRelativeY": -0.0008929556611205064,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 7,
+    "state": "roll",
+    "time": 0.11666666666666665,
+    "minRelativeY": 0.045249456300256785,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 8,
+    "state": "roll",
+    "time": 0.13333333333333333,
+    "minRelativeY": 0.04998399215897553,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 9,
+    "state": "roll",
+    "time": 0.15,
+    "minRelativeY": 0.07336836521727719,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 10,
+    "state": "roll",
+    "time": 0.16666666666666666,
+    "minRelativeY": 0.07901823325769897,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 11,
+    "state": "roll",
+    "time": 0.18333333333333332,
+    "minRelativeY": 0.07620805533113106,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 12,
+    "state": "roll",
+    "time": 0.19999999999999998,
+    "minRelativeY": 0.027810069977783236,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 13,
+    "state": "roll",
+    "time": 0.21666666666666665,
+    "minRelativeY": 0.0056586882539104155,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 14,
+    "state": "roll",
+    "time": 0.2333333333333333,
+    "minRelativeY": 0.027949645973790016,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 15,
+    "state": "roll",
+    "time": 0.24999999999999997,
+    "minRelativeY": 0.026441211927023867,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 16,
+    "state": "roll",
+    "time": 0.26666666666666666,
+    "minRelativeY": 0.026441191273576692,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 17,
+    "state": "roll",
+    "time": 0.2833333333333333,
+    "minRelativeY": 0.026441138845595402,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 18,
+    "state": "roll",
+    "time": 0.3,
+    "minRelativeY": 0.026441149966682342,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 19,
+    "state": "roll",
+    "time": 0.31666666666666665,
+    "minRelativeY": 0.03515570359702602,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 20,
+    "state": "roll",
+    "time": 0.3333333333333333,
+    "minRelativeY": 0.03616890769870995,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 21,
+    "state": "roll",
+    "time": 0.35,
+    "minRelativeY": 0.03114684090333153,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 22,
+    "state": "roll",
+    "time": 0.36666666666666664,
+    "minRelativeY": 0.028817332241587668,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 23,
+    "state": "roll",
+    "time": 0.3833333333333333,
+    "minRelativeY": 0.0005691451075331769,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 24,
+    "state": "roll",
+    "time": 0.39999999999999997,
+    "minRelativeY": -0.0003887218060242975,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 25,
+    "state": "roll",
+    "time": 0.41666666666666663,
+    "minRelativeY": -0.000629119292436614,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 26,
+    "state": "roll",
+    "time": 0.4333333333333333,
+    "minRelativeY": -0.0005838927610655395,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 27,
+    "state": "roll",
+    "time": 0.44999999999999996,
+    "minRelativeY": -1.4244598769835639e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 28,
+    "state": "idle",
+    "time": 0,
+    "minRelativeY": -1.5481587028903428e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 29,
+    "state": "idle",
+    "time": 0.016666666666666666,
+    "minRelativeY": -1.555963277984545e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 30,
+    "state": "idle",
+    "time": 0.03333333333333333,
+    "minRelativeY": -1.8049560564039105e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 31,
+    "state": "idle",
+    "time": 0.05,
+    "minRelativeY": -1.6987721085016313e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 32,
+    "state": "idle",
+    "time": 0.06666666666666667,
+    "minRelativeY": -1.7076316671213122e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 33,
+    "state": "idle",
+    "time": 0.08333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 34,
+    "state": "idle",
+    "time": 0.09999999999999999,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 35,
+    "state": "idle",
+    "time": 0.11666666666666665,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 36,
+    "state": "idle",
+    "time": 0.13333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 37,
+    "state": "idle",
+    "time": 0.15,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 38,
+    "state": "idle",
+    "time": 0.16666666666666666,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 39,
+    "state": "idle",
+    "time": 0.18333333333333332,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 40,
+    "state": "idle",
+    "time": 0.19999999999999998,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 41,
+    "state": "idle",
+    "time": 0.21666666666666665,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 42,
+    "state": "idle",
+    "time": 0.2333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 43,
+    "state": "idle",
+    "time": 0.24999999999999997,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 44,
+    "state": "idle",
+    "time": 0.26666666666666666,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 45,
+    "state": "idle",
+    "time": 0.2833333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 46,
+    "state": "idle",
+    "time": 0.3,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 47,
+    "state": "idle",
+    "time": 0.31666666666666665,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 48,
+    "state": "idle",
+    "time": 0.3333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 49,
+    "state": "idle",
+    "time": 0.35,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 50,
+    "state": "idle",
+    "time": 0.36666666666666664,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 51,
+    "state": "idle",
+    "time": 0.3833333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 52,
+    "state": "idle",
+    "time": 0.39999999999999997,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 53,
+    "state": "idle",
+    "time": 0.41666666666666663,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 54,
+    "state": "idle",
+    "time": 0.4333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 55,
+    "state": "idle",
+    "time": 0.44999999999999996,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 56,
+    "state": "idle",
+    "time": 0.4666666666666666,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 57,
+    "state": "idle",
+    "time": 0.4833333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 58,
+    "state": "idle",
+    "time": 0.49999999999999994,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 59,
+    "state": "idle",
+    "time": 0.5166666666666666,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 60,
+    "state": "idle",
+    "time": 0.5333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 61,
+    "state": "idle",
+    "time": 0.55,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 62,
+    "state": "idle",
+    "time": 0.5666666666666668,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 63,
+    "state": "idle",
+    "time": 0.5833333333333335,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "dodge",
+    "step": 64,
+    "state": "idle",
+    "time": 0.6000000000000002,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 0,
+    "state": "jump",
+    "time": 0,
+    "minRelativeY": -0.000004543085440525396,
+    "entry": 0.25925925925925897
+  },
+  {
+    "action": "jump",
+    "step": 1,
+    "state": "jump",
+    "time": 0.016666666666666666,
+    "minRelativeY": 0.000006644601029920372,
+    "entry": 0.7407407407407401
+  },
+  {
+    "action": "jump",
+    "step": 2,
+    "state": "jump",
+    "time": 0.03333333333333333,
+    "minRelativeY": 0.00037521577071059076,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 3,
+    "state": "jump",
+    "time": 0.05,
+    "minRelativeY": 0.0013128528194865652,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 4,
+    "state": "jump",
+    "time": 0.06666666666666667,
+    "minRelativeY": 0.0032095054334198014,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 5,
+    "state": "jump",
+    "time": 0.08333333333333333,
+    "minRelativeY": 0.006426309115549755,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 6,
+    "state": "jump",
+    "time": 0.09999999999999999,
+    "minRelativeY": 0.011290906960706448,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 7,
+    "state": "jump",
+    "time": 0.11666666666666665,
+    "minRelativeY": 0.017985544432076894,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 8,
+    "state": "jump",
+    "time": 0.13333333333333333,
+    "minRelativeY": 0.02672290709924474,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 9,
+    "state": "jump",
+    "time": 0.15,
+    "minRelativeY": 0.037572326228678676,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 10,
+    "state": "jump",
+    "time": 0.16666666666666666,
+    "minRelativeY": 0.05047663466732588,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 11,
+    "state": "jump",
+    "time": 0.18333333333333332,
+    "minRelativeY": 0.06525636349159825,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 12,
+    "state": "jump",
+    "time": 0.19999999999999998,
+    "minRelativeY": 0.08161365580821878,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 13,
+    "state": "jump",
+    "time": 0.21666666666666665,
+    "minRelativeY": 0.09914273657278572,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 14,
+    "state": "jump",
+    "time": 0.2333333333333333,
+    "minRelativeY": 0.11734569007032758,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 15,
+    "state": "jump",
+    "time": 0.24999999999999997,
+    "minRelativeY": 0.13565171857000302,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 16,
+    "state": "jump",
+    "time": 0.26666666666666666,
+    "minRelativeY": 0.15343864491930703,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 17,
+    "state": "jump",
+    "time": 0.2833333333333333,
+    "minRelativeY": 0.17002235068893112,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 18,
+    "state": "jump",
+    "time": 0.3,
+    "minRelativeY": 0.1847398236290656,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 19,
+    "state": "jump",
+    "time": 0.31666666666666665,
+    "minRelativeY": 0.19698710303718703,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 20,
+    "state": "jump",
+    "time": 0.3333333333333333,
+    "minRelativeY": 0.20614754206366626,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 21,
+    "state": "jump",
+    "time": 0.35,
+    "minRelativeY": 0.21164984247396346,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 22,
+    "state": "fall",
+    "time": 0.36666666666666664,
+    "minRelativeY": 0.21177086821514401,
+    "entry": 0.18861454046639115
+  },
+  {
+    "action": "jump",
+    "step": 23,
+    "state": "fall",
+    "time": 0.3833333333333333,
+    "minRelativeY": 0.2088857941998088,
+    "entry": 0.5829903978052097
+  },
+  {
+    "action": "jump",
+    "step": 24,
+    "state": "fall",
+    "time": 0.39999999999999997,
+    "minRelativeY": 0.1959938740664786,
+    "entry": 0.9259259259259235
+  },
+  {
+    "action": "jump",
+    "step": 25,
+    "state": "fall",
+    "time": 0.41666666666666663,
+    "minRelativeY": 0.1773010297049491,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 26,
+    "state": "fall",
+    "time": 0.4333333333333333,
+    "minRelativeY": 0.15608905902886927,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 27,
+    "state": "fall",
+    "time": 0.44999999999999996,
+    "minRelativeY": 0.13265327762618395,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 28,
+    "state": "fall",
+    "time": 0.4666666666666666,
+    "minRelativeY": 0.10857118154834455,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 29,
+    "state": "fall",
+    "time": 0.4833333333333333,
+    "minRelativeY": 0.08519482170629056,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 30,
+    "state": "fall",
+    "time": 0.49999999999999994,
+    "minRelativeY": 0.06364225345289154,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 31,
+    "state": "fall",
+    "time": 0.5166666666666666,
+    "minRelativeY": 0.04474243296673941,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 32,
+    "state": "fall",
+    "time": 0.5333333333333333,
+    "minRelativeY": 0.029013483799532613,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 33,
+    "state": "fall",
+    "time": 0.55,
+    "minRelativeY": 0.016683664671992893,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 34,
+    "state": "fall",
+    "time": 0.5666666666666668,
+    "minRelativeY": 0.007749213479281036,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 35,
+    "state": "fall",
+    "time": 0.5833333333333335,
+    "minRelativeY": 0.002118539359840632,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 36,
+    "state": "fall",
+    "time": 0.6000000000000002,
+    "minRelativeY": -0.0004689227503141824,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 37,
+    "state": "fall",
+    "time": 0.6166666666666669,
+    "minRelativeY": -0.0006115284043393121,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 38,
+    "state": "fall",
+    "time": 0.6333333333333336,
+    "minRelativeY": -0.0006115175847853926,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 39,
+    "state": "fall",
+    "time": 0.6500000000000004,
+    "minRelativeY": -0.0006115019968598867,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 40,
+    "state": "fall",
+    "time": 0.6666666666666671,
+    "minRelativeY": -0.000611511442885182,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 41,
+    "state": "fall",
+    "time": 0.6833333333333338,
+    "minRelativeY": -0.0006115161205389463,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 42,
+    "state": "fall",
+    "time": 0.7000000000000005,
+    "minRelativeY": -0.0006115011286599581,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 43,
+    "state": "fall",
+    "time": 0.7166666666666672,
+    "minRelativeY": -0.0006115037201511464,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 44,
+    "state": "land",
+    "time": 0,
+    "minRelativeY": -0.000611446395857293,
+    "entry": 0
+  },
+  {
+    "action": "jump",
+    "step": 45,
+    "state": "land",
+    "time": 0.016666666666666666,
+    "minRelativeY": -0.0006886839830316446,
+    "entry": 0.4643127092106683
+  },
+  {
+    "action": "jump",
+    "step": 46,
+    "state": "land",
+    "time": 0.03333333333333333,
+    "minRelativeY": -0.0005853346298464249,
+    "entry": 0.9934132383111975
+  },
+  {
+    "action": "jump",
+    "step": 47,
+    "state": "land",
+    "time": 0.05,
+    "minRelativeY": -0.0005763144850314122,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 48,
+    "state": "land",
+    "time": 0.06666666666666667,
+    "minRelativeY": -0.0006480480774768288,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 49,
+    "state": "land",
+    "time": 0.08333333333333333,
+    "minRelativeY": -0.0006649431433905575,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 50,
+    "state": "land",
+    "time": 0.09999999999999999,
+    "minRelativeY": -0.0005437948380914576,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 51,
+    "state": "land",
+    "time": 0.11666666666666665,
+    "minRelativeY": -0.0006580340191858075,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 52,
+    "state": "idle",
+    "time": 0.13333333333333333,
+    "minRelativeY": -0.0006209804441139055,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 53,
+    "state": "idle",
+    "time": 0.15,
+    "minRelativeY": -0.0005151682666485191,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 54,
+    "state": "idle",
+    "time": 0.16666666666666666,
+    "minRelativeY": -0.00034957560481852293,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 55,
+    "state": "idle",
+    "time": 0.18333333333333332,
+    "minRelativeY": -0.00015245960146005946,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 56,
+    "state": "idle",
+    "time": 0.19999999999999998,
+    "minRelativeY": -0.000007282715461693961,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 57,
+    "state": "idle",
+    "time": 0.21666666666666665,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 58,
+    "state": "idle",
+    "time": 0.2333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 59,
+    "state": "idle",
+    "time": 0.24999999999999997,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 60,
+    "state": "idle",
+    "time": 0.26666666666666666,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 61,
+    "state": "idle",
+    "time": 0.2833333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 62,
+    "state": "idle",
+    "time": 0.3,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 63,
+    "state": "idle",
+    "time": 0.31666666666666665,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  },
+  {
+    "action": "jump",
+    "step": 64,
+    "state": "idle",
+    "time": 0.3333333333333333,
+    "minRelativeY": -1.7115338789120206e-8,
+    "entry": 1
+  }
+]

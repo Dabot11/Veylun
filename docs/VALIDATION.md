@@ -1,5 +1,26 @@
 # Validación ejecutada
 
+## Salto y voltereta equipados: validado localmente
+
+Aprobaron typecheck, build y **197 pruebas unitarias en 18 archivos** en 4.56 s.
+La etapa añade subida, caída, aterrizaje y voltereta sobre el rig real, sin
+cambiar los cinco GLB, los tiempos de simulación ni la invulnerabilidad.
+
+La calibración manual corrigió penetraciones iniciales de pies/capa. La prueba
+posterior de transición corrigió la mezcla de pelvis/piernas al entrar en la
+voltereta; sus 130 muestras finales quedaron dentro de 0.01 unidades de
+tolerancia de contacto. Estas auditorías complementan las pruebas desde
+controles. Aprobaron **22 casos únicos seleccionados de navegador: 15 de
+desarrollo y siete de producción**. Los cuatro nuevos cerraron con tres
+aprobados inicialmente y Shift aprobado tras corregir sólo el filtro que
+comparaba su posición con Idle. La aplicación y el build no cambiaron. Las
+18 regresiones aprobaron sin omitidos ni resultados inestables.
+
+La selección no repite la suite completa de 44 casos, `journey` ni los
+encuentros de enemigos restantes. Incluye caída sin impulso desde una altura
+preparada. Publicación pendiente. [Alcance](RUEN_GAME_TRAVERSAL.md) ·
+[Evidencia](evidence/ruen-game-traversal/README.md).
+
 ## Guardia, bloqueo y combo equipado: validado y publicado
 
 22 de octubre de 2026, fecha de America/Monterrey. La nueva etapa adapta la
@@ -327,15 +348,16 @@ nueva prueba completa desde el inicio.
 
 ## Límites
 
-El build conserva el aviso de chunks mayores de 500 kB: aproximadamente 962 kB
-minificados / 239 kB gzip para el principal y 768 kB / 180 kB gzip para el cargador
-opcional de modelos. No impide compilar. No se midieron 60 FPS en macOS ni la
-mezcla de sonido con altavoces físicos.
+El build conserva el aviso de chunks mayores de 500 kB de Babylon; no impide
+compilar. Las pruebas locales usan renderizado de software. No se midieron
+FPS en Chrome/macOS del usuario ni la mezcla de sonido con altavoces físicos;
+el mando Xbox es simulado, no hardware conectado.
 
-Pendientes: recorrido humano en Chrome/macOS, Xbox físico, dificultad y duración
-con jugadores. Los modelos, animaciones y escenario son provisionales y
-simplifican las 24 referencias PNG conservadas. No se recibió un GLB definitivo;
-el cargador se prueba con una jerarquía sintética.
+Ruen y su espada/escudo usan los GLB reales recibidos y copias optimizadas del
+equipo. Las pruebas cargan esos archivos; también se conservan fixtures
+sintéticos para fallos y rigs incompatibles. Enemigos, escenario y acciones
+aún sin adaptar mantienen recursos provisionales. Siguen pendientes la
+revisión artística con el usuario, la dificultad y la duración con jugadores.
 
 El acceso directo a `dabot11.github.io` está bloqueado por la política de la red
 cloud. La publicación se verifica mediante GitHub Actions, las revisiones de

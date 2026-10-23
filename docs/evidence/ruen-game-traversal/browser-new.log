@@ -1,0 +1,56 @@
+[WebServer] (node:22626) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:22639) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+(node:22663) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/4] tests/browser/ruen-traversal-preview.spec.ts:125:1 › traversal preview starts paused and animates four real equipped clips without altering the master
+[2/4] tests/browser/ruen-traversal-preview.spec.ts:186:1 › production traversal preview exposes all authored clips and controls without development hooks
+[3/4] tests/browser/ruen-traversal.spec.ts:245:1 › Space keeps equipped jump, fall and landing on the physics clock, including pause and an unlaunched drop
+[4/4] tests/browser/ruen-traversal.spec.ts:282:1 › Shift rolls along its committed direction under lock-on, freezes in pause, and respects the level wall
+  1) tests/browser/ruen-traversal.spec.ts:282:1 › Shift rolls along its committed direction under lock-on, freezes in pause, and respects the level wall
+
+    Error: expect(received).toBeGreaterThan(expected)
+
+    Expected: > 1
+    Received:   0
+
+      313 |   expect(stoppedZ).toBeLessThanOrEqual(89.32);
+      314 |   const blocked = wall.renders.filter(sample => sample.player.state === 'roll' && sample.player.z === stoppedZ);
+    > 315 |   expect(blocked.length).toBeGreaterThan(1);
+          |                          ^
+      316 |   blocked.forEach(expectTraversal);
+      317 |   expect(blocked.at(-1)!.traversal.frame).toBeGreaterThan(blocked[0]!.traversal.frame!);
+      318 |   expect(wall.steps.every(step => step.player.z <= 89.32)).toBe(true);
+        at /workspace/Veylun/tests/browser/ruen-traversal.spec.ts:315:26
+
+    attachment #1: equipped-roll-lock-on-roll.png (image/png) ──────────────────────────────────────
+    ../veylun-validation/ruen-game-traversal/browser-new/ruen-traversal-Shift-rolls-dce61-and-respects-the-level-wall/attachments/equipped-roll-lock-on-roll-png-01af7819e6326a5fd8e4b18c1cf1b10725552d62.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: equipped-roll-wall-roll.png (image/png) ─────────────────────────────────────────
+    ../veylun-validation/ruen-game-traversal/browser-new/ruen-traversal-Shift-rolls-dce61-and-respects-the-level-wall/attachments/equipped-roll-wall-roll-png-7452b42214ee2b0dafc2976a9c144cfd63cf7c7c.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #5: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../veylun-validation/ruen-game-traversal/browser-new/ruen-traversal-Shift-rolls-dce61-and-respects-the-level-wall/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../veylun-validation/ruen-game-traversal/browser-new/ruen-traversal-Shift-rolls-dce61-and-respects-the-level-wall/error-context.md
+
+
+  1 failed
+    tests/browser/ruen-traversal.spec.ts:282:1 › Shift rolls along its committed direction under lock-on, freezes in pause, and respects the level wall
+  3 passed (3.3m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

@@ -1,0 +1,400 @@
+{
+  "selection": "Latest result and attachments per test from the two reports; all four selected tests passed. The original report with one failed Shift case is preserved.",
+  "sourceHistory": [
+    {
+      "report": "new-browser-report.json",
+      "statistics": {
+        "startTime": "2026-10-23T06:26:08.092Z",
+        "duration": 195177.346,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "report": "shift-retest-report.json",
+      "statistics": {
+        "startTime": "2026-10-23T06:30:30.055Z",
+        "duration": 70114.356,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "selectedTests": [
+    {
+      "title": "traversal preview starts paused and animates four real equipped clips without altering the master",
+      "status": "passed",
+      "durationMs": 40038,
+      "report": "new-browser-report.json"
+    },
+    {
+      "title": "production traversal preview exposes all authored clips and controls without development hooks",
+      "status": "passed",
+      "durationMs": 23784,
+      "report": "new-browser-report.json"
+    },
+    {
+      "title": "Space keeps equipped jump, fall and landing on the physics clock, including pause and an unlaunched drop",
+      "status": "passed",
+      "durationMs": 65658,
+      "report": "new-browser-report.json"
+    },
+    {
+      "title": "Shift rolls along its committed direction under lock-on, freezes in pause, and respects the level wall",
+      "status": "passed",
+      "durationMs": 69132,
+      "report": "shift-retest-report.json"
+    }
+  ],
+  "inspector": {
+    "durationSeconds": {
+      "roll": 0.45,
+      "jump": 0.380058475033046,
+      "fall": 0.3,
+      "land": 0.11999999999999998
+    },
+    "groups": 33,
+    "authoredClips": 12,
+    "masterClips": 20,
+    "opensRollPaused": true,
+    "originalClipDigest": {
+      "length": 37665767,
+      "hash": 2644327701
+    },
+    "inventoryAndNoAutoplayBasis": "Assertions completed in the selected passing development preview test.",
+    "skinDeltaByClip": {
+      "Ruen_Roll_Equipped": 1.6235467195510864,
+      "Ruen_Jump_Equipped": 0.17669594287872314,
+      "Ruen_Fall_Equipped": 0.22838806360960007,
+      "Ruen_Land_Equipped": 0.31966179609298706
+    },
+    "floorTolerance": -0.01,
+    "floorSampleCount": 21,
+    "floors": {
+      "roll": {
+        "samples": [
+          {
+            "seconds": 0,
+            "minSkinWorldY": -1.6700564486882286e-08
+          },
+          {
+            "seconds": 0.04,
+            "minSkinWorldY": -0.0007977280183695257
+          },
+          {
+            "seconds": 0.065,
+            "minSkinWorldY": -0.00029642967274412513
+          },
+          {
+            "seconds": 0.1,
+            "minSkinWorldY": -0.0010469135595485568
+          },
+          {
+            "seconds": 0.15,
+            "minSkinWorldY": 0.08601808547973633
+          },
+          {
+            "seconds": 0.2,
+            "minSkinWorldY": 0.03260491043329239
+          },
+          {
+            "seconds": 0.225,
+            "minSkinWorldY": 0.01826620288193226
+          },
+          {
+            "seconds": 0.25,
+            "minSkinWorldY": 0.03099999390542507
+          },
+          {
+            "seconds": 0.2833333333333333,
+            "minSkinWorldY": 0.030999956652522087
+          },
+          {
+            "seconds": 0.32,
+            "minSkinWorldY": 0.04114658012986183
+          },
+          {
+            "seconds": 0.35,
+            "minSkinWorldY": 0.03651698678731918
+          },
+          {
+            "seconds": 0.385,
+            "minSkinWorldY": -0.00029642967274412513
+          },
+          {
+            "seconds": 0.4,
+            "minSkinWorldY": -0.00045574281830340624
+          },
+          {
+            "seconds": 0.45,
+            "minSkinWorldY": -1.6700564486882286e-08
+          }
+        ],
+        "minimum": -0.0010469135595485568,
+        "allAboveTolerance": true,
+        "exteriorRootAtOriginAndStable": true
+      },
+      "land": {
+        "samples": [
+          {
+            "seconds": 0,
+            "minSkinWorldY": -0.0007168682059273124
+          },
+          {
+            "seconds": 0.02,
+            "minSkinWorldY": -0.000985566177405417
+          },
+          {
+            "seconds": 0.04,
+            "minSkinWorldY": -0.000654033210594207
+          },
+          {
+            "seconds": 0.06,
+            "minSkinWorldY": -0.0007602695841342211
+          },
+          {
+            "seconds": 0.08333333333333333,
+            "minSkinWorldY": -0.0007795885321684182
+          },
+          {
+            "seconds": 0.1,
+            "minSkinWorldY": -0.0006375525845214725
+          },
+          {
+            "seconds": 0.12,
+            "minSkinWorldY": -1.6700564486882286e-08
+          }
+        ],
+        "minimum": -0.000985566177405417,
+        "allAboveTolerance": true,
+        "exteriorRootAtOriginAndStable": true
+      }
+    },
+    "developmentRequests": [
+      "/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb",
+      "/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb",
+      "/assets/models/ruen/equipment/runtime/azure-oathblade.glb"
+    ],
+    "productionRequests": [
+      "/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb",
+      "/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb",
+      "/assets/models/ruen/equipment/runtime/azure-oathblade.glb"
+    ],
+    "developmentErrors": {
+      "unhandled": [],
+      "console": []
+    },
+    "productionErrors": {
+      "unhandled": [],
+      "console": []
+    },
+    "productionNoHooks": "Assertion completed in selected passing production preview test, including test=1 URL."
+  },
+  "controllerReplays": {
+    "equipped-jump": {
+      "steps": 72,
+      "maxNumericDelta": 0,
+      "mismatchCount": 0
+    },
+    "equipped-drop": {
+      "steps": 54,
+      "maxNumericDelta": 0,
+      "mismatchCount": 0
+    },
+    "equipped-roll-lock-on": {
+      "steps": 54,
+      "maxNumericDelta": 5.551115123125783e-17,
+      "mismatchCount": 0
+    },
+    "equipped-roll-wall": {
+      "steps": 48,
+      "maxNumericDelta": 0,
+      "mismatchCount": 0
+    }
+  },
+  "gameplayChecks": {
+    "equipped-jump": {
+      "steps": 72,
+      "renders": 14,
+      "renderedRoles": {
+        "jump": 5,
+        "fall": 4,
+        "land": 1
+      },
+      "controllerDtSeconds": [
+        0.016666666666666666
+      ],
+      "maxRecordedAgeDelta": 0,
+      "maxTraversalTimeErrorSeconds": 0.0,
+      "maxDiagnosticFrameError": 0.0,
+      "maxRuntimeFrameError": 0.0,
+      "allTraversalUsesMeshyAndPausedRuntime": true,
+      "maxExteriorRootPositionError": 0,
+      "allTraversalEquipmentVisible": true,
+      "maxGripError": 2.715976363338624e-07,
+      "jumpInputEdges": 1,
+      "dodgeInputEdges": 0,
+      "healthValues": [
+        10
+      ],
+      "combatDamageEvents": [],
+      "sameClockRenderPairs": [
+        {
+          "age": 0.39999999999999997,
+          "role": "jump",
+          "frame": 11.999999999999993
+        },
+        {
+          "age": 0.39999999999999997,
+          "role": "jump",
+          "frame": 11.999999999999993
+        }
+      ],
+      "pauseCheck": {
+        "role": "jump",
+        "passed": true,
+        "basis": "Latest passing browser test includes 300 ms exact snapshot equality and resume checks; raw pause snapshots are not attached."
+      }
+    },
+    "equipped-drop": {
+      "steps": 54,
+      "renders": 9,
+      "renderedRoles": {
+        "fall": 4,
+        "land": 2
+      },
+      "controllerDtSeconds": [
+        0.016666666666666666
+      ],
+      "maxRecordedAgeDelta": 0,
+      "maxTraversalTimeErrorSeconds": 0.0,
+      "maxDiagnosticFrameError": 0.0,
+      "maxRuntimeFrameError": 0.0,
+      "allTraversalUsesMeshyAndPausedRuntime": true,
+      "maxExteriorRootPositionError": 0,
+      "allTraversalEquipmentVisible": true,
+      "maxGripError": 2.1687189184795964e-07,
+      "jumpInputEdges": 0,
+      "dodgeInputEdges": 0,
+      "healthValues": [
+        10
+      ],
+      "combatDamageEvents": [],
+      "sameClockRenderPairs": [],
+      "unlaunchedFall": {
+        "initialStateTime": 9,
+        "firstRenderedStateTime": 9.100000000000005,
+        "firstClipTimeSeconds": 0.1
+      }
+    },
+    "equipped-roll-lock-on": {
+      "steps": 54,
+      "renders": 12,
+      "renderedRoles": {
+        "roll": 6
+      },
+      "controllerDtSeconds": [
+        0.016666666666666666
+      ],
+      "maxRecordedAgeDelta": 0,
+      "maxTraversalTimeErrorSeconds": 0.0,
+      "maxDiagnosticFrameError": 0.0,
+      "maxRuntimeFrameError": 0.0,
+      "allTraversalUsesMeshyAndPausedRuntime": true,
+      "maxExteriorRootPositionError": 0,
+      "allTraversalEquipmentVisible": true,
+      "maxGripError": 2.645226328244753e-06,
+      "jumpInputEdges": 0,
+      "dodgeInputEdges": 1,
+      "healthValues": [
+        10
+      ],
+      "combatDamageEvents": [],
+      "sameClockRenderPairs": [
+        {
+          "age": 0.6000000000000002,
+          "role": "roll",
+          "frame": 11
+        },
+        {
+          "age": 0.6000000000000002,
+          "role": "roll",
+          "frame": 11
+        }
+      ],
+      "pauseCheck": {
+        "role": "roll",
+        "passed": true,
+        "basis": "Latest passing browser test includes 300 ms exact snapshot equality and resume checks; raw pause snapshots are not attached."
+      },
+      "lockOn": {
+        "targets": [
+          "sprout-1"
+        ],
+        "maxDirectionOffsetRadians": 1.9125767204620985,
+        "xDisplacement": 4.221338165755409
+      }
+    },
+    "equipped-roll-wall": {
+      "steps": 48,
+      "renders": 8,
+      "renderedRoles": {
+        "roll": 4
+      },
+      "controllerDtSeconds": [
+        0.016666666666666666
+      ],
+      "maxRecordedAgeDelta": 0,
+      "maxTraversalTimeErrorSeconds": 0.0,
+      "maxDiagnosticFrameError": 0.0,
+      "maxRuntimeFrameError": 0.0,
+      "allTraversalUsesMeshyAndPausedRuntime": true,
+      "maxExteriorRootPositionError": 0,
+      "allTraversalEquipmentVisible": true,
+      "maxGripError": 7.922601113794228e-06,
+      "jumpInputEdges": 0,
+      "dodgeInputEdges": 1,
+      "healthValues": [
+        10
+      ],
+      "combatDamageEvents": [],
+      "sameClockRenderPairs": [],
+      "wallCollision": {
+        "fixture": "closed sanctuary door at z=90",
+        "initialZ": 89.1,
+        "maxZ": 89.31694521136974,
+        "stationaryRollPairsWithAdvancingClip": 3
+      }
+    }
+  },
+  "gameplayConsoleErrors": {
+    "jump": [],
+    "roll": []
+  },
+  "pngPaths": [
+    "gameplay-jump.png",
+    "gameplay-roll-lock-on.png",
+    "preview-roll-side.png"
+  ],
+  "visualReview": [
+    {
+      "path": "gameplay-jump.png",
+      "recommended": true,
+      "note": "Clear three-quarter game view: entire equipped hero airborne, no obstruction."
+    },
+    {
+      "path": "gameplay-roll-lock-on.png",
+      "recommended": true,
+      "note": "Real lock-on dodge: inverted/tucked hero remains visible near the bottom; target ring is visible. Smaller than inspector view."
+    },
+    {
+      "path": "preview-roll-side.png",
+      "recommended": true,
+      "note": "Best pose detail: side view of inverted roll, tucked legs and body above the grid. Inspector evidence, not a live control capture."
+    }
+  ]
+}

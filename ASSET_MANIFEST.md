@@ -61,7 +61,16 @@ en la fuente vigente `f828d841`. Ver el
 
 ## Animación
 
-La nueva etapa crea `Ruen_Guard_Equipped`, `Ruen_Block_Equipped` y
+La etapa de salto y voltereta añade cuatro clips propios en memoria, sin
+reexportar los cinco GLB ni cambiar el tamaño del equipo. Hay 12 clips
+propios en total: tres de locomoción, cinco de combate y cuatro de movimiento.
+Los 20 originales permanecen separados; son 32 grupos en gameplay y 33 en el
+visor de movimiento, que añade el Idle neutro. Los cuatro nuevos grupos son
+`Ruen_Jump_Equipped`, `Ruen_Fall_Equipped`, `Ruen_Land_Equipped` y
+`Ruen_Roll_Equipped`. Aprobaron typecheck, build, 197 unitarias y 22 casos
+seleccionados de navegador. Publicación pendiente: [alcance de movimiento](docs/RUEN_GAME_TRAVERSAL.md).
+
+La versión publicada crea `Ruen_Guard_Equipped`, `Ruen_Block_Equipped` y
 `Ruen_Attack1_Equipped` a `Ruen_Attack3_Equipped` sobre el rig real. Sus 160
 canales parten del Idle equipado, con rotaciones propias de torso, brazos y
 manos. El montaje del escudo sigue en 0.294 y el de la espada en 0.55.

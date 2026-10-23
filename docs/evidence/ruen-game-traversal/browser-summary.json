@@ -1,0 +1,265 @@
+{
+  "scope": "22 targeted browser tests after the equipped traversal change; the complete 44-test browser suite was not rerun.",
+  "totals": {
+    "distinctTests": 22,
+    "latestPassed": 22,
+    "latestFailed": 0,
+    "latestSkipped": 0,
+    "latestFlaky": 0,
+    "selectedTestDurationMs": 1106846,
+    "allRunDurationMs": 1174674.156
+  },
+  "environments": {
+    "development": {
+      "tests": 15,
+      "passed": 15,
+      "selectedTestDurationMs": 838060
+    },
+    "production": {
+      "tests": 7,
+      "passed": 7,
+      "selectedTestDurationMs": 268786
+    }
+  },
+  "runs": [
+    {
+      "report": "new-browser-report.json",
+      "log": "browser-new.log",
+      "startTime": "2026-10-23T06:26:08.092Z",
+      "duration": 195177.346,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    {
+      "report": "shift-retest-report.json",
+      "log": "browser-shift-retest.log",
+      "startTime": "2026-10-23T06:30:30.055Z",
+      "duration": 70114.356,
+      "expected": 1,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    {
+      "report": "regression-browser-report.json",
+      "log": "browser-regression.log",
+      "startTime": "2026-10-23T06:31:50.191Z",
+      "duration": 909382.454,
+      "expected": 18,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  ],
+  "selectedTests": [
+    {
+      "file": "ruen-traversal-preview.spec.ts",
+      "title": "traversal preview starts paused and animates four real equipped clips without altering the master",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 40038,
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-traversal-preview.spec.ts",
+      "title": "production traversal preview exposes all authored clips and controls without development hooks",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 23784,
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-traversal.spec.ts",
+      "title": "Space keeps equipped jump, fall and landing on the physics clock, including pause and an unlaunched drop",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 65658,
+      "report": "new-browser-report.json"
+    },
+    {
+      "file": "ruen-traversal.spec.ts",
+      "title": "Shift rolls along its committed direction under lock-on, freezes in pause, and respects the level wall",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 69132,
+      "report": "shift-retest-report.json"
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "new game, keyboard movement, jump, roll, camera, pause and responsive HUD",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 70061,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "corrupt saves are handled without crashing or enabling Continue",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 17493,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "saved checkpoint, key and boss completion persist; new game requires confirmation",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 44047,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "bootstrap.spec.ts",
+      "title": "synthetic standard Xbox is detected, starts game, moves and pauses on a single edge",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 41194,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat-preview.spec.ts",
+      "title": "combat preview opens paused and deforms the real skin with five independent equipped clips",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 54067,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat-preview.spec.ts",
+      "title": "production combat preview exposes its clips and comparison controls without development hooks",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 23088,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "keyboard: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 57998,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "mouse: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 67974,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "gamepad: equipped combo 1–2–3 follows the controller clock and preserves 1/1/2 damage",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 62022,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "real shield input blocks a Brote hit and keeps equipped guard while moving under lock-on",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 77168,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "attack pause preserves the exact frame, dodge keeps equipment, and enemy damage uses the safe fallback",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 70196,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "real Meshy master loads its skin/materials and plays Walking and Running independently in the inspector",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 27647,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 100662,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "actual collision displacement freezes Meshy even while the controller requests movement",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 57464,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a failed real model request retains the existing playable Ruen",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 16548,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "explicit provisional opt-out keeps the old Ruen without requesting the Meshy master",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 8873,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "production loads equipped Ruen automatically and honors the provisional opt-out without debug hooks",
+      "environment": "production",
+      "status": "passed",
+      "durationMs": 49119,
+      "report": "regression-browser-report.json"
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "a missing runtime shield keeps a neutral real hero playable without partial floating equipment",
+      "environment": "development",
+      "status": "passed",
+      "durationMs": 62613,
+      "report": "regression-browser-report.json"
+    }
+  ],
+  "testCorrection": {
+    "file": "tests/browser/ruen-traversal.spec.ts",
+    "applicationChanged": false,
+    "reason": "Initial wall assertion compared the final Idle position with earlier Roll positions. Roll was stationary at z=89.23333333333333 while requesting vz=8, then shorter deceleration substeps reached z=89.31694521136974. The corrected assertion compares consecutive Roll frames with deltaZ<1e-9 and vz>7.99; the clip still advances. Only the failed Shift case was rerun.",
+    "initialRollFrames": [
+      5,
+      11,
+      17,
+      23
+    ],
+    "initialRollZ": 89.23333333333333,
+    "finalIdleZ": 89.31694521136974,
+    "artifactsPreserved": true
+  },
+  "sourceIntegrity": {
+    "basis": "final-source.sha256 taken before the browser run",
+    "checkedFiles": 92,
+    "differences": [
+      {
+        "path": "tests/browser/ruen-traversal.spec.ts",
+        "before": "08415ccbe9ffae0a054b60ea30e51f8e824b4704ce624f104f05c7b47bb1c76c",
+        "after": "665bec7b245cc940cb8e247b0b6cad2010b27dafdbfd09f2d12f684e686bbcb5"
+      }
+    ],
+    "applicationAndAssetsUnchanged": true
+  },
+  "limits": [
+    "Software-rendered Chromium is functional validation, not an FPS benchmark.",
+    "The no-impulse fall starts from a prepared height; the current level has no abrupt ledge.",
+    "Gameplay screenshots capture rendered real input frames; the side preview screenshot is an inspector pose."
+  ]
+}
