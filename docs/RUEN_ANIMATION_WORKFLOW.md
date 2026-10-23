@@ -5,13 +5,13 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
-## Integración jugable validada localmente
+## Integración jugable publicada
 
 La etapa actual lleva **Idle, caminar y correr con espada y escudo** a la ruta
 normal del juego. El escudo se reduce uniformemente un 30%; las armas usan
 copias ligeras y los originales se conservan. Typecheck, build, 152 pruebas
-unitarias y 33 de navegador aprobaron. Publicación pendiente:
-[alcance actual](RUEN_GAME_EQUIPMENT.md).
+unitarias y 33 de navegador aprobaron. Publicada desde `50210a9c`, con
+confirmación de Actions: [alcance actual](RUEN_GAME_EQUIPMENT.md).
 
 Los grupos `Ruen_Idle_Equipped`, `Ruen_Walk_Equipped` y `Ruen_Run_Equipped`
 comparten el conjunto completo de canales para mezclar poses durante 0.2 s.
@@ -23,8 +23,8 @@ Si no carga todo el equipo, se utiliza una variante sin armas con Idle neutro.
 ## Primer prototipo: Idle propio v1
 
 Estado histórico: **prototipo del visor validado y publicado en `43fa18c`**.
-Esa revisión no añadía Idle al gameplay. La integración jugable se prepara en
-la etapa actual, sin modificar los 20 clips del master.
+Esa revisión no añadía Idle al gameplay. La etapa actual ya lo integra,
+sin modificar los 20 clips del master.
 
 La primera versión se define con claves creadas aquí mediante **Babylon.js**:
 

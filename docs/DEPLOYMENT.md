@@ -8,7 +8,35 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Publicación vigente: Idle con espada y escudo
+## Publicación vigente: Idle y locomoción equipados
+
+El 22 de octubre de 2026, fecha de America/Monterrey, se integró el
+[PR #4](https://github.com/Dabot11/Veylun/pull/4) y se envió a Pages la fuente
+`50210a9c445e8851fa28df178b986c4651ff9f76` desde `main`. Su árbol coincide
+exactamente con la revisión probada `272339ed60a8abb4f7d6dd6b5583bc974f41b397`.
+`npm run deploy` terminó correctamente y generó el commit de `gh-pages`
+`907deb03d65c8ead5e3b07f68b50292c4e90fc86`.
+El `deployment.json` de ese commit confirma la fuente y la fecha del build,
+`2026-10-23T02:29:04.151Z`.
+[Actions 39889821939](https://github.com/Dabot11/Veylun/actions/runs/39889821939)
+terminó con **Success** para ese commit de `gh-pages` a las
+`2026-10-23T02:29:45Z`.
+
+Esta versión integra Idle, caminar y correr con espada y escudo en la
+[ruta normal del juego](https://dabot11.github.io/Veylun/). El escudo usa el
+70% de su tamaño anterior, tanto en gameplay como en el visor. El juego carga
+copias optimizadas del equipo de 7.61 MB y 122,930 triángulos; los originales
+permanecen intactos. Las demás acciones conservan el rig provisional.
+
+Typecheck, build, **152 pruebas unitarias en 16 archivos y 33 de navegador**
+aprobaron. La suite completa de navegador terminó en 28.7 minutos sin
+omisiones ni reintentos. [Evidencia local](evidence/ruen-game-equipment/README.md).
+La publicación se verificó mediante Actions y los metadatos del commit; el
+dominio público sigue restringido desde este entorno. Desarrollo y producción
+se probaron localmente. Los cambios documentales posteriores no modifican el
+build publicado, cuya fuente es `50210a9c`.
+
+## Publicación anterior: Idle con espada y escudo
 
 El 22 de octubre de 2026 se integró el [PR #3](https://github.com/Dabot11/Veylun/pull/3)
 y se publicó la fuente `15a6a6c52d224303e79a01e24255ee74b31cc2e4` desde `main`.
@@ -78,7 +106,7 @@ navegador, incluidos desarrollo y producción.
 estático, `.nojekyll` y `deployment.json` con la revisión de origen. Vite genera
 rutas relativas compatibles con `/Veylun/`. Los cambios documentales
 posteriores a esa revisión no modificaron su build, cuya fuente era `2045061`.
-La publicación vigente del prototipo se registra arriba.
+La publicación vigente se registra arriba.
 
 ### Publicación anterior
 

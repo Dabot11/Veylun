@@ -55,6 +55,9 @@ y comprueba los hashes de los originales. La reducción de tamaño del escudo
 es un ajuste exterior de 0.42 a 0.294; no está horneada en ninguna malla.
 [Inventario comparativo](docs/evidence/ruen-game-equipment/runtime-inventory.json).
 
+La integración está publicada desde `50210a9c`; ver el
+[registro de despliegue](docs/DEPLOYMENT.md).
+
 ## Animación
 
 El rig provisional conserva idle, caminar, correr, salto, caída, aterrizaje,

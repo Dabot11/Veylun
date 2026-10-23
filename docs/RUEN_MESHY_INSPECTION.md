@@ -1,10 +1,11 @@
 # Ruen / Meshy: visor y prueba de locomoción
 
 Esta revisión integra **Idle, caminar y correr con equipo optimizado**
-y reduce el escudo un 30%. La validación local aprobó; la publicación está pendiente.
+y reduce el escudo un 30%. La validación local aprobó y la fuente `50210a9c`
+está publicada, con confirmación de Actions.
 [Alcance de esta etapa](RUEN_GAME_EQUIPMENT.md).
 
-El último build publicado, `15a6a6c`, incluye el Idle neutro y la variante con
+El build anterior, `15a6a6c`, incluía el Idle neutro y la variante con
 espada y escudo sólo en el visor. Esa revisión conserva como evidencia 142
 pruebas unitarias y 10 casos de navegador locales. Los resultados históricos
 de carga automática y reposo estático (`2045061`: 123 unitarias y 26 de
@@ -159,8 +160,9 @@ del root motion antes de probar combate. No están conectados a daño.
 ## Pruebas y evidencia
 
 La revisión equipada aprobó typecheck, build, **152 pruebas unitarias en 16
-archivos y 33 de navegador**, sin omisiones ni reintentos. La publicación está
-pendiente; resultados y capturas en [la evidencia actual](evidence/ruen-game-equipment/README.md).
+archivos y 33 de navegador**, sin omisiones ni reintentos. La fuente publicada
+es `50210a9c`; resultados, capturas y confirmación en
+[la evidencia actual](evidence/ruen-game-equipment/README.md).
 
 **Revisión histórica de reposo estático:** typecheck y build correctos; **123 pruebas unitarias en
 12 archivos y 26 de navegador aprobadas**, estas últimas en una ejecución de

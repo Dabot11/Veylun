@@ -1,7 +1,7 @@
 # Evidencia de Idle y locomoción equipados
 
 Validación del 22 de octubre de 2026, fecha de America/Monterrey.
-**Validación local aprobada; publicación pendiente.**
+**Validación local aprobada; publicación confirmada desde `50210a9c`.**
 
 [Alcance y uso](../../RUEN_GAME_EQUIPMENT.md) ·
 [Inventario de originales y copias](runtime-inventory.json).
@@ -53,6 +53,20 @@ muestra al Ruen real cuando falla una pieza.
 
 Esta ejecución usó Chromium con SwiftShader y servidores locales de desarrollo
 y producción. No mide FPS/memoria en Chrome/macOS del usuario ni comprueba un
-Xbox físico o el sitio público. La publicación y su verificación remota siguen
-pendientes. Defensa, ataques y otras acciones conservan el rig provisional
-hasta adaptar sus animaciones.
+Xbox físico o el sitio público. Defensa, ataques y otras acciones conservan
+el rig provisional hasta adaptar sus animaciones.
+
+## Publicación
+
+El [PR #4](https://github.com/Dabot11/Veylun/pull/4) integró la revisión probada
+`272339ed60a8abb4f7d6dd6b5583bc974f41b397`. El árbol de la fuente publicada
+`50210a9c445e8851fa28df178b986c4651ff9f76` coincide exactamente.
+El commit de `gh-pages` es `907deb03d65c8ead5e3b07f68b50292c4e90fc86`; su
+`deployment.json` confirma la fuente y el build de `2026-10-23T02:29:04.151Z`.
+[Actions 39889821939](https://github.com/Dabot11/Veylun/actions/runs/39889821939)
+terminó con **Success** a las `2026-10-23T02:29:45Z`.
+
+La confirmación remota procede de Actions y los metadatos de publicación. El
+dominio público sigue restringido desde este entorno y no se abrió en navegador.
+Los cambios documentales posteriores no modifican ese build.
+[Registro de despliegue](../../DEPLOYMENT.md).

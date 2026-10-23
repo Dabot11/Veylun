@@ -1,6 +1,6 @@
 # Validación ejecutada
 
-## Idle y locomoción con equipo: validación local aprobada
+## Idle y locomoción con equipo: validado y publicado
 
 22 de octubre de 2026, fecha de America/Monterrey. La etapa actual integra el
 Idle equipado y las adaptaciones de Walking/Running en la ruta normal del juego.
@@ -28,7 +28,12 @@ fallos de carga, regreso al rig provisional para acciones sin adaptar y el
 build de producción sin hooks. La suite también recorre controles, combate,
 guardado y restauración del santuario. Los resultados, capturas y límites de
 esta ejecución local están en [la ficha de evidencia](evidence/ruen-game-equipment/README.md).
-Publicación pendiente. [Alcance jugable](RUEN_GAME_EQUIPMENT.md).
+Publicación confirmada por
+[Actions 39889821939](https://github.com/Dabot11/Veylun/actions/runs/39889821939):
+fuente `50210a9c445e8851fa28df178b986c4651ff9f76`, árbol idéntico a la revisión
+probada `272339ed60a8abb4f7d6dd6b5583bc974f41b397`, commit de `gh-pages`
+`907deb03d65c8ead5e3b07f68b50292c4e90fc86`.
+[Registro de despliegue](DEPLOYMENT.md) · [Alcance jugable](RUEN_GAME_EQUIPMENT.md).
 
 ## Prototipo anterior de Idle con equipo: validación local
 

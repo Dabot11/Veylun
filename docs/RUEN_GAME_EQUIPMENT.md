@@ -1,13 +1,14 @@
 # Ruen equipado dentro del juego
 
-Estado: **integrado y validado localmente; publicación pendiente**.
+Estado: **integrado, validado localmente y publicado desde `50210a9c`**.
 Esta etapa lleva Idle, caminar y correr con espada y escudo a la ruta normal
 del juego. El usuario pidió reducir el escudo un 30% respecto al prototipo.
-La versión pública anterior `15a6a6c` sólo muestra el equipo en el visor.
+La versión anterior `15a6a6c` sólo mostraba el equipo en el visor.
 
 ## Probar esta revisión
 
-Con `npm run dev`, abre `/` y comienza o continúa una partida. Ruen y las
+Abre [el juego publicado](https://dabot11.github.io/Veylun/) y comienza o continúa
+una partida. También puedes abrir `/` con `npm run dev`. Ruen y las
 copias ligeras del equipo se cargan automáticamente. El personaje mantiene
 espada y escudo al estar quieto, caminar y correr; al detenerse reproduce
 un ciclo de respiración de cuatro segundos. No hay que cargar los GLB a mano.
@@ -86,8 +87,10 @@ aprobaron. La suite de navegador terminó en 28.7 minutos, en una ejecución
 sin omisiones ni reintentos. El build conserva el aviso conocido de Vite sobre
 chunks grandes. La [evidencia actual](evidence/ruen-game-equipment/README.md)
 incluye capturas desde los controles, los agarres y transiciones, pausa,
-colisión, fallos de carga y producción sin hooks. Publicación pendiente.
+colisión, fallos de carga y producción sin hooks.
+[Actions 39889821939](https://github.com/Dabot11/Veylun/actions/runs/39889821939)
+confirmó el despliegue; [registro de publicación](DEPLOYMENT.md).
 
-Después de publicar Idle y locomoción, siguen guardia/bloqueo y el primer ataque
+La siguiente etapa es guardia/bloqueo y el primer ataque
 de espada, ajustados a las ventanas de combate existentes. El equipo visible
 no implica que esas animaciones estén ya adaptadas.

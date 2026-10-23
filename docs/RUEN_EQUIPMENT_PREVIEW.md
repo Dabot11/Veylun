@@ -1,8 +1,8 @@
 # Ruen: prueba de Idle con espada y escudo
 
-Estado: **visor publicado en `15a6a6c`; reducción del escudo y etapa jugable en validación**.
+Estado: **visor con escudo reducido e integración jugable publicados en `50210a9c`**.
 Este visor permite revisar la postura usando los modelos originales completos.
-La etapa actual reduce el escudo un 30% y prepara Idle, caminar y correr con
+La etapa actual reduce el escudo un 30% e integra Idle, caminar y correr con
 copias ligeras dentro del juego. [Integración jugable](RUEN_GAME_EQUIPMENT.md).
 
 ![Ruen con Azure Oathblade y Aegis of the Azure en el visor](images/ruen-equipped-idle.png)
@@ -86,6 +86,7 @@ dominio del sitio no está accesible desde la red de este entorno.
 
 La validación local del escudo reducido y de las transiciones jugables aprobó
 con 33 casos de navegador y 152 pruebas unitarias; [evidencia actual](evidence/ruen-game-equipment/README.md).
-La publicación de esta revisión sigue pendiente.
+Esta revisión está publicada desde `50210a9c`, con confirmación de Actions.
+[Registro de despliegue](DEPLOYMENT.md).
 Guardia, golpes y las demás acciones se adaptarán en etapas posteriores. La
 pose del visor no define eventos de daño ni sustituye animaciones de combate.

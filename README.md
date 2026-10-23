@@ -35,13 +35,13 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
-## Ruen equipado: validado localmente
+## Ruen equipado: publicado
 
 Esta revisión integra Idle, caminar y correr con espada y escudo en la ruta
 normal `/`. Typecheck, build, **152 pruebas unitarias y 33 de navegador**
-aprobaron. La publicación está pendiente; la versión pública sigue siendo
-`15a6a6c`, que muestra el equipo sólo en el visor. Consulta el
-[registro de despliegue](docs/DEPLOYMENT.md).
+aprobaron. La fuente publicada es **`50210a9c`**, tras integrar el PR #4;
+Actions confirmó el despliegue. [Jugar](https://dabot11.github.io/Veylun/) ·
+[Registro de despliegue](docs/DEPLOYMENT.md).
 
 El escudo queda al **70% de su tamaño anterior**: una reducción uniforme del
 30% alrededor del asa, sin mover el punto de agarre. El juego carga copias
