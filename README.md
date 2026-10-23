@@ -35,22 +35,23 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
-## Animaciones de combate: validadas localmente
+## Animaciones de combate: publicadas
 
 La revisión actual adapta la guardia, la reacción de bloqueo y los tres golpes
 del combo al Ruen real con espada y escudo. El escudo conserva su reducción
 del 30%. Las animaciones se crean sobre su esqueleto y siguen los tiempos de
 combate existentes. Aprobaron typecheck, build, **173 pruebas unitarias y
-40 casos únicos de navegador**. La publicación sigue pendiente; la evidencia
-registra las correcciones y la repetición aislada de una expectativa de texto.
+40 casos únicos de navegador**. La fuente publicada es **`f828d841`**, tras
+integrar el [PR #5](https://github.com/Dabot11/Veylun/pull/5); Actions confirmó
+el despliegue. [Jugar](https://dabot11.github.io/Veylun/?v=f828d841) ·
+[Ver las animaciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=combat-v1&v=f828d841) ·
 [Alcance del combate](docs/RUEN_GAME_COMBAT.md).
 
-## Ruen equipado: versión publicada
+## Ruen equipado: Idle y locomoción
 
-Esta revisión integra Idle, caminar y correr con espada y escudo en la ruta
-normal `/`. Typecheck, build, **152 pruebas unitarias y 33 de navegador**
-aprobaron. La fuente publicada es **`50210a9c`**, tras integrar el PR #4;
-Actions confirmó el despliegue. [Jugar](https://dabot11.github.io/Veylun/) ·
+La revisión anterior `50210a9c` incorporó Idle, caminar y correr con espada y
+escudo en la ruta normal `/`. Aprobó typecheck, build, 152 unitarias y 33 casos
+de navegador; el combate publicado ahora amplía esa base.
 [Registro de despliegue](docs/DEPLOYMENT.md).
 
 El escudo queda al **70% de su tamaño anterior**: una reducción uniforme del
@@ -61,8 +62,8 @@ Los tres archivos originales se conservan intactos. El
 las copias jugables y el alcance de las animaciones.
 
 Ruen respira al detenerse y mantiene el equipo al caminar y correr, con
-transiciones de 0.2 s. Salto, esquiva, ataques, defensa y las demás acciones
-conservan el rig provisional hasta adaptar sus animaciones. Si una pieza del
+transiciones de 0.2 s. Guardia, bloqueo y combo también usan el modelo real.
+Salto, esquiva, daño y las demás acciones aún sin adaptar conservan el rig provisional. Si una pieza del
 equipo no carga, queda disponible el Ruen real sin equipo, con Idle y locomoción.
 `/?ruen=meshy` sigue siendo un alias y `/?ruen=provisional` carga el rig anterior.
 
@@ -165,7 +166,8 @@ imagen del santuario visible en el chat. Los originales están separados en
 `design/references/` y no se descargan con el juego.
 
 Ruen usa el GLB real de Meshy mediante `RuenLocomotionView`. Esta revisión
-integra Idle y locomoción con equipo optimizado; el resto de acciones conserva
+integra Idle, locomoción, guardia, bloqueo y combo con equipo optimizado;
+el resto de acciones conserva
 el rig provisional. Los tres enemigos y el rig alternativo de Ruen siguen
 siendo **3D procedurales provisionales**; simplifican las ilustraciones.
 El arte final y el rendimiento en el equipo del usuario siguen pendientes.
@@ -185,7 +187,7 @@ casos nuevos, 32 regresiones y un caso repetido tras corregir sólo el texto
 esperado del test. La aplicación y el build se conservaron durante ese ajuste.
 [Incidencias y evidencia de combate](docs/evidence/ruen-game-combat/README.md).
 
-La versión publicada `50210a9c`, con Idle y locomoción equipada, aprobó typecheck, build,
+La versión anterior `50210a9c`, con Idle y locomoción equipada, aprobó typecheck, build,
 **152 pruebas unitarias en 16 archivos y 33 de navegador**. La suite completa
 de navegador terminó en 28.7 minutos sin omisiones ni reintentos. El estado,
 las capturas y la evidencia actual se registran en

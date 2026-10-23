@@ -8,7 +8,37 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Publicación vigente: Idle y locomoción equipados
+## Publicación vigente: guardia, bloqueo y combo equipado
+
+El 22 de octubre de 2026, fecha de America/Monterrey, se integró el
+[PR #5](https://github.com/Dabot11/Veylun/pull/5) y se publicó la fuente
+`f828d84120b1df74a25ac51c62dbaf9666c9d866` desde `main`. Su árbol coincide
+exactamente con la revisión probada `5db6021cb74a00042fb9b1c4b8c56f28a8bac702`.
+`npm run deploy` terminó correctamente y generó el commit de `gh-pages`
+`8c4216ae69400623c02c3b747f6cd4297c43a7cd`. El `deployment.json` remoto de ese
+commit confirma la fuente y el build de `2026-10-23T05:27:26.757Z`.
+[Actions 39905860479](https://github.com/Dabot11/Veylun/actions/runs/39905860479)
+terminó con **Success**, incluidos build, deploy y el paso Deploy to GitHub Pages.
+
+[Jugar](https://dabot11.github.io/Veylun/?v=f828d841) carga automáticamente a
+Ruen con Idle, locomoción, guardia, reacción al bloqueo y los tres golpes del
+combo. El escudo conserva su reducción del 30%. El
+[visor de combate](https://dabot11.github.io/Veylun/?inspect=ruen&motion=combat-v1&v=f828d841)
+abre Guardia en pausa y permite elegir cada animación. Salto, esquiva, daño y
+las demás acciones aún sin adaptar conservan el rig provisional.
+
+Typecheck, build, **173 unitarias en 17 archivos y 40 casos únicos de navegador**
+aprobaron. El cierre tuvo tres tandas: siete nuevos, 32 regresiones y un caso
+repetido tras corregir únicamente su texto esperado. La aplicación y el build
+se conservaron durante ese ajuste. Los fallos iniciales y las correcciones
+están en la [evidencia de combate](evidence/ruen-game-combat/README.md).
+
+La publicación se confirmó mediante Actions y `deployment.json`. El dominio
+público sigue restringido desde este entorno; las pruebas de desarrollo y
+producción fueron locales. Los cambios documentales posteriores no modifican
+este build, cuya fuente es `f828d841`.
+
+## Publicación anterior: Idle y locomoción equipados
 
 El 22 de octubre de 2026, fecha de America/Monterrey, se integró el
 [PR #4](https://github.com/Dabot11/Veylun/pull/4) y se envió a Pages la fuente

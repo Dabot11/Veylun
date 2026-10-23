@@ -5,7 +5,7 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
-## Combate equipado validado localmente
+## Combate equipado publicado
 
 La etapa actual crea **guardia, reacción al bloqueo y los tres golpes del combo**
 sobre el esqueleto real. Cada clip se define mediante keyframes de huesos; no
@@ -16,12 +16,12 @@ segundos, bloqueo de 0.22 s y ataques de 0.48/0.50/0.63 s. Typecheck, build y
 173 pruebas unitarias aprobaron tras corregir la repetición del visor y una
 tolerancia numérica detectadas en la primera tanda de navegador. Los siete
 casos nuevos y las 33 regresiones aprobaron; una regresión se repitió tras
-corregir sólo su texto esperado. Son 40 casos únicos aprobados. Publicación
-pendiente: [alcance de combate](RUEN_GAME_COMBAT.md).
+corregir sólo su texto esperado. Son 40 casos únicos aprobados. Publicado
+desde `f828d841`, con confirmación de Actions: [alcance de combate](RUEN_GAME_COMBAT.md).
 
-## Integración jugable publicada
+## Etapa anterior: integración de Idle y locomoción
 
-La versión publicada `50210a9c` lleva **Idle, caminar y correr con espada y escudo** a la ruta
+La versión anterior `50210a9c` incorporó **Idle, caminar y correr con espada y escudo** a la ruta
 normal del juego. El escudo se reduce uniformemente un 30%; las armas usan
 copias ligeras y los originales se conservan. Typecheck, build, 152 pruebas
 unitarias y 33 de navegador aprobaron. Publicada desde `50210a9c`, con

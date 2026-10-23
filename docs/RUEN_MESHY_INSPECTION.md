@@ -2,11 +2,11 @@
 
 La nueva etapa adapta [defensa y los tres ataques del combo](RUEN_GAME_COMBAT.md);
 su validación local aprobó con 173 unitarias y 40 casos únicos de navegador.
-La publicación sigue pendiente.
+La fuente vigente `f828d841` está publicada, con confirmación de Actions.
 
-La versión publicada integra **Idle, caminar y correr con equipo optimizado**
-y reduce el escudo un 30%. La validación local aprobó y la fuente `50210a9c`
-está publicada, con confirmación de Actions.
+La etapa anterior `50210a9c` incorporó **Idle, caminar y correr con equipo
+optimizado** y redujo el escudo un 30%. Esas características se conservan en
+la publicación vigente.
 [Alcance de esta etapa](RUEN_GAME_EQUIPMENT.md).
 
 El build anterior, `15a6a6c`, incluía el Idle neutro y la variante con
@@ -100,10 +100,11 @@ sigue `mixamorig:RightHand`; el escudo sigue `mixamorig:LeftHand`. Su escala de
 montaje pasa de 0.42 a 0.294, conservando el asa en la mano. Los tres grupos
 propios se mezclan en 0.2 s y no modifican los 20 clips del master.
 
-`RuenLocomotionView` conserva el rig provisional para salto, caída,
-aterrizaje, esquiva, ataques, defensa, daño, muerte, interacción y victoria.
-También lo utiliza para desplazamientos laterales/hacia atrás con objetivo
-fijado. El equipo real se oculta junto al modelo durante esos estados.
+La fuente `f828d841` añade cinco grupos propios de guardia, bloqueo y ataques;
+[detalles de combate](RUEN_GAME_COMBAT.md). `RuenLocomotionView` conserva el
+rig provisional para salto, caída, aterrizaje, esquiva, daño, muerte, interacción
+y victoria. También lo utiliza para desplazamientos laterales/hacia atrás
+con objetivo fijado cuando no está defendiendo. El equipo real se oculta junto al modelo durante esos estados.
 Si falla el master, se conserva el modelo provisional; si falla sólo una pieza
 del equipo, se conserva el Ruen real sin equipo con Idle neutro y locomoción.
 No se reinterpretan Combat_Stance ni Axe_Breathe_and_Look_Around como Idle o
@@ -134,8 +135,8 @@ Un bloqueo por colisión congela el ciclo; los menús pausan la animación.
 
 Las reglas de movimiento, salto, combate, daño, checkpoints y guardado siguen
 perteneciendo al MVP. El GLB no genera daño ni añade arco, hacha, escalada,
-parry o ataques cargados. Esta etapa comprueba las transiciones de Idle y
-locomoción equipada. Defensa, ataques, salto y esquiva requieren su propia
+parry o ataques cargados. Idle, locomoción, defensa y los tres ataques están
+adaptados y comprobados en navegador. Salto y esquiva requieren su propia
 adaptación y revisión posteriores.
 
 ## Revisión visual y límites

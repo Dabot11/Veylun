@@ -1,6 +1,6 @@
 # Validación ejecutada
 
-## Guardia, bloqueo y combo equipado: validado localmente
+## Guardia, bloqueo y combo equipado: validado y publicado
 
 22 de octubre de 2026, fecha de America/Monterrey. La nueva etapa adapta la
 defensa y los tres ataques al Ruen real con su equipo actual. Conserva los
@@ -39,7 +39,11 @@ permanecieron intactos.
 El cierre suma **40 casos únicos aprobados**: siete nuevos, 32 regresiones
 aprobadas inicialmente y una repetición aislada. Son tres tandas de cierre,
 con el fallo de texto y su repetición registrados, no dos tandas limpias.
-La publicación sigue pendiente.
+Publicación confirmada por [Actions 39905860479](https://github.com/Dabot11/Veylun/actions/runs/39905860479),
+tras integrar el [PR #5](https://github.com/Dabot11/Veylun/pull/5). Fuente
+`f828d84120b1df74a25ac51c62dbaf9666c9d866`, con árbol idéntico a la revisión
+probada `5db6021cb74a00042fb9b1c4b8c56f28a8bac702`; commit de `gh-pages`
+`8c4216ae69400623c02c3b747f6cd4297c43a7cd`. [Registro de despliegue](DEPLOYMENT.md).
 Las 152 pruebas unitarias y 33 casos de `50210a9c`
 permanecen como resultados históricos. Logs y capturas de calibración en
 [la evidencia de combate](evidence/ruen-game-combat/README.md).

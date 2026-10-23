@@ -1,9 +1,9 @@
 # Guardia, bloqueo y combo de Ruen
 
-Estado: **validado localmente con 173 unitarias y 40 casos de navegador; publicación pendiente**.
+Estado: **validado y publicado desde `f828d841`, con 173 unitarias y 40 casos de navegador**.
 Esta etapa adapta la defensa y los tres golpes del combo al Ruen real con
-espada y escudo. La versión pública vigente, `50210a9c`, ya tiene Idle y
-locomoción equipados; todavía utiliza el rig provisional para el combate.
+espada y escudo. Amplía Idle y locomoción equipados de la versión anterior
+`50210a9c`, sustituyendo su rig provisional durante estas acciones.
 
 ## Alcance
 
@@ -50,7 +50,9 @@ las copias optimizadas de 7,608,828 bytes y 122,930 triángulos en conjunto.
 
 ## Revisión visual e integración
 
-Con `npm run dev`, abre `?inspect=ruen&motion=combat-v1&equipment=azure`.
+Abre [el juego](https://dabot11.github.io/Veylun/?v=f828d841) o el
+[visor de combate](https://dabot11.github.io/Veylun/?inspect=ruen&motion=combat-v1&v=f828d841).
+Con `npm run dev`, la ruta local es `?inspect=ruen&motion=combat-v1&equipment=azure`.
 Carga el master de Ruen y las copias optimizadas del equipo utilizadas por el
 juego; el visor anterior `motion=idle-v1` conserva los originales completos.
 La nueva ruta comienza en Guardia, pausada. El selector permite elegir
@@ -96,7 +98,8 @@ omisiones ni reintentos, en 6 min 48.809 s. La regresión terminó con 32 de 33
 aprobados en 29 min 40.410 s; el caso restante esperaba un texto antiguo. Tras
 corregir sólo esa expectativa aprobó en 2.720 s, con la aplicación y el build
 intactos. El cierre suma **40 casos únicos aprobados en tres tandas**, con esa
-repetición documentada. La publicación sigue pendiente.
+repetición documentada. [Actions 39905860479](https://github.com/Dabot11/Veylun/actions/runs/39905860479)
+confirmó la publicación de `f828d841`; [registro de despliegue](DEPLOYMENT.md).
 Las 152 unitarias y 33 de navegador de `50210a9c` pertenecen
 a la versión anterior. [Evidencia actual](evidence/ruen-game-combat/README.md).
 

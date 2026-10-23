@@ -1,9 +1,9 @@
 # Ruen: prueba de Idle con espada y escudo
 
-Estado: **visor con escudo reducido e integración jugable publicados en `50210a9c`**.
+Estado: **visor de Idle publicado desde `50210a9c`; combate disponible en `f828d841`**.
 Este visor permite revisar la postura usando los modelos originales completos.
-La nueva etapa de [combate equipado](RUEN_GAME_COMBAT.md) está validada localmente
-y pendiente de publicación; su revisión de poses y pruebas se registran por separado.
+La nueva etapa de [combate equipado](RUEN_GAME_COMBAT.md) está validada y
+publicada desde `f828d841`; su revisión de poses y pruebas se registran por separado.
 La etapa actual reduce el escudo un 30% e integra Idle, caminar y correr con
 copias ligeras dentro del juego. [Integración jugable](RUEN_GAME_EQUIPMENT.md).
 
@@ -90,5 +90,6 @@ La validación local del escudo reducido y de las transiciones jugables aprobó
 con 33 casos de navegador y 152 pruebas unitarias; [evidencia actual](evidence/ruen-game-equipment/README.md).
 Esta revisión está publicada desde `50210a9c`, con confirmación de Actions.
 [Registro de despliegue](DEPLOYMENT.md).
-Guardia, golpes y las demás acciones se adaptarán en etapas posteriores. La
-pose del visor no define eventos de daño ni sustituye animaciones de combate.
+Guardia, bloqueo y los tres golpes ya están adaptados en `f828d841`; las demás
+acciones siguen en etapas posteriores. Este visor de Idle no define eventos
+de daño; el [visor de combate](RUEN_GAME_COMBAT.md) muestra los clips nuevos.

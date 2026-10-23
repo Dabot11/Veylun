@@ -1,6 +1,7 @@
 # Ruen equipado dentro del juego
 
-Estado: **integrado, validado localmente y publicado desde `50210a9c`**.
+Estado histórico: **Idle y locomoción publicados desde `50210a9c`**.
+La versión vigente `f828d841` añade [guardia, bloqueo y combo](RUEN_GAME_COMBAT.md).
 Esta etapa lleva Idle, caminar y correr con espada y escudo a la ruta normal
 del juego. El usuario pidió reducir el escudo un 30% respecto al prototipo.
 La versión anterior `15a6a6c` sólo mostraba el equipo en el visor.
@@ -75,7 +76,8 @@ Si falla una pieza del equipo, se oculta la carga parcial y se conservan
 sigue disponible el rig provisional. El visor mantiene su propio botón de
 reintento del equipo; no se añade un nuevo flujo de carga al juego.
 
-Salto, caída, aterrizaje, esquiva, ataques, defensa, daño, muerte, interacción,
+En la revisión `50210a9c`, salto, caída, aterrizaje, esquiva, ataques, defensa,
+daño, muerte, interacción,
 victoria y desplazamiento lateral/hacia atrás con objetivo fijado conservan
 el rig provisional. El equipo real se oculta durante esos estados. Sus reglas
 de combate, colisiones, invulnerabilidad, checkpoints y guardado no cambian.
@@ -91,7 +93,6 @@ colisión, fallos de carga y producción sin hooks.
 [Actions 39889821939](https://github.com/Dabot11/Veylun/actions/runs/39889821939)
 confirmó el despliegue; [registro de publicación](DEPLOYMENT.md).
 
-La siguiente etapa, ya validada localmente, adapta guardia/bloqueo y **los tres
-golpes del combo**, con las ventanas de combate existentes. Su publicación
-sigue pendiente: [combate equipado](RUEN_GAME_COMBAT.md).
+La etapa posterior, publicada desde `f828d841`, adapta guardia/bloqueo y **los
+tres golpes del combo**, con las ventanas de combate existentes: [combate equipado](RUEN_GAME_COMBAT.md).
 Los resultados de esta ficha corresponden a Idle y locomoción.

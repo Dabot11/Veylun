@@ -20,7 +20,7 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 | ID | Implementación | Escala inicial | Materiales y articulación | Estado |
 |---|---|---|---|---|
 | ruen | `createRuen` en `src/assets/ruen.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas facetadas. Cadera, cabeza, hombros, codos, piernas, rodillas, capa, espada y escudo | 3D procedural provisional, primera revisión artística |
-| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips originales | Idle y locomoción equipados validados localmente; master intacto |
+| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips originales | Idle, locomoción y combate equipados publicados; master intacto |
 | ruen-azure-sword | GLB Azure Oathblade en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:RightHand` | Master del visor intacto; montaje validado localmente |
 | ruen-azure-shield | GLB Aegis of the Azure en `public/assets/models/ruen/equipment/` | Escala exterior 0.294; 30% menor que 0.42 | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:LeftHand` | Master del visor intacto; montaje validado localmente |
 | ruen-azure-sword-runtime | `public/assets/models/ruen/equipment/runtime/azure-oathblade.glb` | Escala exterior 0.55, dentro del root de Ruen | Copia de 19,640 triángulos; PBR y tres texturas 1024² | Integrada en gameplay; validación local aprobada |
@@ -55,7 +55,8 @@ y comprueba los hashes de los originales. La reducción de tamaño del escudo
 es un ajuste exterior de 0.42 a 0.294; no está horneada en ninguna malla.
 [Inventario comparativo](docs/evidence/ruen-game-equipment/runtime-inventory.json).
 
-La integración está publicada desde `50210a9c`; ver el
+Idle y locomoción se publicaron desde `50210a9c`; el combate amplía esa base
+en la fuente vigente `f828d841`. Ver el
 [registro de despliegue](docs/DEPLOYMENT.md).
 
 ## Animación
@@ -68,7 +69,7 @@ La fuente final aprobó typecheck, build y 173 pruebas unitarias tras corregir
 los hallazgos iniciales del navegador. Los cinco GLB conservan
 sus hashes publicados; [verificación](docs/evidence/ruen-game-combat/asset-hashes.json).
 Los 40 casos únicos de navegador aprobaron, con una repetición aislada
-tras corregir el texto esperado de un test. Publicación pendiente: [alcance del combate](docs/RUEN_GAME_COMBAT.md).
+tras corregir el texto esperado de un test. Publicado desde `f828d841`: [alcance del combate](docs/RUEN_GAME_COMBAT.md).
 
 El rig provisional conserva idle, caminar, correr, salto, caída, aterrizaje,
 rodada, ataques, escudo, daño, muerte, interacción y victoria. Enemigos tienen

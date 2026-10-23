@@ -1,7 +1,7 @@
 # Evidencia de guardia, bloqueo y combo equipado
 
 Revisión iniciada el 22 de octubre de 2026, fecha de America/Monterrey.
-**173 unitarias y 40 casos únicos de navegador aprobados; publicación pendiente.**
+**173 unitarias y 40 casos únicos de navegador aprobados; publicado desde `f828d841`.**
 
 [Alcance de la etapa](../../RUEN_GAME_COMBAT.md).
 
@@ -124,9 +124,25 @@ regresiones aprobadas inicialmente y un caso repetido. El
 [resumen conjunto](validation-summary.json) conserva las tres tandas y la
 repetición; no representa dos tandas limpias ni 41 casos distintos.
 
-La publicación sigue pendiente. Estas pruebas usan Chromium con SwiftShader
+Estas pruebas usan Chromium con SwiftShader
 y servidores locales de desarrollo y producción; no miden FPS en el equipo
 del usuario ni prueban un mando físico o el sitio público.
 
 La validación anterior de `50210a9c` —152 unitarias y 33 de navegador— permanece
 en [su propia ficha](../ruen-game-equipment/README.md).
+
+## Publicación
+
+El [PR #5](https://github.com/Dabot11/Veylun/pull/5) integró la revisión probada
+`5db6021cb74a00042fb9b1c4b8c56f28a8bac702`. La fuente publicada
+`f828d84120b1df74a25ac51c62dbaf9666c9d866` tiene exactamente el mismo árbol.
+El commit de `gh-pages` es `8c4216ae69400623c02c3b747f6cd4297c43a7cd`; su
+`deployment.json` remoto confirma esa fuente y el build de
+`2026-10-23T05:27:26.757Z`.
+[Actions 39905860479](https://github.com/Dabot11/Veylun/actions/runs/39905860479)
+terminó con **Success**, incluido el despliegue de Pages.
+
+La confirmación procede de Actions y los metadatos del commit. El dominio
+público sigue restringido desde este entorno; no se comprobó en navegador
+remoto. Los cambios documentales posteriores no modifican el build publicado.
+[Registro de despliegue](../../DEPLOYMENT.md).
