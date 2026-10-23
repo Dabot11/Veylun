@@ -93,7 +93,7 @@ export class AssetInspector {
    <p class="inspector-kicker">VEYLUN · PRUEBA DE ASSET</p>
    <h1>${this.equipmentRequested?'Ruen / Idle con equipo':this.idlePreviewRequested?'Ruen / Idle · prototipo v1':'Ruen / Meshy'}</h1>
    <p class="inspector-intro">El modelo original se carga automáticamente. Revisa sus materiales, esqueleto y un clip a la vez.</p>
-   ${this.idlePreviewRequested?'<p class="inspector-note">Primera animación propia de Veylun: respiración suave en un ciclo de 4 segundos. Se añade sólo a este visor; el master original y el juego conservan su versión actual.</p>':''}
+   ${this.idlePreviewRequested?'<p class="inspector-note">Respiración suave en un ciclo de 4 segundos. El juego incorpora esta base de Idle con espada y escudo; aquí puedes revisar los modelos originales.</p>':''}
    <label class="inspector-file">Abrir GLB desde tu equipo<input id="asset-file" type="file" accept=".glb,model/gltf-binary"></label>
    <button id="asset-load-default" type="button">Recargar modelo original</button>
    <p id="asset-status" role="status">Preparando la carga del modelo…</p>
@@ -115,7 +115,7 @@ export class AssetInspector {
    </fieldset>
    <details><summary>Inventario real del archivo</summary><pre id="asset-report">Sin datos: aún no se ha cargado un GLB.</pre><button id="asset-export" disabled type="button">Descargar informe JSON</button></details>
    <details><summary>Revisión visual pendiente</summary><p>Walking y Running: revisar manos, hombros, rodillas, capa desde atrás, orientación y contacto de pies. No hay Idle neutro, Block, Roll/Dodge ni salto normal identificados en la inspección aportada. Los clips de armas requieren revisar coreografía y root motion.</p></details>
-   <p class="inspector-note">Visor aislado: reproduce un solo clip. El juego carga Ruen automáticamente para reposo, caminar y correr; las demás acciones conservan el modelo provisional. El reposo usa la pose base estática, no un clip Idle.</p>
+   <p class="inspector-note">Visor aislado: reproduce un solo clip. El juego carga Ruen, espada y escudo automáticamente para Idle, caminar y correr. Las demás acciones conservan el modelo provisional mientras se adaptan sus animaciones.</p>
    <a class="inspector-back" href="${import.meta.env.BASE_URL}">Jugar con Ruen →</a>`;
   document.querySelector('#app')!.append(this.panel);
   this.file=this.element<HTMLInputElement>('asset-file');
@@ -291,8 +291,8 @@ export class AssetInspector {
   }
   this.play.textContent=player.isPlaying?'Pausar':'Reproducir';
   this.playback.textContent=player.currentName?`${player.currentName} · ${player.isPlaying?'Reproduciendo':'Pausado'}`:'El archivo no contiene clips.';
-  this.warning.textContent=player.currentName===this.idlePreviewName?'Idle neutro creado para Veylun · prototipo v1. No forma parte del archivo original ni está integrado en el juego. Revisa respiración, hombros, manos y capa desde las tres vistas.':motionWarnings[player.currentName??'']??(player.currentName==='Walking'||player.currentName==='Running'?'Prueba de locomoción en el visor. El avance del juego seguirá perteneciendo al controlador.':'Sólo inspección. Sin asignación automática a estados del juego.');
-  if(this.equippedIdleName&&player.currentName===this.equippedIdleName)this.warning.textContent='Idle con espada y escudo · prototipo v1. Revisa la postura y el agarre desde las tres vistas. Esta versión se muestra sólo en el visor.';
+  this.warning.textContent=player.currentName===this.idlePreviewName?'Idle neutro creado para Veylun · prototipo v1. No forma parte del archivo original. Revisa respiración, hombros, manos y capa desde las tres vistas.':motionWarnings[player.currentName??'']??(player.currentName==='Walking'||player.currentName==='Running'?'Clip original de locomoción. El juego usa una adaptación con agarres para espada y escudo.':'Sólo inspección. Sin asignación automática a estados del juego.');
+  if(this.equippedIdleName&&player.currentName===this.equippedIdleName)this.warning.textContent='Idle con espada y escudo. Escudo reducido un 30%. Revisa la postura y el agarre desde las tres vistas; el juego incorpora versiones ligeras del equipo.';
  }
  private resize=():void=>this.engine.resize();
  private visibility=():void=>{if(document.hidden){this.model?.player.pause();this.updatePlayback();}};

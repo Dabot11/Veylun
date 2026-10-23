@@ -20,9 +20,11 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 | ID | Implementación | Escala inicial | Materiales y articulación | Estado |
 |---|---|---|---|---|
 | ruen | `createRuen` en `src/assets/ruen.ts` | ~1.45 m | Cobre, marfil, verde petróleo, cuero, metal cálido y gemas facetadas. Cadera, cabeza, hombros, codos, piernas, rodillas, capa, espada y escudo | 3D procedural provisional, primera revisión artística |
-| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips inventariados | Carga por defecto, reposo estático y Walking/Running; pruebas locales aprobadas y versión `2045061` publicada |
-| ruen-azure-sword | GLB Azure Oathblade en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:RightHand` | Idle equipado validado localmente y publicado en `15a6a6c`; original intacto |
-| ruen-azure-shield | GLB Aegis of the Azure en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:LeftHand` | Idle equipado validado localmente y publicado en `15a6a6c`; original intacto |
+| ruen-meshy | `public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb` mediante `RuenLocomotionView` | 1.45/1.70 sobre el master | PBR con tres texturas, skin de 80 joints y 20 clips originales | Idle y locomoción equipados validados localmente; master intacto |
+| ruen-azure-sword | GLB Azure Oathblade en `public/assets/models/ruen/equipment/` | Ajuste exterior del visor | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:RightHand` | Master del visor intacto; montaje validado localmente |
+| ruen-azure-shield | GLB Aegis of the Azure en `public/assets/models/ruen/equipment/` | Escala exterior 0.294; 30% menor que 0.42 | Malla rígida, material PBR y tres texturas; vinculada a `mixamorig:LeftHand` | Master del visor intacto; montaje validado localmente |
+| ruen-azure-sword-runtime | `public/assets/models/ruen/equipment/runtime/azure-oathblade.glb` | Escala exterior 0.55, dentro del root de Ruen | Copia de 19,640 triángulos; PBR y tres texturas 1024² | Integrada en gameplay; validación local aprobada |
+| ruen-azure-shield-runtime | `public/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb` | Escala exterior 0.294, dentro del root de Ruen | Copia de 103,290 triángulos; PBR y tres texturas 1024² | Integrada en gameplay; validación local aprobada |
 | corrupt-sprout | `createEnemyRig(..., 'sprout')` | ~1.1 m | Corteza, raíces, musgo, hojas y ojos ámbar. Cuerpo encorvado, cabeza baja y grandes brazos delanteros | 3D procedural provisional |
 | wandering-spirit | `createEnemyRig(..., 'spirit')` | ~1.25 m incluyendo aletas y cola | Núcleo emisivo, máscara de madera, ojos grandes, hojas y aletas de energía | 3D procedural provisional |
 | ancestral-guardian | `createEnemyRig(..., 'guardian')` | ~4.2 m | Raíces, placas de piedra, vegetación y runas turquesa. Cuerpo, cabeza, brazos y piernas | 3D procedural provisional |
@@ -32,37 +34,45 @@ transferirse por superar 32 MiB; las cuatro entregas individuales lo sustituyen.
 | sound-fx | `src/audio/AudioManager.ts` | Síntesis Web Audio | Pasos, espada, impacto, escudo, rodada, proyectil, cofre, interruptor, checkpoint, derrota y victoria | Efectos originales funcionales |
 
 El master de Meshy se recibió mediante el release `ruen-modelo-prueba` y se
-verificó por SHA-256. Walking y Running se revisaron visualmente; los otros
-18 clips están inventariados, sin aprobación para gameplay. La revisión actual
-carga Meshy en `/` y conserva `?ruen=provisional` como alternativa. Su pose base
-exacta se revisó frontalmente y de espaldas para el reposo estático, sin crear
-un clip Idle. Esta revisión está publicada en GitHub Pages; el arte final sigue pendiente.
-Los PNG son referencias 2D, no una conversión automática de alta calidad. Ver el
-[informe y evidencia](docs/RUEN_MESHY_INSPECTION.md).
+verificó por SHA-256. Sus 20 clips se conservan sin editar. Esta revisión
+adapta Walking/Running y el Idle propio para portar equipo; los otros 18 clips
+siguen inventariados, sin asignación automática al gameplay. El arte final
+continúa pendiente. Los PNG son referencias 2D, no una conversión automática
+de alta calidad. Ver el [informe del master](docs/RUEN_MESHY_INSPECTION.md).
 
-Los dos GLB de equipo se recibieron como adjuntos del usuario. Cada uno tiene
-una malla, un material PBR y tres texturas JPEG 2048²; no contiene skin ni clips.
-Suman 44,478,640 bytes y 906,832 triángulos. Se conservan sin reexportar ni
-reducir geometría; la orientación y el agarre se ajustan en nodos exteriores.
-Los nombres completos, hashes e inventario están en la
-[ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
+Los dos GLB de equipo se recibieron como adjuntos. Cada original tiene una malla,
+un material PBR y tres texturas JPEG 2048², sin skin ni clips. Suman 44,478,640
+bytes y 906,832 triángulos, y se conservan sin reexportar. El visor los carga
+completos. Los nombres y hashes están en la [ficha del equipo](docs/RUEN_EQUIPMENT_PREVIEW.md).
+
+El juego usa copias independientes con los mismos ejes, origen y puntos de
+agarre: 7,608,828 bytes y 122,930 triángulos entre ambas, con texturas 1024².
+El mapa de normales se adapta a la malla reducida y se guarda como PNG sin
+pérdida; color y metal/rugosidad usan JPEG de calidad 90. El equipo requiere
+82.9% menos bytes y 86.4% menos triángulos que los originales.
+`scripts/optimize-ruen-equipment.py` reproduce la reducción con Blender 4.3.2
+y comprueba los hashes de los originales. La reducción de tamaño del escudo
+es un ajuste exterior de 0.42 a 0.294; no está horneada en ninguna malla.
+[Inventario comparativo](docs/evidence/ruen-game-equipment/runtime-inventory.json).
 
 ## Animación
 
-Ruen implementa idle, caminar, correr, salto, caída, aterrizaje, rodada, tres
-ataques, escudo, daño, muerte, interacción y victoria mediante transformaciones
-de partes articuladas. Enemigos tienen patrulla/flotación, anticipación, ataque,
-recuperación, reacción y colapso. El rig provisional conserva esas animaciones.
-Meshy usa la pose base estática en reposo y mezcla sólo Walking/Running, con
-fallback para acciones sin clip validado. La transición reposo↔locomoción dura
-0.2 s; no se añade respiración ni offsets a la pose base. La capa del
-GLB sigue su skin; no se añadió simulación de tela.
+El rig provisional conserva idle, caminar, correr, salto, caída, aterrizaje,
+rodada, ataques, escudo, daño, muerte, interacción y victoria. Enemigos tienen
+patrulla/flotación, anticipación, ataque, recuperación, reacción y colapso.
 
-El visor añade `Ruen_Idle_v1` y, sólo en la ruta con `equipment=azure`,
-`Ruen_Idle_Armed_v1`. Ambos son clips propios de cuatro segundos construidos
-por código sobre el rig original; no se escriben dentro del master. La
-variante equipada añade una postura de agarre a la respiración. Estos clips
-y los nuevos modelos de equipo todavía no se usan en gameplay.
+Esta revisión crea `Ruen_Idle_Equipped`, `Ruen_Walk_Equipped` y
+`Ruen_Run_Equipped` sobre el rig original. Idle usa la respiración de cuatro
+segundos; caminar/correr conservan cuerpo y piernas de Walking/Running y
+adaptan brazos, manos y dedos para el agarre. Los tres grupos cubren los mismos
+canales y se mezclan durante 0.2 s. Los archivos y clips originales no cambian.
+No se añadió simulación de tela: la capa sigue su skin.
+
+Si falla una pieza, se usan las variantes sin equipo `Ruen_Idle_Unarmed`,
+`Ruen_Walk_Unarmed` y `Ruen_Run_Unarmed`, y se oculta cualquier carga parcial.
+Las acciones todavía no adaptadas conservan el rig provisional y sus reglas.
+El visor mantiene `Ruen_Idle_v1` y `Ruen_Idle_Armed_v1` para comparar los masters;
+sus inventarios siguen separados de los grupos creados en memoria.
 
 ## Sustitución por GLB
 

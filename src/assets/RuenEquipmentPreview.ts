@@ -33,14 +33,17 @@ export interface RuenEquipmentPreviewReport {
   items: (RuenEquipmentProfile & { status: ItemStatus; error: string | null; inventory: InspectionReport | null })[];
 }
 
-/** Inspector equipment only: no animation, grip pose, controller or combat writes. */
+/** Shared visual attachment loader: no animation, controller or combat writes. */
 export class RuenEquipmentPreview {
   private state: PreviewStatus = 'idle';
   private enabled = true;
   private pending: Promise<void> | undefined;
-  private readonly entries: EquipmentEntry[] = ruenEquipmentProfiles.map(profile => ({ profile, status: 'idle', error: null }));
+  private readonly entries: EquipmentEntry[];
 
-  constructor(private readonly scene: Scene, private readonly heroModel: InspectionModel) {}
+  constructor(private readonly scene: Scene, private readonly heroModel: InspectionModel,
+    profiles: readonly RuenEquipmentProfile[] = ruenEquipmentProfiles) {
+    this.entries = profiles.map(profile => ({ profile, status: 'idle', error: null }));
+  }
 
   get models(): readonly RuenEquipmentItem[] {
     return this.entries.flatMap(entry => entry.model && entry.mount ? [{ kind: entry.profile.kind, model: entry.model, mount: entry.mount }] : []);

@@ -5,52 +5,35 @@ import type { Simulation, Player } from '../core/Simulation';
 import type { CharacterRig } from './characters';
 import { assetUrl } from './assetCatalog';
 import { loadInspectionModel, type InspectionModel } from './inspectModel';
+import { RuenEquipmentPreview, type RuenEquipmentDiagnostics } from './RuenEquipmentPreview';
+import { ruenRuntimeEquipmentProfiles } from './ruenEquipmentProfile';
+import { createRuenEquippedLocomotion } from './ruenEquippedLocomotion';
 
-type Locomotion = 'walk' | 'run';
+type Locomotion = 'idle' | 'walk' | 'run';
 type LoadStatus = 'loading' | 'ready' | 'error';
 type Weights = Record<Locomotion, number>;
-type PoseValue = number | Vector3 | Quaternion;
+const states = ['idle', 'walk', 'run'] as const;
+const zeroWeights = (): Weights => ({ idle: 0, walk: 0, run: 0 });
 
-/** Local animated properties only: never skeleton bind matrices or the exterior root. */
-interface PoseChannel {
-  owner: Record<string, unknown>;
-  property: string;
-  rest: PoseValue;
-}
-
-function clonePoseValue(value: unknown): PoseValue {
-  if (typeof value === 'number') return value;
-  if (value instanceof Vector3 || value instanceof Quaternion) return value.clone();
-  throw new Error('La pose base contiene un canal de transformación no compatible.');
-}
-
-function captureRestPose(groups: AnimationGroup[]): PoseChannel[] {
-  const channels: PoseChannel[] = [];
-  const seen = new Map<object, Set<string>>();
-  for (const group of groups) for (const { target, animation } of group.targetedAnimations) {
+/** Weighted goToFrame queues a second contribution before the next render.
+ * Seek without that queue, then restore the visible pose until normal blending.
+ */
+function seekForBlend(group: AnimationGroup, frame: number): void {
+  const snapshots = group.targetedAnimations.map(({ target, animation }) => {
     const path = animation.targetPropertyPath;
-    const key = path.join('.');
-    const properties = seen.get(target) ?? new Set<string>();
-    if (properties.has(key)) continue;
-    properties.add(key); seen.set(target, properties);
     let owner = target as Record<string, unknown>;
     for (const part of path.slice(0, -1)) owner = owner[part] as Record<string, unknown>;
-    const property = path[path.length - 1]!;
-    channels.push({ owner, property, rest: clonePoseValue(owner[property]) });
-  }
-  return channels;
-}
-
-function applyPoseValue(channel: PoseChannel, from: PoseValue, progress: number): void {
-  const value = channel.owner[channel.property];
-  if (value instanceof Quaternion && from instanceof Quaternion && channel.rest instanceof Quaternion) {
-    if (progress === 1) value.copyFrom(channel.rest);
-    else Quaternion.SlerpToRef(from, channel.rest, progress, value);
-  } else if (value instanceof Vector3 && from instanceof Vector3 && channel.rest instanceof Vector3) {
-    if (progress === 1) value.copyFrom(channel.rest);
-    else Vector3.LerpToRef(from, channel.rest, progress, value);
-  } else if (typeof from === 'number' && typeof channel.rest === 'number') {
-    channel.owner[channel.property] = progress === 1 ? channel.rest : from + (channel.rest - from) * progress;
+    const key = path[path.length - 1]!;
+    const current = owner[key];
+    const value = current instanceof Vector3 || current instanceof Quaternion ? current.clone() : current;
+    return { owner, key, value };
+  });
+  group.goToFrame(frame);
+  for (const { owner, key, value } of snapshots) {
+    const current = owner[key];
+    if (current instanceof Vector3 && value instanceof Vector3) current.copyFrom(value);
+    else if (current instanceof Quaternion && value instanceof Quaternion) current.copyFrom(value);
+    else owner[key] = value;
   }
 }
 
@@ -62,8 +45,7 @@ export const ruenMeshyProfile = {
   path: 'assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb',
   scale: 1.45 / 1.70,
   crossfadeSeconds: 0.2,
-  // Initial estimates from backward toe velocity in the real clips, scaled to
-  // the existing 1.45-unit controller. They are visual tuning, not movement rules.
+  // Visual gait calibration; controller movement remains authoritative.
   referenceSpeed: { walk: 1.2, run: 4.0 },
 } as const;
 
@@ -81,6 +63,8 @@ export interface RuenLocomotionDiagnostics {
   reason: string;
   speed: number;
   weights: Weights;
+  equipped: boolean;
+  equipment: RuenEquipmentDiagnostics | null;
   clips: { name: string; isPlaying: boolean; isStarted: boolean; weight: number; speedRatio: number; frame: number }[];
 }
 
@@ -89,6 +73,8 @@ export class RuenLocomotionView {
   /** Exterior adjustment only; authored bone translation remains intact. */
   groundOffset = 0;
   private loaded: InspectionModel | undefined;
+  private loadingModel: InspectionModel | undefined;
+  private equipmentView: RuenEquipmentPreview | undefined;
   private loadState: LoadStatus = 'loading';
   private loadError: string | undefined;
   private pending: Promise<void> | undefined;
@@ -98,18 +84,16 @@ export class RuenLocomotionView {
   private movementDirection: { x: number; z: number } | undefined;
   private directionTarget: string | null = null;
   private speed = 0;
-  private blendWeights: Weights = { walk: 0, run: 0 };
+  private blendWeights: Weights = zeroWeights();
   private target: Locomotion | null = null;
   private transition: { startWeights: Weights; elapsed: number } | undefined;
-  private restPose: PoseChannel[] = [];
-  private resting = false;
-  private idleTransition: { from: PoseValue[]; elapsed: number } | undefined;
   private representation: 'meshy' | 'fallback' = 'fallback';
   private reason = 'loading';
 
   constructor(private readonly scene: Scene, private readonly fallback: CharacterRig) {}
 
   get model(): InspectionModel | undefined { return this.loaded; }
+  get equipment(): RuenEquipmentPreview | undefined { return this.equipmentView; }
   get status(): LoadStatus { return this.loadState; }
   get error(): string | undefined { return this.loadError; }
   get actualSpeed(): number { return this.speed; }
@@ -119,6 +103,8 @@ export class RuenLocomotionView {
     return {
       status: this.loadState, representation: this.representation, reason: this.reason,
       speed: this.speed, weights: this.weights,
+      equipped: this.equipmentView?.diagnostics.status === 'ready',
+      equipment: this.equipmentView?.diagnostics ?? null,
       clips: this.groups ? Object.values(this.groups).map(group => ({
         name: group.name, isPlaying: group.isPlaying, isStarted: !!group.isStarted,
         weight: group.weight, speedRatio: group.speedRatio, frame: group.getCurrentFrame(),
@@ -136,32 +122,42 @@ export class RuenLocomotionView {
 
   private async loadModel(): Promise<void> {
     let model: InspectionModel | undefined;
+    let equipment: RuenEquipmentPreview | undefined;
     try {
       model = await loadInspectionModel(assetUrl(ruenMeshyProfile.path), this.scene);
       if (this.disposed || this.scene.isDisposed) { model.dispose(); return; }
+      this.loadingModel = model;
       model.root.setEnabled(false);
       model.player.stopAll();
-      const find = (name: string): AnimationGroup => {
-        const matches = model!.container.animationGroups.filter(group => group.name === name);
+      for (const name of ['Walking', 'Running']) {
+        const matches = model.container.animationGroups.filter(group => group.name === name);
         const group = matches[0];
         if (matches.length !== 1 || !group || group.to <= group.from || !group.targetedAnimations.length) {
           throw new Error(`Se requiere un clip válido y único «${name}».`);
         }
-        return group;
-      };
-      const walk = find('Walking'), run = find('Running');
+      }
+      equipment = new RuenEquipmentPreview(this.scene, model, ruenRuntimeEquipmentProfiles);
+      this.equipmentView = equipment;
+      equipment.setEnabled(false);
+      await equipment.load();
+      if (this.disposed || this.scene.isDisposed) {
+        equipment.dispose(); if (!model.root.isDisposed()) model.dispose(); this.loadingModel = undefined; return;
+      }
+      // Author while the imported rig and exterior root retain their rest transforms.
+      // A failed piece leaves an unarmed breathing hero available; partial gear stays hidden.
+      const groups = createRuenEquippedLocomotion(model, this.scene, equipment.diagnostics.status === 'ready');
+      model.container.animationGroups.push(...Object.values(groups));
+      this.groups = groups;
       model.root.name = 'ruen-meshy-visual';
       model.root.scaling.setAll(ruenMeshyProfile.scale);
-      // Keep the glTF conversion node and every joint beneath this exterior root.
-      // It is deliberately NOT parented to the procedural rig's animated root.
-      this.groups = { walk, run };
-      // The real file has no neutral Idle clip. Preserve its exact imported pose
-      // before starting either clip; do not substitute a combat animation.
-      this.restPose = captureRestPose([walk, run]);
-      walk.weight = run.weight = 0;
-      this.loaded = model; this.loadState = 'ready'; this.reason = 'awaiting-controller';
+      // Keep the glTF conversion and all hand-mounted assets under this independent root.
+      // Never parent it to the procedural rig's animated root.
+      for (const group of Object.values(groups)) group.weight = 0;
+      this.loaded = model; this.loadingModel = undefined; this.loadState = 'ready'; this.reason = 'awaiting-controller';
     } catch (error) {
-      model?.dispose();
+      equipment?.dispose(); this.equipmentView = undefined;
+      if (model && !model.root.isDisposed()) model.dispose();
+      this.loaded = undefined; this.loadingModel = undefined; this.groups = undefined;
       if (this.disposed) return;
       this.loadState = 'error';
       this.loadError = error instanceof Error ? error.message : String(error);
@@ -181,14 +177,11 @@ export class RuenLocomotionView {
     const elapsed = previous ? sim.age - previous.age : 0;
     const dx = previous ? p.x - previous.x : 0, dz = previous ? p.z - previous.z : 0;
     const distance = Math.hypot(dx, dz);
-    // Respawn replaces Player, new game replaces Simulation. The distance guard
-    // catches external/checkpoint teleports without borrowing desired vx/vz.
+    // Respawn/new game replaces these objects. Discard checkpoint/teleport deltas.
     const reset = !previous || previous.sim !== sim || previous.player !== p || elapsed < 0 || elapsed > 0.5 ||
-      (elapsed === 0 && distance > 0.000001) ||
-      distance > Math.max(0.75, elapsed * 12);
+      (elapsed === 0 && distance > 0.000001) || distance > Math.max(0.75, elapsed * 12);
     const dt = !reset && playing && sim.mode === 'playing' && elapsed > 0 ? elapsed : 0;
-    // A 120 Hz render may have no new 60 Hz simulation sample. Keep its last
-    // measured rate; an explicit paused menu must instead freeze animation.
+    // Extra 120 Hz renders keep the most recently measured controller rate.
     if (reset || !playing || sim.mode !== 'playing') this.speed = 0;
     else if (dt > 0) this.speed = distance / dt;
     if (reset || !sim.targetId || this.directionTarget !== sim.targetId) this.movementDirection = undefined;
@@ -198,119 +191,87 @@ export class RuenLocomotionView {
 
     this.loaded.root.position.set(p.x, p.y + this.groundOffset, p.z);
     this.loaded.root.rotation.set(0, p.yaw, 0);
-    const kind = p.state === 'walk' || p.state === 'run' ? p.state : null;
-    if ((!kind && p.state !== 'idle') || !p.grounded || p.shield || p.attackTime >= 0 || p.health <= 0 || sim.mode !== 'playing') {
+    const kind = states.find(state => state === p.state);
+    if (!kind || !p.grounded || p.shield || p.attackTime >= 0 || p.health <= 0 || sim.mode !== 'playing') {
       this.showFallback(`unsupported-state:${p.state}`); return;
     }
-    for (const mesh of this.loaded.container.meshes) {
-      mesh.visibility = p.invulnerable > 0 && Math.sin(sim.age * 35) > 0 ? 0.4 : 1;
-    }
-    if (!kind) {
-      this.showIdle(dt, reset);
-      return;
-    }
-    // The clips are forward locomotion. Do not silently reuse them for lock-on
-    // strafing/backpedaling; the existing rig remains the explicit test fallback.
-    if (sim.targetId && this.movementDirection &&
+    // Forward clips are not reused for lock-on strafing or backpedaling.
+    if (kind !== 'idle' && sim.targetId && this.movementDirection &&
       this.movementDirection.x * Math.sin(p.yaw) + this.movementDirection.z * Math.cos(p.yaw) < Math.cos(Math.PI / 4)) {
       this.showFallback('unsupported-direction'); return;
     }
 
-    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true);
-    this.representation = 'meshy';
+    if (reset || this.representation !== 'meshy') this.resetClips();
     if (this.target !== kind) this.select(kind);
-    const moving = playing && !reset && this.speed > 0.01;
-    if (moving && this.transition) {
+    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true);
+    this.equipmentView?.setEnabled(this.equipmentView.diagnostics.status === 'ready');
+    this.representation = 'meshy';
+    const visibility = p.invulnerable > 0 && Math.sin(sim.age * 35) > 0 ? 0.4 : 1;
+    for (const mesh of this.loaded.container.meshes) mesh.visibility = visibility;
+    for (const item of this.equipmentView?.models ?? []) for (const mesh of item.model.container.meshes) mesh.visibility = visibility;
+    const clockRatio = Number.isFinite(playbackTimeScale) && playbackTimeScale > 0 ? playbackTimeScale : 0;
+    const animate = playing && !reset && clockRatio > 0 && (kind === 'idle' || this.speed > 0.01);
+    if (animate && this.transition) {
       this.transition.elapsed += dt;
-      const t = fadeProgress(this.transition.elapsed);
-      const eased = t * t * (3 - 2 * t);
-      for (const key of ['walk', 'run'] as const) {
+      const t = fadeProgress(this.transition.elapsed), eased = t * t * (3 - 2 * t);
+      for (const key of states) {
         const start = this.transition.startWeights[key];
         this.blendWeights[key] = start + ((key === kind ? 1 : 0) - start) * eased;
       }
-      if (t === 1) { this.blendWeights = { walk: kind === 'walk' ? 1 : 0, run: kind === 'run' ? 1 : 0 }; this.transition = undefined; }
+      if (t === 1) { this.blendWeights = zeroWeights(); this.blendWeights[kind] = 1; this.transition = undefined; }
     }
-    for (const key of ['walk', 'run'] as const) {
+    for (const key of states) {
       const group = this.groups[key];
       group.weight = this.blendWeights[key];
-      // Both ratios are dimensionless. Babylon advances wall time; the clock
-      // ratio honors the controller's 100 ms cap on slow frames without a second dt.
-      group.speedRatio = this.speed / ruenMeshyProfile.referenceSpeed[key] * playbackTimeScale;
+      // Idle breathes at its authored rate. Gaits advance only by actual movement.
+      // Babylon uses wall time; this ratio honors the existing simulation-time cap.
+      group.speedRatio = (key === 'idle' ? 1 : this.speed / ruenMeshyProfile.referenceSpeed[key]) * clockRatio;
       if (group.weight === 0 && (!this.transition || !group.isStarted)) group.stop(true);
-      else if (moving) { if (!group.isPlaying) group.play(true); }
+      else if (animate) { if (!group.isPlaying) group.play(true); }
       else group.pause();
     }
-    this.reason = !playing ? 'paused' : reset ? 'controller-reset' : dt === 0 ? 'no-simulation-step' :
-      !moving ? 'controller-stationary' : this.transition ? 'crossfade' : 'locomotion';
-  }
-
-  private showIdle(dt: number, reset: boolean): void {
-    if (!this.loaded || !this.groups) return;
-    if (reset || this.representation !== 'meshy') {
-      this.stopLocomotion();
-      this.idleTransition = undefined;
-      for (const channel of this.restPose) applyPoseValue(channel, channel.rest, 1);
-    } else if (!this.resting) {
-      // Snapshot the last rendered pose before stopping. stop(true) leaves local
-      // values intact; player.stopAll() would reset them and cause a visible snap.
-      const from = this.restPose.map(channel => clonePoseValue(channel.owner[channel.property]));
-      this.stopLocomotion();
-      this.idleTransition = { from, elapsed: 0 };
-    }
-    if (this.idleTransition) {
-      this.idleTransition.elapsed += dt;
-      const t = fadeProgress(this.idleTransition.elapsed);
-      const eased = t * t * (3 - 2 * t);
-      this.restPose.forEach((channel, index) => applyPoseValue(channel, this.idleTransition!.from[index]!, eased));
-      if (t === 1) this.idleTransition = undefined;
-    }
-    this.resting = true;
-    this.fallback.root.setEnabled(false); this.loaded.root.setEnabled(true);
-    this.representation = 'meshy';
-    this.reason = this.idleTransition ? 'idle-transition' : 'idle-pose';
-  }
-
-  private stopLocomotion(): void {
-    if (this.groups) for (const group of Object.values(this.groups)) { group.stop(true); group.weight = 0; }
-    this.blendWeights = { walk: 0, run: 0 }; this.target = null; this.transition = undefined;
+    this.reason = !playing || clockRatio === 0 ? 'paused' : reset ? 'controller-reset' : dt === 0 ? 'no-simulation-step' :
+      !animate ? 'controller-stationary' : this.transition ? 'crossfade' : kind === 'idle' ? 'idle-animation' : 'locomotion';
   }
 
   private select(kind: Locomotion): void {
     if (!this.groups) return;
     const incoming = this.groups[kind];
     if (!this.target) {
-      // With a visible rest pose, Babylon blends the remaining weight against
-      // the local values captured at animation start. No fabricated Idle group.
-      this.blendWeights = this.resting ? { walk: 0, run: 0 } : { walk: kind === 'walk' ? 1 : 0, run: kind === 'run' ? 1 : 0 };
-      if (this.resting) this.transition = { startWeights: { ...this.blendWeights }, elapsed: 0 };
-      incoming.weight = this.blendWeights[kind];
-      incoming.start(true, 0); incoming.goToFrame(incoming.from, true);
+      this.blendWeights = zeroWeights(); this.blendWeights[kind] = 1;
+      incoming.weight = 1; incoming.start(true, 0); incoming.goToFrame(incoming.from);
     } else {
       if (!incoming.isStarted) {
         const outgoing = this.groups[this.target];
-        const phase = Math.max(0, Math.min(1, (outgoing.getCurrentFrame() - outgoing.from) / (outgoing.to - outgoing.from)));
-        incoming.weight = 0;
-        incoming.start(true, 0);
-        incoming.goToFrame(incoming.from + phase * (incoming.to - incoming.from), true);
+        // Match foot-cycle phase only between the two gaits, not to breathing.
+        const phase = kind !== 'idle' && this.target !== 'idle' ?
+          Math.max(0, Math.min(1, (outgoing.getCurrentFrame() - outgoing.from) / (outgoing.to - outgoing.from))) : 0;
+        incoming.weight = 0; incoming.start(true, 0);
+        seekForBlend(incoming, incoming.from + phase * (incoming.to - incoming.from));
       }
-      this.transition = { startWeights: { ...this.blendWeights }, elapsed: 0 };
+      this.transition = { startWeights: this.weights, elapsed: 0 };
     }
-    this.resting = false; this.idleTransition = undefined;
     this.target = kind;
   }
 
-  private showFallback(reason: string): void {
-    this.loaded?.root.setEnabled(false);
+  private resetClips(): void {
     this.loaded?.player.stopAll();
+    if (this.groups) for (const group of Object.values(this.groups)) group.weight = 0;
+    this.blendWeights = zeroWeights(); this.target = null; this.transition = undefined;
+  }
+
+  private showFallback(reason: string): void {
+    this.loaded?.root.setEnabled(false); this.equipmentView?.setEnabled(false);
+    this.resetClips();
     this.fallback.root.setEnabled(true);
-    this.blendWeights = { walk: 0, run: 0 }; this.target = null; this.transition = undefined;
-    this.resting = false; this.idleTransition = undefined;
     this.representation = 'fallback'; this.reason = reason;
   }
 
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.equipmentView?.dispose(); this.equipmentView = undefined;
+    this.loadingModel?.dispose(); this.loadingModel = undefined;
     this.loaded?.dispose(); this.loaded = undefined; this.groups = undefined;
     if (!this.fallback.root.isDisposed()) this.fallback.root.setEnabled(true);
   }

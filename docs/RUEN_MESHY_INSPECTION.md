@@ -1,14 +1,14 @@
 # Ruen / Meshy: visor y prueba de locomoción
 
-La integración jugable de carga automática y reposo estático cuenta con **123 pruebas
-unitarias y 26 de navegador aprobadas**.
-La revisión anterior `6a80022` mantiene sus resultados de 119 pruebas unitarias
-y 24 de navegador como historial del paso previo.
-Integración de gameplay `2045061` en `main`; el build vigente `15a6a6c` incluye
-el Idle neutro y [la variante con espada y escudo sólo en el visor](RUEN_EQUIPMENT_PREVIEW.md).
-Esta última pasó 142 pruebas unitarias y 10 casos únicos de navegador locales.
-Visor previo: `9d64cf5`; base del MVP:
-`1928f65` en `work`. Esto no aprueba el arte final ni completa las animaciones.
+Esta revisión integra **Idle, caminar y correr con equipo optimizado**
+y reduce el escudo un 30%. La validación local aprobó; la publicación está pendiente.
+[Alcance de esta etapa](RUEN_GAME_EQUIPMENT.md).
+
+El último build publicado, `15a6a6c`, incluye el Idle neutro y la variante con
+espada y escudo sólo en el visor. Esa revisión conserva como evidencia 142
+pruebas unitarias y 10 casos de navegador locales. Los resultados históricos
+de carga automática y reposo estático (`2045061`: 123 unitarias y 26 de
+navegador) se conservan abajo; no validan la integración equipada actual.
 
 ## Archivo real y conservación del master
 
@@ -27,8 +27,9 @@ superara el límite de transferencia de 32 MiB. El archivo ya está en:
 
 En GitHub Pages: [jugar con Ruen](https://dabot11.github.io/Veylun/)
 y [visor](https://dabot11.github.io/Veylun/?inspect=ruen).
-La integración de `2045061`, conservada en el build actual, carga Meshy por defecto. El visor también carga
-el master automáticamente y queda en pausa. Para probarlo localmente:
+Los enlaces públicos muestran la última publicación registrada. La revisión
+local carga el equipo optimizado por defecto; el visor mantiene los masters
+completos y queda en pausa. Para probarla localmente:
 
 ```sh
 cd /workspace/Veylun
@@ -39,11 +40,11 @@ Agrega uno de estos parámetros a la dirección que imprime Vite:
 
 | Ruta | Comportamiento |
 | --- | --- |
-| `/` o `/?ruen=meshy` | Carga automática de Meshy; reposo estático y Walking/Running. |
+| `/` o `/?ruen=meshy` | Idle, caminar y correr con equipo optimizado; validado localmente. |
 | `/?ruen=provisional` | Rig procedural anterior para todas las acciones. |
 | `/?inspect=ruen` | Visor aislado; carga automática del master, pausado. |
 | `/?inspect=ruen&motion=idle-v1` | Idle neutro propio de cuatro segundos, exclusivo del visor. |
-| `/?inspect=ruen&motion=idle-v1&equipment=azure` | Idle con espada y escudo reales; pruebas locales aprobadas y versión publicada. |
+| `/?inspect=ruen&motion=idle-v1&equipment=azure` | Idle con los masters de espada/escudo; escudo reducido un 30% en esta revisión. |
 
 Las rutas locales también funcionan con `npm run preview`. El visor permite
 **Recargar modelo original** o abrir un GLB local; el selector lee el archivo
@@ -87,18 +88,21 @@ las extensiones se reportan como declaraciones del JSON, sin inferir plugins.
 
 ## Alcance del modo jugable
 
-La revisión actual carga Meshy automáticamente. Sólo **Walking y Running**
-se conectan a los estados `walk` y `run`. En reposo conserva el modelo real en
-su pose base exacta y estática, sin clip Idle, respiración ni offsets añadidos.
-La transición reposo↔locomoción dura 0.2 s. La UI muestra cuándo
-se utiliza Meshy o el Ruen provisional.
+Esta revisión carga Meshy y dos copias ligeras del equipo automáticamente.
+`Ruen_Idle_Equipped` incorpora respiración; `Ruen_Walk_Equipped` y
+`Ruen_Run_Equipped` adaptan Walking/Running para mantener los agarres. La espada
+sigue `mixamorig:RightHand`; el escudo sigue `mixamorig:LeftHand`. Su escala de
+montaje pasa de 0.42 a 0.294, conservando el asa en la mano. Los tres grupos
+propios se mezclan en 0.2 s y no modifican los 20 clips del master.
 
-`RuenLocomotionView` conserva el rig existente para salto, caída,
+`RuenLocomotionView` conserva el rig provisional para salto, caída,
 aterrizaje, esquiva, ataques, defensa, daño, muerte, interacción y victoria.
-También conserva ese fallback para desplazamientos laterales/hacia atrás
-con objetivo fijado. Un error de carga conserva el modelo provisional.
-No se reinterpretan Combat_Stance ni Axe_Breathe_and_Look_Around como idle
-neutro o bloqueo: no hay Idle, Block, Roll/Dodge ni salto normal identificados.
+También lo utiliza para desplazamientos laterales/hacia atrás con objetivo
+fijado. El equipo real se oculta junto al modelo durante esos estados.
+Si falla el master, se conserva el modelo provisional; si falla sólo una pieza
+del equipo, se conserva el Ruen real sin equipo con Idle neutro y locomoción.
+No se reinterpretan Combat_Stance ni Axe_Breathe_and_Look_Around como Idle o
+bloqueo: el master no contiene esos clips neutros identificados.
 
 El GLB tiene un contenedor exterior independiente del collider y del root
 animado del rig provisional. Su posición/yaw vienen del controlador; la cámara
@@ -107,9 +111,11 @@ con corrección de yaw 0 y offset vertical 0. Se preserva toda la jerarquía glT
 incluido el nodo de conversión de Babylon, y no se normalizan huesos.
 
 La carga usa Babylon.js 9.31.0, `LoadAssetContainerAsync` y
-`GLTFLoaderAnimationStartMode.NONE`. En gameplay sólo se mezclan Walking y
-Running durante 0.2 s, con fase alineada y pesos complementarios; después se
-detiene el clip saliente. Los otros 18 clips permanecen fuera del gameplay.
+`GLTFLoaderAnimationStartMode.NONE`. En gameplay se mezclan los tres grupos
+propios con pesos complementarios; las transiciones entre caminar y correr
+alinean la fase y detienen el grupo saliente. Los originales Walking/Running
+son fuentes de las copias adaptadas, no clips alterados. Los otros 18 clips
+permanecen fuera del gameplay.
 
 La velocidad del ciclo se calcula con desplazamiento horizontal real dividido
 por avance de `sim.age`, después de colisiones. No utiliza `vx/vz` deseados ni
@@ -123,13 +129,13 @@ Un bloqueo por colisión congela el ciclo; los menús pausan la animación.
 
 Las reglas de movimiento, salto, combate, daño, checkpoints y guardado siguen
 perteneciendo al MVP. El GLB no genera daño ni añade arco, hacha, escalada,
-parry o ataques cargados. El Idle propio y el montaje de espada/escudo se
-preparan primero en el visor. Queda revisar sus transiciones e integración
-jugable, resolver salto/esquiva/defensa y después integrar combos.
+parry o ataques cargados. Esta etapa comprueba las transiciones de Idle y
+locomoción equipada. Defensa, ataques, salto y esquiva requieren su propia
+adaptación y revisión posteriores.
 
 ## Revisión visual y límites
 
-**Verificado en el visor real:** carga PBR y tres texturas; reproducción de
+**Inspección histórica del master en el visor real:** carga PBR y tres texturas; reproducción de
 Walking/Running; pausa y exclusividad; vistas frontal, lateral y trasera.
 Manos, hombros, rodillas y capa se mantienen unidos y con poses coherentes
 en las muestras revisadas. La consola de esta inspección no registró errores.
@@ -152,13 +158,17 @@ del root motion antes de probar combate. No están conectados a daño.
 
 ## Pruebas y evidencia
 
-**Revisión actual:** typecheck y build correctos; **123 pruebas unitarias en
+La revisión equipada aprobó typecheck, build, **152 pruebas unitarias en 16
+archivos y 33 de navegador**, sin omisiones ni reintentos. La publicación está
+pendiente; resultados y capturas en [la evidencia actual](evidence/ruen-game-equipment/README.md).
+
+**Revisión histórica de reposo estático:** typecheck y build correctos; **123 pruebas unitarias en
 12 archivos y 26 de navegador aprobadas**, estas últimas en una ejecución de
 18.6 minutos sin reintentos. Son 17 casos del MVP, tres del visor con fixture
 sintético y seis de integración: cuatro cargan el master (visor, reposo/locomoción,
 colisión y build de producción), uno aborta su descarga y otro verifica el
 opt-out sin descargarlo. Estas pruebas se ejecutaron contra servidores locales.
-Ver [log actual](evidence/ruen-meshy/default-idle-browser.log),
+Ver [log histórico](evidence/ruen-meshy/default-idle-browser.log),
 [reposo jugable](evidence/ruen-meshy/gameplay-idle.png) y
 [reposo en el build de producción](evidence/ruen-meshy/production-default-idle.png).
 
@@ -171,7 +181,7 @@ comprobó en navegador por la restricción de red del entorno.
 
 Los siguientes resultados históricos corresponden a `6a80022`:
 
-- La inspección actual del master real confirmó 20 clips, 80 joints, las tres
+- La inspección de esa revisión confirmó 20 clips, 80 joints, las tres
   texturas y cambios de pose de Walking/Running, con consola sin errores.
   Los otros 18 clips sólo están inventariados.
 - **Typecheck y build correctos; 119 pruebas unitarias en 12 archivos y
@@ -208,7 +218,8 @@ En otra etapa, crear una copia de distribución con nombre propio, eliminar
 sólo datos no referenciados, validar glTF y comparar clips/skin/apariencia.
 Evaluar KTX2/Basis y resolución metallic-roughness midiendo carga y memoria
 en el equipo objetivo. Conservar siempre el master y su hash; no reducir
-geometría en esta tarea.
+geometría del master de Ruen en esta etapa. El equipo sí dispone de copias
+independientes optimizadas, con su [inventario](evidence/ruen-game-equipment/runtime-inventory.json).
 
 Para usar el rig anterior en esta revisión, abre `?ruen=provisional`; no hay
 migraciones de guardado. La rama `work` conserva el MVP previo y `9d64cf5`

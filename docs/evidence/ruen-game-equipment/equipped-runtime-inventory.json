@@ -1,0 +1,440 @@
+{
+  "hero": {
+    "animationGroups": [
+      {
+        "name": "Running",
+        "from": 0,
+        "to": 37.99998164176941,
+        "fps": 60,
+        "durationSeconds": 0.6333330273628235
+      },
+      {
+        "name": "Walking",
+        "from": 0,
+        "to": 61.99997663497925,
+        "fps": 60,
+        "durationSeconds": 1.0333329439163208
+      },
+      {
+        "name": "Archery_Shot",
+        "from": 0,
+        "to": 300,
+        "fps": 60,
+        "durationSeconds": 5
+      },
+      {
+        "name": "Arise",
+        "from": 0,
+        "to": 109.99998092651367,
+        "fps": 60,
+        "durationSeconds": 1.8333330154418945
+      },
+      {
+        "name": "Attack",
+        "from": 0,
+        "to": 167.99999713897705,
+        "fps": 60,
+        "durationSeconds": 2.799999952316284
+      },
+      {
+        "name": "Axe_Breathe_and_Look_Around",
+        "from": 0,
+        "to": 675.9999847412109,
+        "fps": 60,
+        "durationSeconds": 11.266666412353516
+      },
+      {
+        "name": "Axe_Spin_Attack",
+        "from": 0,
+        "to": 150,
+        "fps": 60,
+        "durationSeconds": 2.5
+      },
+      {
+        "name": "Back_Jump",
+        "from": 0,
+        "to": 55.99997878074646,
+        "fps": 60,
+        "durationSeconds": 0.9333329796791077
+      },
+      {
+        "name": "BeHit_FlyUp",
+        "from": 0,
+        "to": 90,
+        "fps": 60,
+        "durationSeconds": 1.5
+      },
+      {
+        "name": "Climb_Attempt_and_Fall_1",
+        "from": 0,
+        "to": 48.00000071525574,
+        "fps": 60,
+        "durationSeconds": 0.800000011920929
+      },
+      {
+        "name": "Climb_Attempt_and_Fall_5",
+        "from": 0,
+        "to": 70.00001907348633,
+        "fps": 60,
+        "durationSeconds": 1.1666669845581055
+      },
+      {
+        "name": "Climb_Left_with_Both_Limbs",
+        "from": 0,
+        "to": 70.00001907348633,
+        "fps": 60,
+        "durationSeconds": 1.1666669845581055
+      },
+      {
+        "name": "Collect_Object",
+        "from": 0,
+        "to": 360,
+        "fps": 60,
+        "durationSeconds": 6
+      },
+      {
+        "name": "Combat_Stance",
+        "from": 0,
+        "to": 100.00001907348633,
+        "fps": 60,
+        "durationSeconds": 1.6666669845581055
+      },
+      {
+        "name": "RunFast",
+        "from": 0,
+        "to": 28.000019788742065,
+        "fps": 60,
+        "durationSeconds": 0.4666669964790344
+      },
+      {
+        "name": "Sneaky_Walk",
+        "from": 0,
+        "to": 169.99998092651367,
+        "fps": 60,
+        "durationSeconds": 2.8333330154418945
+      },
+      {
+        "name": "Weapon_Combo",
+        "from": 0,
+        "to": 220.00001907348633,
+        "fps": 60,
+        "durationSeconds": 3.6666669845581055
+      },
+      {
+        "name": "Weapon_Combo_1",
+        "from": 0,
+        "to": 210,
+        "fps": 60,
+        "durationSeconds": 3.5
+      },
+      {
+        "name": "Weapon_Combo_2",
+        "from": 0,
+        "to": 270,
+        "fps": 60,
+        "durationSeconds": 4.5
+      },
+      {
+        "name": "dying_backwards",
+        "from": 0,
+        "to": 132.00000286102295,
+        "fps": 60,
+        "durationSeconds": 2.200000047683716
+      }
+    ],
+    "skeletons": [
+      {
+        "name": "SmartRigArmature",
+        "bones": [
+          "mixamorig:Hips",
+          "mixamorig:Spine",
+          "mixamorig:Spine1",
+          "mixamorig:Spine2",
+          "mixamorig:Neck",
+          "mixamorig:Head",
+          "mixamorig:HeadTop_End",
+          "headfront",
+          "mixamorig:LeftShoulder",
+          "mixamorig:LeftArm",
+          "mixamorig:LeftForeArm",
+          "mixamorig:LeftHand",
+          "mixamorig:LeftHandThumb1",
+          "mixamorig:LeftHandThumb2",
+          "mixamorig:LeftHandThumb3",
+          "mixamorig:LeftHandThumb4",
+          "mixamorig:LeftHandPinky1",
+          "mixamorig:LeftHandPinky2",
+          "mixamorig:LeftHandPinky3",
+          "mixamorig:LeftHandPinky4",
+          "mixamorig:LeftHandRing1",
+          "mixamorig:LeftHandRing2",
+          "mixamorig:LeftHandRing3",
+          "mixamorig:LeftHandRing4",
+          "mixamorig:LeftHandIndex1",
+          "mixamorig:LeftHandIndex2",
+          "mixamorig:LeftHandIndex3",
+          "mixamorig:LeftHandIndex4",
+          "mixamorig:LeftHandMiddle1",
+          "mixamorig:LeftHandMiddle2",
+          "mixamorig:LeftHandMiddle3",
+          "mixamorig:LeftHandMiddle4",
+          "mixamorig:RightShoulder",
+          "mixamorig:RightArm",
+          "mixamorig:RightForeArm",
+          "mixamorig:RightHand",
+          "mixamorig:RightHandThumb1",
+          "mixamorig:RightHandThumb2",
+          "mixamorig:RightHandThumb3",
+          "mixamorig:RightHandThumb4",
+          "mixamorig:RightHandPinky1",
+          "mixamorig:RightHandPinky2",
+          "mixamorig:RightHandPinky3",
+          "mixamorig:RightHandPinky4",
+          "mixamorig:RightHandIndex1",
+          "mixamorig:RightHandIndex2",
+          "mixamorig:RightHandIndex3",
+          "mixamorig:RightHandIndex4",
+          "mixamorig:RightHandRing1",
+          "mixamorig:RightHandRing2",
+          "mixamorig:RightHandRing3",
+          "mixamorig:RightHandRing4",
+          "mixamorig:RightHandMiddle1",
+          "mixamorig:RightHandMiddle2",
+          "mixamorig:RightHandMiddle3",
+          "mixamorig:RightHandMiddle4",
+          "Bone_032",
+          "Bone_031",
+          "Bone_030",
+          "Bone_029",
+          "Bone_028",
+          "Bone_037",
+          "Bone_036",
+          "Bone_035",
+          "Bone_034",
+          "Bone_033",
+          "Bone_041",
+          "Bone_040",
+          "Bone_039",
+          "Bone_038",
+          "mixamorig:LeftUpLeg",
+          "mixamorig:LeftLeg",
+          "mixamorig:LeftFoot",
+          "mixamorig:LeftToeBase",
+          "mixamorig:LeftToe_End",
+          "mixamorig:RightUpLeg",
+          "mixamorig:RightLeg",
+          "mixamorig:RightFoot",
+          "mixamorig:RightToeBase",
+          "mixamorig:RightToe_End"
+        ]
+      }
+    ],
+    "meshes": [
+      {
+        "name": "__root__",
+        "vertices": 0,
+        "triangles": 0,
+        "skeleton": null
+      },
+      {
+        "name": "output_unwrapped",
+        "vertices": 70995,
+        "triangles": 51727,
+        "skeleton": "SmartRigArmature"
+      }
+    ],
+    "materials": [
+      {
+        "name": "BakedMaterial",
+        "type": "PBRMaterial",
+        "textures": [
+          {
+            "name": "BakedMaterial (Base Color)",
+            "width": 2048,
+            "height": 2048
+          },
+          {
+            "name": "BakedMaterial (Metallic Roughness)",
+            "width": 4096,
+            "height": 4096
+          },
+          {
+            "name": "BakedMaterial (Normal)",
+            "width": 2048,
+            "height": 2048
+          }
+        ]
+      }
+    ],
+    "extensionsUsed": [],
+    "extensionsRequired": [],
+    "extensionSource": "glTF JSON declarations"
+  },
+  "groups": [
+    "Running",
+    "Walking",
+    "Archery_Shot",
+    "Arise",
+    "Attack",
+    "Axe_Breathe_and_Look_Around",
+    "Axe_Spin_Attack",
+    "Back_Jump",
+    "BeHit_FlyUp",
+    "Climb_Attempt_and_Fall_1",
+    "Climb_Attempt_and_Fall_5",
+    "Climb_Left_with_Both_Limbs",
+    "Collect_Object",
+    "Combat_Stance",
+    "RunFast",
+    "Sneaky_Walk",
+    "Weapon_Combo",
+    "Weapon_Combo_1",
+    "Weapon_Combo_2",
+    "dying_backwards",
+    "Ruen_Idle_Equipped",
+    "Ruen_Walk_Equipped",
+    "Ruen_Run_Equipped"
+  ],
+  "equipment": {
+    "status": "ready",
+    "enabled": true,
+    "items": [
+      {
+        "kind": "sword",
+        "label": "Azure Oathblade",
+        "path": "assets/models/ruen/equipment/runtime/azure-oathblade.glb",
+        "hand": "mixamorig:RightHand",
+        "uniformScale": 0.55,
+        "grip": [
+          0.000373,
+          0.65,
+          -0.000586
+        ],
+        "handOffset": [
+          0,
+          0.05,
+          0
+        ],
+        "rotation": [
+          0.1003138816,
+          -0.4090243679,
+          -2.9653931856
+        ],
+        "status": "ready",
+        "error": null,
+        "inventory": {
+          "animationGroups": [],
+          "skeletons": [],
+          "meshes": [
+            {
+              "name": "__root__",
+              "vertices": 0,
+              "triangles": 0,
+              "skeleton": null
+            },
+            {
+              "name": "sword-runtime",
+              "vertices": 13697,
+              "triangles": 19640,
+              "skeleton": null
+            }
+          ],
+          "materials": [
+            {
+              "name": "Material_0.001",
+              "type": "PBRMaterial",
+              "textures": [
+                {
+                  "name": "Material_0.001 (Base Color)",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "name": "Material_0.001 (Metallic Roughness)",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "name": "Material_0.001 (Normal)",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            }
+          ],
+          "extensionsUsed": [],
+          "extensionsRequired": [],
+          "extensionSource": "glTF JSON declarations"
+        }
+      },
+      {
+        "kind": "shield",
+        "label": "Aegis of the Azure",
+        "path": "assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb",
+        "hand": "mixamorig:LeftHand",
+        "uniformScale": 0.294,
+        "grip": [
+          0.000351,
+          0.125,
+          -0.275346
+        ],
+        "handOffset": [
+          0,
+          0.05,
+          0
+        ],
+        "rotation": [
+          -1.4497777416,
+          2.0538441591,
+          1.0377765256
+        ],
+        "status": "ready",
+        "error": null,
+        "inventory": {
+          "animationGroups": [],
+          "skeletons": [],
+          "meshes": [
+            {
+              "name": "__root__",
+              "vertices": 0,
+              "triangles": 0,
+              "skeleton": null
+            },
+            {
+              "name": "shield-runtime",
+              "vertices": 63510,
+              "triangles": 103290,
+              "skeleton": null
+            }
+          ],
+          "materials": [
+            {
+              "name": "Material_0.001",
+              "type": "PBRMaterial",
+              "textures": [
+                {
+                  "name": "Material_0.001 (Base Color)",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "name": "Material_0.001 (Metallic Roughness)",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "name": "Material_0.001 (Normal)",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            }
+          ],
+          "extensionsUsed": [],
+          "extensionsRequired": [],
+          "extensionSource": "glTF JSON declarations"
+        }
+      }
+    ]
+  }
+}

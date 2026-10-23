@@ -4,6 +4,7 @@ import { Color3, Color4 } from '@babylonjs/core/Maths/math.color';
 import { Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { HemisphericLight } from '@babylonjs/core/Lights/hemisphericLight';
 import { DirectionalLight } from '@babylonjs/core/Lights/directionalLight';
+import { RawCubeTexture } from '@babylonjs/core/Materials/Textures/rawCubeTexture';
 import { ShadowGenerator } from '@babylonjs/core/Lights/Shadows/shadowGenerator';
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 import '@babylonjs/core/Culling/ray';
@@ -26,6 +27,9 @@ export class Application {
  constructor(readonly canvas:HTMLCanvasElement){
   this.engine=new Engine(canvas,true,{stencil:true});this.engine.setHardwareScalingLevel(1/Math.min(devicePixelRatio||1,1.5));
   this.scene=new Scene(this.engine);this.scene.clearColor=new Color4(.62,.77,.73,1);this.scene.fogMode=Scene.FOGMODE_EXP2;this.scene.fogDensity=.017;this.scene.fogColor=new Color3(.62,.77,.66);
+  // Local ambient reflection for the metal equipment; no remote environment download.
+  this.scene.environmentTexture=new RawCubeTexture(this.scene,Array.from({length:6},()=>new Uint8Array([160,170,180,255])),1,Engine.TEXTUREFORMAT_RGBA);
+  this.scene.environmentIntensity=.45;
   const ambient=new HemisphericLight('forest-sky',new Vector3(0,1,0),this.scene);ambient.intensity=.78;ambient.groundColor=new Color3(.25,.32,.18);
   const sun=new DirectionalLight('warm-sun',new Vector3(.6,-1,.5),this.scene);sun.position.set(-20,40,-15);sun.intensity=.9;sun.diffuse=new Color3(1,.91,.68);
   let storage:Storage|undefined;try{storage=localStorage;}catch{/* SaveStore retains the session and shows the storage warning. */}
@@ -45,7 +49,7 @@ export class Application {
  }
  private async enableRuenModel():Promise<void>{
   const panel=document.createElement('aside');panel.id='ruen-model-trial';
-  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Reposo provisional · animaciones de acción en revisión</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen">Visor de animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
+  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Idle y movimiento con equipo · acciones en revisión</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=idle-v1&equipment=azure">Ver el equipo</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
   document.querySelector('#app')!.append(panel);this.ruenStatus=panel.querySelector('#ruen-model-status')!;
   try{
    await import('../ui/ruenTrial.css');
@@ -55,6 +59,7 @@ export class Application {
    await this.ruenLocomotion.load();
    if(this.scene.isDisposed)return;
    for(const mesh of this.ruenLocomotion.model?.container.meshes??[])this.shadows.addShadowCaster(mesh);
+   for(const item of this.ruenLocomotion.equipment?.models??[])for(const mesh of item.model.container.meshes)this.shadows.addShadowCaster(mesh);
    this.needsRender=true;this.updateRuenStatus();
   }catch(error){
    if(this.scene.isDisposed)return;
@@ -66,8 +71,11 @@ export class Application {
   if(!this.ruenStatus||!this.ruenLocomotion)return;
   const d=this.ruenLocomotion.diagnostics;
   this.ruenStatus.dataset['status']=d.status;this.ruenStatus.dataset['representation']=d.representation;
+  const equipment=d.equipment?.status??'idle';this.ruenStatus.dataset['equipmentStatus']=equipment;
   const states:Record<string,string>={idle:'reposo',jump:'salto',fall:'caída',land:'aterrizaje',roll:'esquiva',shield:'defensa',attack1:'ataque 1',attack2:'ataque 2',attack3:'ataque 3',hurt:'daño',death:'muerte',interact:'interacción',victory:'victoria'};
-  const label=d.status==='loading'?'Cargando Ruen…':d.status==='error'?'No se pudo cargar Ruen. Se muestra el modelo provisional.':d.representation==='meshy'?`Ruen · ${this.sim.player.state==='idle'?'reposo provisional':this.sim.player.state==='walk'?'caminando':'corriendo'}`:`Modelo provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
+  const motion=this.sim.player.state==='idle'?'en reposo':this.sim.player.state==='walk'?'caminando':'corriendo';
+  const gearLabel=equipment==='ready'?'con espada y escudo':equipment==='loading'?'cargando equipo':'sin equipo: carga no disponible';
+  const label=d.status==='loading'?'Cargando Ruen y su equipo…':d.status==='error'?'No se pudo cargar Ruen. Se muestra el modelo provisional.':d.representation==='meshy'?`Ruen · ${motion} · ${gearLabel}`:`Modelo provisional · ${states[this.sim.player.state]??'movimiento no validado'}`;
   if(this.ruenStatus.textContent!==label)this.ruenStatus.textContent=label;
  }
  private resize=():void=>{this.engine.resize();this.needsRender=true;};

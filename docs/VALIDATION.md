@@ -1,6 +1,36 @@
 # Validación ejecutada
 
-## Idle con equipo: validación local
+## Idle y locomoción con equipo: validación local aprobada
+
+22 de octubre de 2026, fecha de America/Monterrey. La etapa actual integra el
+Idle equipado y las adaptaciones de Walking/Running en la ruta normal del juego.
+El escudo se reduce uniformemente un 30%, de escala 0.42 a 0.294, alrededor
+del mismo punto de agarre. Los archivos originales se conservan y el juego
+usa copias optimizadas; el visor sigue cargando los masters completos.
+
+Typecheck, build, **152 pruebas unitarias en 16 archivos y 33 de navegador**
+aprobaron. La suite completa usó un worker y terminó en **28.7 minutos**, en
+una ejecución sin omisiones, fallos ni reintentos. El build conserva el aviso
+conocido de Vite sobre chunks grandes. Se revisaron el escudo reducido en el
+visor de frente y de lado, e Idle y Running desde controles en el juego.
+Los registros de consola de gameplay y producción no contienen errores.
+
+Las copias optimizadas quedaron revisadas y congeladas: **7,608,828 bytes y
+122,930 triángulos**, frente a 44,478,640 bytes y 906,832 triángulos originales.
+Se conservan los masters, los ejes y los agarres; las normales se hornearon
+desde la superficie original hacia la malla reducida y se guardaron en PNG 1024²
+sin pérdida para mantener el acabado. Color y metal/rugosidad usan JPEG 1024².
+Dos exportaciones consecutivas produjeron archivos binariamente idénticos.
+[Inventario final](evidence/ruen-game-equipment/runtime-inventory.json).
+
+Las pruebas comprueban agarres, transiciones, pausa, bloqueo por colisión,
+fallos de carga, regreso al rig provisional para acciones sin adaptar y el
+build de producción sin hooks. La suite también recorre controles, combate,
+guardado y restauración del santuario. Los resultados, capturas y límites de
+esta ejecución local están en [la ficha de evidencia](evidence/ruen-game-equipment/README.md).
+Publicación pendiente. [Alcance jugable](RUEN_GAME_EQUIPMENT.md).
+
+## Prototipo anterior de Idle con equipo: validación local
 
 22 de octubre de 2026. Se inventariaron los GLB reales de espada y escudo:
 44,478,640 bytes y 906,832 triángulos en conjunto. Los originales conservan
