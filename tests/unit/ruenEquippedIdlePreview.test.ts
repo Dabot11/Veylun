@@ -11,6 +11,7 @@ import { Matrix, Quaternion, Vector3 } from '@babylonjs/core/Maths/math.vector';
 import { instantiateInspectionModel } from '../../src/assets/inspectModel';
 import { createRuenIdlePreview } from '../../src/assets/ruenIdlePreview';
 import { createRuenEquippedIdlePreview, ruenEquippedIdleProfile } from '../../src/assets/ruenEquippedIdlePreview';
+import { ruenEquipmentProfiles } from '../../src/assets/ruenEquipmentProfile';
 
 interface RigJson {
   nodes: { name: string; children?: number[]; translation?: number[]; rotation?: number[]; scale?: number[] }[];
@@ -192,26 +193,38 @@ describe('equipped Idle preview pose', () => {
     }
   });
 
-  it('raises only the left forearm, closes both grips, and leaves root, legs and right wrist in place', () => {
+  it('fits transverse handles inside both fists while preserving weapon positions, bone lengths, root and legs', () => {
     const { scene, model, neutral, nodes, find } = fixture();
     const fixed = [model.root, ...nodes.filter(node => /Hips|UpLeg|Leg$|Foot|Toe/.test(node.name))];
     const fixedBefore = fixed.map(node => ({ local: pose(node), world: Array.from(node.computeWorldMatrix(true).m) }));
-    const rightBefore = find('mixamorig:RightHand').getAbsolutePosition().clone();
-    const elbowsBefore = ['Left', 'Right'].map(side => find(`mixamorig:${side}ForeArm`).getAbsolutePosition().clone());
+    const lengths = ['Left', 'Right'].map(side => {
+      const points = ['Arm', 'ForeArm', 'Hand'].map(part => find(`mixamorig:${side}${part}`).computeWorldMatrix(true).getTranslation());
+      return [Vector3.Distance(points[0]!, points[1]!), Vector3.Distance(points[1]!, points[2]!)];
+    });
     const tipsBefore = ['Left', 'Right'].flatMap(side => ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky'].map(finger => ({
       side, finger, point: handPoint(find, side, finger),
     })));
     const armed = createRuenEquippedIdlePreview(model, scene, neutral);
     armed.start(true); armed.pause(); armed.goToFrame(0);
-    const wrist = find('mixamorig:LeftHand'); wrist.computeWorldMatrix(true);
-    expect(wrist.getAbsolutePosition().x).toBeCloseTo(-0.27, 2);
-    expect(wrist.getAbsolutePosition().y).toBeCloseTo(1.10, 2);
-    expect(wrist.getAbsolutePosition().z).toBeCloseTo(0.24, 2);
-    expect(find('mixamorig:RightHand').computeWorldMatrix(true)).toBeDefined();
-    expect(find('mixamorig:RightHand').getAbsolutePosition().equalsWithEpsilon(rightBefore, 1e-6)).toBe(true);
     for (const [index, side] of ['Left', 'Right'].entries()) {
-      const elbow = find(`mixamorig:${side}ForeArm`); elbow.computeWorldMatrix(true);
-      expect(elbow.getAbsolutePosition().equalsWithEpsilon(elbowsBefore[index]!, 1e-6)).toBe(true);
+      const points = ['Arm', 'ForeArm', 'Hand'].map(part => find(`mixamorig:${side}${part}`).computeWorldMatrix(true).getTranslation());
+      expect(Vector3.Distance(points[0]!, points[1]!)).toBeCloseTo(lengths[index]![0]!, 6);
+      expect(Vector3.Distance(points[1]!, points[2]!)).toBeCloseTo(lengths[index]![1]!, 6);
+      const profile = ruenEquipmentProfiles.find(item => item.hand === `mixamorig:${side}Hand`)!;
+      const hand = find(profile.hand), grip = Vector3.TransformCoordinates(Vector3.FromArray(profile.handOffset), hand.computeWorldMatrix(true));
+      // Measured exterior-root handle centers of the previous equipped Idle.
+      const expected = side === 'Left' ? [-0.27558635, 1.10321669, 0.29303995] : [0.34822168, 0.86127829, 0.09416677];
+      // The sword's old wrist placement lies 7.56 mm beyond the corrected
+      // two-bone reach; its visible grip moves inward instead of stretching.
+      expect(Vector3.Distance(grip, Vector3.FromArray(expected)), `${side} grip ${grip.asArray()}`).toBeLessThan(side === 'Right' ? 0.008 : 1e-5);
+      const across = find(`mixamorig:${side}HandPinky1`).position.subtract(find(`mixamorig:${side}HandIndex1`).position).normalize();
+      const shaft = Vector3.TransformNormal(Vector3.Up(), Matrix.RotationYawPitchRoll(profile.rotation[1], profile.rotation[0], profile.rotation[2])).normalize();
+      expect(Math.abs(Vector3.Dot(across, shaft))).toBeCloseTo(1, 6);
+      for (const finger of ['Index', 'Middle', 'Ring', 'Pinky']) {
+        const delta = handPoint(find, side, finger).subtract(Vector3.FromArray(profile.handOffset));
+        const radial = delta.subtract(shaft.scale(Vector3.Dot(delta, shaft))).length();
+        expect(radial, `${side} ${finger} surrounds handle`).toBeLessThan(0.035);
+      }
     }
     for (const { side, finger, point } of tipsBefore) {
       const gripCenter = new Vector3(0, 0.09, -0.005);
@@ -248,11 +261,10 @@ describe('equipped Idle preview pose', () => {
     model.root.position.set(3, 0.5, -2); model.root.rotation.y = 0.7; model.root.scaling.setAll(0.85);
     const conversionBefore = pose(conversion), rootBefore = pose(model.root);
     const armed = createRuenEquippedIdlePreview(model, scene, neutral); armed.start(true); armed.pause(); armed.goToFrame(0);
-    const wrist = find('mixamorig:LeftHand'); wrist.computeWorldMatrix(true);
-    const local = Vector3.TransformCoordinates(wrist.getAbsolutePosition(), Matrix.Invert(model.root.computeWorldMatrix(true)));
-    expect(local.x).toBeCloseTo(ruenEquippedIdleProfile.leftWristTarget[0], 2);
-    expect(local.y).toBeCloseTo(ruenEquippedIdleProfile.leftWristTarget[1], 2);
-    expect(local.z).toBeCloseTo(ruenEquippedIdleProfile.leftWristTarget[2], 2);
+    const profile = ruenEquipmentProfiles.find(item => item.kind === 'shield')!, wrist = find(profile.hand);
+    const grip = Vector3.TransformCoordinates(Vector3.FromArray(profile.handOffset), wrist.computeWorldMatrix(true));
+    const local = Vector3.TransformCoordinates(grip, Matrix.Invert(model.root.computeWorldMatrix(true)));
+    expect(local.equalsWithEpsilon(new Vector3(-0.27558635, 1.10321669, 0.29303995), 1e-5)).toBe(true);
     expect(pose(model.root)).toEqual(rootBefore); expect(pose(conversion)).toEqual(conversionBefore);
   });
 

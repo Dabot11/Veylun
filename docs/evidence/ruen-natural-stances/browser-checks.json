@@ -1,0 +1,99 @@
+{
+  "preview": {
+    "sampleCount": 15,
+    "profiles": [
+      {
+        "name": "Ruen_Idle_Equipped",
+        "samples": 6,
+        "vertices": 70995,
+        "minBodyY": -0.000764375610742718,
+        "minGearY": 0.134616621346501,
+        "maxGripError": 1.31930334592729e-07,
+        "maxFootDrift": 5.281510531439567e-08,
+        "maxSkinDelta": 0.007903039455413818,
+        "loopSkinDelta": 0,
+        "rootUnchanged": true
+      },
+      {
+        "name": "Ruen_Guard_Equipped",
+        "samples": 6,
+        "vertices": 70995,
+        "minBodyY": -0.0008524511358700693,
+        "minGearY": 0.8479574225519826,
+        "maxGripError": 8.870434098453763e-08,
+        "maxFootDrift": 5.385589709431291e-08,
+        "maxSkinDelta": 0.007636964321136475,
+        "loopSkinDelta": 0,
+        "rootUnchanged": true
+      },
+      {
+        "name": "Ruen_Block_Equipped",
+        "samples": 3,
+        "vertices": 70995,
+        "minBodyY": -0.0008459333330392838,
+        "minGearY": 0.836074482053498,
+        "maxGripError": 8.870434098453763e-08,
+        "maxFootDrift": 4.712160915387242e-08,
+        "maxSkinDelta": 0.06710485171061009,
+        "loopSkinDelta": 0,
+        "rootUnchanged": true
+      }
+    ],
+    "originalDigest": {
+      "length": 37657289,
+      "hash": 1320489955
+    },
+    "errors": {
+      "unhandled": [],
+      "console": []
+    }
+  },
+  "guardGameplay": {
+    "renders": 18,
+    "steps": 108,
+    "events": {
+      "telegraph": 1,
+      "zone": 1,
+      "save": 1,
+      "shield": 1
+    },
+    "healthRange": [
+      10,
+      10
+    ],
+    "maxRootError": 0,
+    "maxGripError": 2.3757565938710783e-06,
+    "allMeshy": true,
+    "guardMovingObserved": true,
+    "blockObserved": true,
+    "console": []
+  },
+  "defaultGameplay": {
+    "groups": 42,
+    "originalGroups": 20,
+    "equipmentStatus": "ready",
+    "console": [],
+    "assertedInPassedCase": [
+      "Automatic loading and breathing",
+      "Planted foot/toe positions while standing",
+      "Walk/run blending from controller input",
+      "Exact pause preservation",
+      "Return to equipped Idle",
+      "Equipped jump and roll",
+      "Original clip fingerprint unchanged"
+    ]
+  },
+  "productionPreview": {
+    "errors": {
+      "unhandled": [],
+      "console": []
+    },
+    "assertedInPassedCase": [
+      "Idle opens paused",
+      "Guard and block playable from selector",
+      "Neutral comparison works",
+      "No development hooks",
+      "Saved adventure unchanged"
+    ]
+  }
+}

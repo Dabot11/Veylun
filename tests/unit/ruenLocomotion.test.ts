@@ -21,6 +21,7 @@ import { groundHeight } from '../../src/world/level';
 import { gameConfig } from '../../src/config/gameConfig';
 import { RuenLocomotionView, ruenMeshyProfile } from '../../src/assets/RuenLocomotionView';
 import { ruenRuntimeEquipmentProfiles } from '../../src/assets/ruenEquipmentProfile';
+import { refineRuenStances } from '../../src/assets/ruenNaturalStances';
 
 vi.mock('../../src/assets/inspectModel', async importOriginal => ({
   ...await importOriginal<typeof import('../../src/assets/inspectModel')>(),
@@ -39,6 +40,9 @@ vi.mock('../../src/assets/ruenEquippedActions', async importOriginal => ({
 vi.mock('../../src/assets/ruenEquippedDirectional', async importOriginal => ({
   ...await importOriginal<typeof import('../../src/assets/ruenEquippedDirectional')>(), createRuenEquippedDirectional: vi.fn(),
 }));
+// This adapter fixture deliberately has a small synthetic rig. Real 80-joint
+// authoring/geometry is verified independently in ruenNaturalStances.test.ts.
+vi.mock('../../src/assets/ruenNaturalStances', () => ({ refineRuenStances: vi.fn() }));
 vi.mock('../../src/assets/RuenEquipmentPreview', () => ({ RuenEquipmentPreview: vi.fn() }));
 
 const engines: NullEngine[] = [];
@@ -197,12 +201,21 @@ const equipped = (kind: 'Idle' | 'Walk' | 'Run') => `Ruen_${kind}_Equipped`;
 
 describe('equipped Meshy locomotion visual adapter', () => {
   it('loads runtime equipment and authored clips before exterior scaling, preserving original groups', async () => {
-    const { view, model, conversion, joint, fallback, gear, container } = fixture();
+    const { view, model, scene, groups, combatGroups, directionalGroups, conversion, joint, fallback, gear, container } = fixture();
     const originalGroups = [...container.animationGroups];
     const originalKeys = originalGroups.map(group => group.targetedAnimations[0]!.animation.getKeys());
     fallback.root.rotation.x = 1.4;
     gear.load.mockImplementation(async () => { expect(model.root.scaling.asArray()).toEqual([1, 1, 1]); });
+    vi.mocked(refineRuenStances).mockImplementationOnce((actualModel, actualScene, locomotion, combat) => {
+      expect(actualModel).toBe(model); expect(actualScene).toBe(scene);
+      expect(locomotion).toBe(groups); expect(combat).toBe(combatGroups);
+      expect(Object.values(directionalGroups)).toHaveLength(6);
+      expect(Object.values(directionalGroups).every(group => model.container.animationGroups.includes(group))).toBe(true);
+      expect(model.root.scaling.asArray()).toEqual([1, 1, 1]);
+      expect(model.container.animationGroups.every(group => !group.isStarted)).toBe(true);
+    });
     await view.load();
+    expect(refineRuenStances).toHaveBeenCalledOnce();
     expect(view.status).toBe('ready'); expect(view.diagnostics.equipped).toBe(true);
     expect(RuenEquipmentPreview).toHaveBeenCalledWith(view.model!.root.getScene(), model, ruenRuntimeEquipmentProfiles);
     expect(gear.load).toHaveBeenCalledOnce(); expect(view.equipment).toBe(gear);
@@ -216,6 +229,17 @@ describe('equipped Meshy locomotion visual adapter', () => {
     originalGroups.forEach((group, index) => expect(group.targetedAnimations[0]!.animation.getKeys()).toEqual(originalKeys[index]));
     expect(container.animationGroups.slice(0, 4)).toEqual(originalGroups);
     expect(container.animationGroups).toHaveLength(26); expect(model.report.animationGroups).toHaveLength(4);
+  });
+
+  it('cleans up a rejected stance refinement and retains the playable fallback instead of exposing a partial rig', async () => {
+    const { view, model, gear, fallback, sim } = fixture();
+    vi.mocked(refineRuenStances).mockImplementationOnce(() => { throw new Error('invalid stance rig'); });
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    await view.load(); view.update(sim, true);
+    expect(view.status).toBe('error'); expect(view.error).toBe('invalid stance rig');
+    expect(model.root.isDisposed()).toBe(true); expect(gear.dispose).toHaveBeenCalledOnce();
+    expect(view.model).toBeUndefined(); expect(view.diagnostics.representation).toBe('fallback');
+    expect(fallback.root.isEnabled()).toBe(true); expect(warn).toHaveBeenCalledOnce();
   });
 
   it('opens in a paused equipped Idle and advances breathing only while the simulation plays', async () => {
@@ -259,6 +283,40 @@ describe('equipped Meshy locomotion visual adapter', () => {
     expect(groups.run!.isStarted).toBe(false); expect(groups.idle!.isPlaying).toBe(true);
     advance(0.25, 0); scene._animate(250); expect(joint.position.y).toBeCloseTo(0, 10);
     expect(joint.position.x).toBeGreaterThan(0);
+  });
+
+  it('restores foot support after a stopping blend without moving the root or affecting airborne/running poses, and releases its observer', async () => {
+    const { view, scene, sim, model, joint, foot, toe, toeEnd, advance } = fixture({ directionalRig: true });
+    const supports = [foot, toe, toeEnd], referenceY = supports.map(node => node.computeWorldMatrix(true).getTranslation().y);
+    const observers = scene.onAfterAnimationsObservable.observers.length;
+    await view.load();
+    Object.assign(sim.player, { state: 'run', y: 2.3, yaw: .7 });
+    view.update(sim, true); scene._animate(0); advance(.1, .4); scene._animate(100);
+    sim.player.state = 'idle'; view.update(sim, true); advance(.08, 0); scene._animate(80);
+    expect(view.weights.idle).toBeGreaterThan(0); expect(view.weights.idle).toBeLessThan(1);
+    const root = model.root.position.clone(), player = structuredClone(sim.player);
+    const clearance = () => supports.map((node, index) => node.computeWorldMatrix(true).getTranslation().y -
+      referenceY[index]! * model.root.scaling.y - model.root.position.y);
+    // A late weighted pose may place the support below the solved floor even
+    // when its two source clips are valid. Exercise the final-animation hook.
+    joint.position.y = -.25;
+    expect(Math.min(...clearance())).toBeLessThan(-.1);
+    scene.onAfterAnimationsObservable.notifyObservers(scene);
+    const corrected = clearance();
+    corrected.forEach(value => expect(value).toBeGreaterThanOrEqual(-1e-7));
+    expect(Math.min(...corrected)).toBeCloseTo(0, 6);
+    expect(model.root.position.equals(root)).toBe(true); expect(sim.player).toEqual(player);
+
+    sim.player.grounded = false; joint.position.y = -.25;
+    scene.onAfterAnimationsObservable.notifyObservers(scene);
+    expect(joint.position.y).toBe(-.25); // Same active transition, airborne guard.
+    sim.player.grounded = true; sim.player.state = 'run'; advance(.05, .2);
+    joint.position.y = -.25;
+    scene.onAfterAnimationsObservable.notifyObservers(scene);
+    expect(joint.position.y).toBe(-.25); // Gait remains responsible for its feet.
+
+    view.dispose(); await new Promise(resolve => setTimeout(resolve, 0));
+    expect(scene.onAfterAnimationsObservable.observers).toHaveLength(observers - 1);
   });
 
   it('interrupts three-way blends continuously and keeps complementary weights', async () => {

@@ -1,5 +1,27 @@
 # Validación ejecutada
 
+## Reposo y guardia: validado; publicación pendiente
+
+Aprobaron **243 unitarias en 21 archivos** en 9.99 s, typecheck y build
+(Vite: 1.40 s, aviso conocido de chunks grandes). Las poses finales de
+Idle/Guardia se revisaron desde tres vistas y ambas manos: 242 muestras,
+muñecas de guardia a 21.4°/19.6° y codo derecho de Idle a 69.9° de flexión.
+
+Tras corregir el transporte bajo de la espada durante carrera lateral,
+el barrido final cubrió 1,182 muestras de 22 clips: cuerpo a −0.0010469 y
+equipo a +0.0892450 como mínimos, dentro de 0.01 de tolerancia de suelo.
+Los cinco GLB conservan sus hashes. El adaptador aprobó 720 muestras de cuatro
+escenarios, con repetición aislada de la frenada tras corregir el apoyo de la
+suela mediante 20 sondas reales. No hubo desplazamiento de raíz ni respaldo
+provisional. Aprobaron **cuatro casos seleccionados de 53** de navegador
+(3 de desarrollo y 1 de producción), sin omisiones. La primera corrida tuvo
+3 aprobados y un fallo: el test del visor suponía que seleccionar un clip lo
+dejaba pausado. Se corrigió sólo el test para pausarlo explícitamente y su
+repetición aislada aprobó; la aplicación y el build permanecieron intactos.
+La publicación sigue pendiente y la fuente pública continúa siendo `f0402306`.
+[Alcance](RUEN_NATURAL_STANCES.md) ·
+[Evidencia](evidence/ruen-natural-stances/README.md).
+
 ## Acciones completas: validadas y publicadas
 
 Aprobaron typecheck, build y **234 pruebas unitarias en 20 archivos** en 5.67 s.

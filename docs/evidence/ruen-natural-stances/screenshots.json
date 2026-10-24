@@ -1,0 +1,55 @@
+{
+  "scope": "Selected before/final stance captures, not gameplay input screenshots. Full20PNG sets stay external.",
+  "images": [
+    {
+      "file": "before-idle-front.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/before/idle-rest-front.png",
+      "sha256": "de096aed327892d969a875d143ebc719adf460d8be227349b8f56464d5966712"
+    },
+    {
+      "file": "before-guard-side.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/before/guard-rest-side.png",
+      "sha256": "f4a9283d236b2674f21d017e2b372d7b6e82cb3a330ed21919f8f846663ba95c"
+    },
+    {
+      "file": "before-idle-right-grip-side.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/before/idle-right-grip-side.png",
+      "sha256": "5a6068e5602f82fa8860339676a10464fe9d2b14f13aca961d9edc002593d659"
+    },
+    {
+      "file": "idle-front.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/idle-rest-front.png",
+      "sha256": "36d648f4e79f3c3497174096990eef777597dffc8b017786a2c51d405620b412"
+    },
+    {
+      "file": "idle-side.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/idle-rest-side.png",
+      "sha256": "ee1e1fbce0f3a135835b9fb536043347b70361a22c70f474d401406b56028c27"
+    },
+    {
+      "file": "idle-back.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/idle-rest-back.png",
+      "sha256": "9ab240a20265e563367ac755c40492c4601637f5cc2b18cbdcf9acea85ecbaa3"
+    },
+    {
+      "file": "guard-front.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/guard-rest-front.png",
+      "sha256": "5668841665ef44fc2713cd788d8a2f58c231c1c629b28a89ea34cf72831f8950"
+    },
+    {
+      "file": "guard-side.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/guard-rest-side.png",
+      "sha256": "8c458fccc59d8469326b1b318be5a0073cfe05dfb288cfd79f3937b15cf96642"
+    },
+    {
+      "file": "idle-right-grip-side.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/idle-right-grip-side.png",
+      "sha256": "b087aef0699dc75037a4bff4e7405e31ec32979f20269d8fc57b1629c8b0dfcf"
+    },
+    {
+      "file": "guard-left-grip-side.png",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/fit2/guard-left-grip-side.png",
+      "sha256": "2042296a727a7a10e820162d7873d797e144241f93c747aa8a7fdab9995ce5b3"
+    }
+  ]
+}

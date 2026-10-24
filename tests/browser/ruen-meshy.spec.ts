@@ -113,7 +113,7 @@ async function equipmentPose(page: Page) {
     const rootInverse = model.root.computeWorldMatrix(true).clone().invert();
     return {
       age: sim.age, health: sim.player.health, enemyHealth: sim.enemies.map(enemy => enemy.hp),
-      feet: model.container.transformNodes.filter(node => /mixamorig:(Left|Right)(UpLeg|Leg|Foot|ToeBase|Toe_End)$/.test(node.name))
+      feet: model.container.transformNodes.filter(node => /mixamorig:(Left|Right)(Foot|ToeBase|Toe_End)$/.test(node.name))
         .map(node => ({ name: node.name, relativeWorld: Array.from(node.computeWorldMatrix(true).multiply(rootInverse).asArray()) })),
       torso: model.container.transformNodes.filter(node => /^mixamorig:Spine[12]$/.test(node.name))
         .map(node => ({ name: node.name, rotation: node.rotationQuaternion!.asArray() })),
@@ -141,10 +141,12 @@ function expectGearAttached(pose: Awaited<ReturnType<typeof equipmentPose>>, ena
   }
 }
 
-function expectSameFeet(actual: Awaited<ReturnType<typeof equipmentPose>>, expected: Awaited<ReturnType<typeof equipmentPose>>) {
+function expectPlantedFeet(actual: Awaited<ReturnType<typeof equipmentPose>>, expected: Awaited<ReturnType<typeof equipmentPose>>) {
   expect(actual.feet.map(node => node.name)).toEqual(expected.feet.map(node => node.name));
-  actual.feet.forEach((node, index) => node.relativeWorld.forEach((value, axis) =>
-    expect(value, `${node.name}[${axis}]`).toBeCloseTo(expected.feet[index]!.relativeWorld[axis]!, 5)));
+  // A weight shift may move the hips and flex the knees. The supporting feet
+  // must retain their positions relative to the controller root throughout it.
+  actual.feet.forEach((node, index) => [12, 13, 14].forEach(axis =>
+    expect(node.relativeWorld[axis], `${node.name}[${axis}]`).toBeCloseTo(expected.feet[index]!.relativeWorld[axis]!, 3)));
 }
 
 async function originalClipFingerprint(page: Page) {
@@ -223,7 +225,7 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
   const standing = await equipmentPose(page);
   expectGearAttached(standing);
   await expect.poll(async () => (await equipmentPose(page)).torso).not.toEqual(standing.torso);
-  expectSameFeet(await equipmentPose(page), standing);
+  expectPlantedFeet(await equipmentPose(page), standing);
 
   await collectBlend(page);
   await stick(page, .45);
@@ -276,10 +278,10 @@ test('default Ruen breathes with reduced equipment, blends walking and running, 
   await expect.poll(() => page.evaluate(() => (window as TestWindow).__veylun.camera.camera.getScene().getTransformNodeByName('ruen-provisional')!.isEnabled())).toBe(false);
   await expect.poll(async () => (await state(page)).diagnostics?.clips.filter(clip => clip.isPlaying).map(clip => clip.name)).toEqual([equippedNames.idle]);
   const returned = await equipmentPose(page);
-  expectSameFeet(returned, standing);
+  expectPlantedFeet(returned, standing);
   expectGearAttached(returned);
   await expect.poll(async () => (await equipmentPose(page)).torso).not.toEqual(returned.torso);
-  expectSameFeet(await equipmentPose(page), standing);
+  expectPlantedFeet(await equipmentPose(page), standing);
   await page.screenshot({ path: info.outputPath('equipped-gameplay-idle.png') });
 
   for (const [key, pattern] of [['Space', /^(jump|fall)$/], ['ShiftLeft', /^roll$/]] as const) {

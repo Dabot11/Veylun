@@ -5,6 +5,7 @@ import type { TransformNode } from '@babylonjs/core/Meshes/transformNode';
 import type { Scene } from '@babylonjs/core/scene';
 import type { InspectionModel } from './inspectModel';
 import { ruenIdlePreviewProfile } from './ruenIdlePreview';
+import { RuenPoseBuilder } from './ruenPoseAuthoring';
 
 /** Initial fitting parameters for the isolated equipment preview, not gameplay. */
 export const ruenEquippedIdleProfile = {
@@ -178,6 +179,28 @@ export function createRuenEquippedIdlePreview(
     }
     poses.push(...gripTracks(side, nodes));
   }
+
+  // Preserve the equipped locomotion's established weapon placement while
+  // correcting the handle frame inside each fist. The new palm offset moves
+  // the wrist; solve both arm segments without stretching any bone. A later
+  // pose refinement supplies the relaxed Idle and braced combat stance.
+  const legacy = new RuenPoseBuilder(nodes, new Map(poses.map(pose => [pose.node, pose.rotation])));
+  const fitted = new RuenPoseBuilder(nodes, legacy.rotations);
+  for (const side of sides) {
+    const hand = nodes.get(`mixamorig:${side}Hand`)!;
+    const rotation = side === 'Right' ? [0.1003138816, -0.4090243679, -2.9653931856] :
+      [-1.4497777416, 2.0538441591, 1.0377765256];
+    const weapon = Matrix.Compose(Vector3.One(), Quaternion.FromEulerAngles(rotation[0]!, rotation[1]!, rotation[2]!),
+      new Vector3(0, 0.05, 0)).multiply(legacy.world(hand));
+    const up = Vector3.TransformNormal(Vector3.Up(), weapon).normalize();
+    const triple = (value: Vector3): [number, number, number] => [value.x, value.y, value.z];
+    fitted.arm(side, {
+      grip: triple(weapon.getTranslation()), face: triple(Vector3.TransformNormal(Vector3.Forward(), weapon).normalize()),
+      ...(side === 'Right' ? { blade: triple(up.negate()) } : { up: triple(up) }),
+      elbow: triple(legacy.position(nodes.get(`mixamorig:${side}ForeArm`)!)),
+    });
+  }
+  for (const pose of poses) pose.rotation = fitted.rotations.get(pose.node)!;
 
   const group = new AnimationGroup(name, scene);
   try {

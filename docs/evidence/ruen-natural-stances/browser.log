@@ -1,0 +1,54 @@
+[WebServer] (node:6670) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6683) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:6721) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 4 tests using 1 worker
+
+(node:6745) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/4] tests/browser/ruen-combat.spec.ts:255:1 › real shield input blocks a Brote hit and keeps equipped guard while moving under lock-on
+[2/4] tests/browser/ruen-meshy.spec.ts:192:1 › default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal
+[3/4] tests/browser/ruen-posture-preview.spec.ts:95:1 › posture preview keeps natural Idle and guard grounded, equipped and looping on the real skin
+  1) tests/browser/ruen-posture-preview.spec.ts:95:1 › posture preview keeps natural Idle and guard grounded, equipped and looping on the real skin 
+
+    Error: page.evaluate: Error: Posture samples must be paused.
+        at eval (eval at evaluate (:370:30), <anonymous>:7:39)
+        at UtilityScript.evaluate (<anonymous>:372:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at eval (eval at evaluate (:370:30), <anonymous>:7:39)
+        at UtilityScript.evaluate (<anonymous>:372:16)
+        at UtilityScript.<anonymous> (<anonymous>:1:44)
+        at sample (/workspace/Veylun/tests/browser/ruen-posture-preview.spec.ts:44:15)
+        at /workspace/Veylun/tests/browser/ruen-posture-preview.spec.ts:103:24
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ../veylun-validation/ruen-natural-poses/browser/ruen-posture-preview-postu-7d074-nd-looping-on-the-real-skin/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ../veylun-validation/ruen-natural-poses/browser/ruen-posture-preview-postu-7d074-nd-looping-on-the-real-skin/error-context.md
+
+
+(node:7154) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[4/4] tests/browser/ruen-posture-preview.spec.ts:137:1 › production posture preview opens the relaxed Idle and offers guard without debug hooks or save writes
+  1 failed
+    tests/browser/ruen-posture-preview.spec.ts:95:1 › posture preview keeps natural Idle and guard grounded, equipped and looping on the real skin 
+  3 passed (3.7m)
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

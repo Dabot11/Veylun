@@ -16,6 +16,8 @@ import { createRuenEquippedDirectional, ruenEquippedDirectionalProfile } from '.
 import { gameConfig } from '../config/gameConfig';
 import { attacks } from '../player/combat';
 import { groundHeight } from '../world/level';
+import { refineRuenStances } from './ruenNaturalStances';
+import { createRuenSoleSampler } from './ruenSoleSupport';
 
 type Locomotion = 'idle' | 'walk' | 'run';
 type LoadStatus = 'loading' | 'ready' | 'error';
@@ -194,8 +196,23 @@ export class RuenLocomotionView {
   private transition: { startWeights: Weights; elapsed: number } | undefined;
   private representation: 'meshy' | 'fallback' = 'fallback';
   private reason = 'loading';
+  private restSupport = new Map<TransformNode, number>();
+  private sampleSoles: (() => number) | undefined;
 
-  constructor(private readonly scene: Scene, private readonly fallback: CharacterRig) {}
+  constructor(private readonly scene: Scene, private readonly fallback: CharacterRig) {
+    scene.onAfterAnimationsObservable.add(this.preserveStoppingSupport);
+  }
+
+  // Weighted joint rotations do not preserve a solved foot contact. Correct
+  // only the final visual blend into grounded Idle, after Babylon has applied
+  // its animation weights; the controller/root position remains authoritative.
+  private preserveStoppingSupport = (): void => {
+    if (!this.loaded || this.representation !== 'meshy' || this.target !== 'idle' || !this.transition || !this.sample?.player.grounded) return;
+    const floor = this.loaded.root.position.y;
+    const clearance = Math.min(this.sampleSoles ? this.sampleSoles() - floor : Infinity, ...[...this.restSupport].map(([node, restY]) =>
+      node.computeWorldMatrix(true).getTranslation().y - restY * this.loaded!.root.scaling.y - floor));
+    if (clearance < -1e-6) this.shiftHipsWorld(-clearance);
+  };
 
   get model(): InspectionModel | undefined { return this.loaded; }
   get equipment(): RuenEquipmentPreview | undefined { return this.equipmentView; }
@@ -322,7 +339,11 @@ export class RuenLocomotionView {
           this.directionalError = error instanceof Error ? error.message : String(error);
           console.warn('El movimiento lateral de Ruen conserva el modelo provisional.', error);
         }
+        refineRuenStances(model, this.scene, groups, this.combatGroups);
       }
+      this.restSupport = new Map(model.container.transformNodes.filter(node => /^mixamorig:(Left|Right)(Foot|ToeBase|Toe_End)$/.test(node.name))
+        .map(node => [node, node.computeWorldMatrix(true).getTranslation().y]));
+      this.sampleSoles = createRuenSoleSampler(model);
       model.root.name = 'ruen-meshy-visual';
       model.root.scaling.setAll(ruenMeshyProfile.scale);
       // Keep the glTF conversion and all hand-mounted assets under this independent root.
@@ -858,6 +879,9 @@ export class RuenLocomotionView {
   dispose(): void {
     if (this.disposed) return;
     this.disposed = true;
+    this.scene.onAfterAnimationsObservable.removeCallback(this.preserveStoppingSupport);
+    this.restSupport.clear();
+    this.sampleSoles = undefined;
     this.equipmentView?.dispose(); this.equipmentView = undefined;
     this.loadingModel?.dispose(); this.loadingModel = undefined;
     this.loaded?.dispose(); this.loaded = undefined; this.groups = undefined; this.combatGroups = undefined; this.traversalGroups = undefined; this.actionGroups = undefined; this.directionalGroups = undefined; this.clearCombat(); this.clearTraversal(); this.clearActions(); this.clearDirectional();

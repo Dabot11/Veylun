@@ -35,6 +35,15 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
+## Reposo y guardia: validados; publicación pendiente
+
+Se ajustaron el agarre de espada y escudo, el reposo relajado, la postura de
+defensa y el transporte de las armas al moverse. Las poses y los contactos
+ya se calibraron; aprobaron 243 unitarias, cuatro casos seleccionados de
+navegador, typecheck y build. La publicación sigue pendiente; la fuente
+pública continúa siendo `f0402306`.
+[Alcance y visor local](docs/RUEN_NATURAL_STANCES.md).
+
 ## Acciones completas: publicadas
 
 La nueva etapa cubre daño, muerte, interacción, victoria, locomoción lateral
