@@ -1,8 +1,10 @@
 # Reposo, guardia y agarre de Ruen
 
-Estado: **validado; publicación pendiente**. Aprobaron 243 unitarias, cuatro
-casos seleccionados de navegador, typecheck y build. La versión pública
-vigente sigue siendo `f0402306`.
+Estado: **validado y publicado desde `878956ab`**. Aprobaron 243 unitarias,
+cuatro casos seleccionados de navegador, typecheck y build. El
+[PR #8](https://github.com/Dabot11/Veylun/pull/8) integra la revisión y
+[Actions](https://github.com/Dabot11/Veylun/actions/runs/40113250432) confirma la publicación.
+[Registro y reversión](DEPLOYMENT.md).
 
 La revisión parte del comentario de que las poses se sienten rígidas y el
 personaje no sostiene las armas con naturalidad. El ajuste se concentra en
@@ -34,6 +36,8 @@ Estas medidas acompañan la revisión visual del agarre y la silueta.
 
 ## Visor
 
+[Jugar](https://dabot11.github.io/Veylun/?v=878956ab) ·
+[Ver reposo y guardia](https://dabot11.github.io/Veylun/?inspect=ruen&motion=posture-v1&v=878956ab).
 La ruta local `?inspect=ruen&motion=posture-v1` abre **Reposo · exploración**
 en pausa. El selector permite comparar ese reposo con **Guardia** y
 **Bloqueo recibido**, además de las otras animaciones. El visor conserva el

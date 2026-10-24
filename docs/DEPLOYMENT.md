@@ -8,7 +8,50 @@ resultado **Success**, revisión de publicación `716047d2c1ac3ffe2eee73dd6db238
 y código fuente `48a8aa0425a689ac1345547019a6dc09f7c82a3a`.
 GitHub habilitó Pages al recibir la rama; no fue necesario activarlo manualmente.
 
-## Publicación vigente: acciones completas de Ruen
+## Publicación vigente: reposo, guardia y agarre de Ruen
+
+El 24 de octubre de 2026, fecha de America/Monterrey, se integró el
+[PR #8](https://github.com/Dabot11/Veylun/pull/8) y se publicó la fuente
+`878956ab518de28c6efa0ba8b681a1cfe3d1f96b`. Su árbol coincide exactamente con el feature
+`382a5124af98cd2fb9f8d7c87be1f96134e4da37`. El commit de `gh-pages` es
+`b5bf8579457d839aeb47aadd3bab137df8134ba5`, con build de `2026-10-24T16:48:16.577Z`.
+[Actions 40113250432](https://github.com/Dabot11/Veylun/actions/runs/40113250432) terminó con **Success**
+a las `2026-10-24T16:49:02Z`; build, deploy y report-build-status aprobaron.
+El marcador remoto `deployment.json` confirma la fuente y la fecha del build.
+
+[Juego](https://dabot11.github.io/Veylun/?v=878956ab) ·
+[Visor de reposo y guardia](https://dabot11.github.io/Veylun/?inspect=ruen&motion=posture-v1&v=878956ab).
+Esta revisión corrige el contacto de las empuñaduras dentro del puño y las
+posturas de exploración/defensa. Ruen lleva la espada baja al descansar y la
+levanta al moverse, conserva el escudo relajado en las ocho variantes de
+locomoción y vuelve a la nueva guardia tras un bloqueo. Las suelas mantienen
+el apoyo al frenar. Se conservan los cinco GLB, los 20 clips originales,
+las escalas del equipo, las reglas de combate y el inventario de 42 grupos
+en juego/43 en el visor. El visor abre Reposo en pausa.
+
+Aprobaron typecheck, build, **243 unitarias y cuatro casos seleccionados de
+53 de navegador** (3 de desarrollo y 1 de producción). Tres casos aprobaron
+inicialmente; el del visor de desarrollo aprobó al repetirlo tras corregir la
+pausa explícita en su test. La aplicación y el build no cambiaron. También
+aprobaron la calibración de 22 clips y las transiciones del adaptador,
+incluida la repetición aislada de la frenada.
+[Evidencia y alcance](RUEN_NATURAL_STANCES.md).
+
+Desarrollo y producción se probaron localmente. La publicación se confirmó
+mediante GitHub y el marcador remoto del commit; el dominio público no se
+abrió en navegador por la política de red.
+[Verificación](evidence/ruen-natural-stances/deployment-verification.json) ·
+[Log de publicación](evidence/ruen-natural-stances/deploy.log).
+Los cambios documentales posteriores conservan este build.
+
+Para comparar con el rig provisional, usar `?ruen=provisional` y retirar el
+parámetro para volver al modelo real. Para retirar esta revisión del sitio,
+crear una reversión del **PR #8**, cuyo merge es
+`878956ab518de28c6efa0ba8b681a1cfe3d1f96b` y cuyo primer padre es
+`3da91d54dff4e619338348705befe3e778dc46a8`; revisar y publicar el nuevo commit.
+Esa base conserva todas las acciones de la etapa anterior.
+
+## Publicación anterior: acciones completas de Ruen
 
 El 23 de octubre de 2026, fecha de America/Monterrey, se integró el
 [PR #7](https://github.com/Dabot11/Veylun/pull/7). La fuente de publicación es

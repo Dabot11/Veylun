@@ -5,20 +5,21 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
-## Revisión de reposo y guardia
+## Reposo y guardia publicados
 
-La etapa en curso corrige el montaje dentro del puño y usa el reposo de
+Esta revisión corrige el montaje dentro del puño y usa el reposo de
 exploración y la guardia como referencia visual. Se comprueban las muñecas,
 la flexión de codos y rodillas, la respiración y el apoyo de los pies desde
 tres vistas y acercamientos a las manos. El agarre debe mantenerse al caminar
 y correr. Las poses y los contactos ya se calibraron; aprobaron 243 unitarias,
-cuatro casos seleccionados de navegador, typecheck y build. La publicación
-sigue pendiente.
+cuatro casos seleccionados de navegador, typecheck y build. Publicado desde
+`878956ab`, tras el [PR #8](https://github.com/Dabot11/Veylun/pull/8), con confirmación de
+[Actions](https://github.com/Dabot11/Veylun/actions/runs/40113250432).
 [Alcance y evidencia](RUEN_NATURAL_STANCES.md).
 
 ## Acciones completas publicadas
 
-La etapa actual adapta daño, muerte, interacción, victoria y seis variantes
+La etapa anterior adaptó daño, muerte, interacción, victoria y seis variantes
 de locomoción lateral/hacia atrás. También compone ataques y defensa con
 salto/caída, defensa con aterrizaje y bloqueo temporal con interacción. Las
 poses usan keyframes sobre el mismo esqueleto y conservan las reglas del

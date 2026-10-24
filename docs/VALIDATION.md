@@ -1,6 +1,6 @@
 # Validación ejecutada
 
-## Reposo y guardia: validado; publicación pendiente
+## Reposo y guardia: validado y publicado
 
 Aprobaron **243 unitarias en 21 archivos** en 9.99 s, typecheck y build
 (Vite: 1.40 s, aviso conocido de chunks grandes). Las poses finales de
@@ -18,7 +18,12 @@ provisional. Aprobaron **cuatro casos seleccionados de 53** de navegador
 3 aprobados y un fallo: el test del visor suponía que seleccionar un clip lo
 dejaba pausado. Se corrigió sólo el test para pausarlo explícitamente y su
 repetición aislada aprobó; la aplicación y el build permanecieron intactos.
-La publicación sigue pendiente y la fuente pública continúa siendo `f0402306`.
+La publicación quedó confirmada por [Actions 40113250432](https://github.com/Dabot11/Veylun/actions/runs/40113250432)
+tras integrar el [PR #8](https://github.com/Dabot11/Veylun/pull/8): fuente
+`878956ab518de28c6efa0ba8b681a1cfe3d1f96b`, con árbol idéntico al feature
+`382a5124af98cd2fb9f8d7c87be1f96134e4da37`; `gh-pages`
+`b5bf8579457d839aeb47aadd3bab137df8134ba5`. El marcador remoto confirma la fuente.
+[Registro de despliegue](DEPLOYMENT.md).
 [Alcance](RUEN_NATURAL_STANCES.md) ·
 [Evidencia](evidence/ruen-natural-stances/README.md).
 

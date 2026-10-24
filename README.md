@@ -35,23 +35,25 @@ No se necesitan secretos, cuentas, CDN ni servicios durante el juego.
 En el entorno cloud, usa `npm ci --cache /workspace/.cache/npm` para respetar
 los permisos de escritura. Ver `docs/CLOUD_SETUP.md`.
 
-## Reposo y guardia: validados; publicación pendiente
+## Reposo y guardia: publicados
 
 Se ajustaron el agarre de espada y escudo, el reposo relajado, la postura de
 defensa y el transporte de las armas al moverse. Las poses y los contactos
 ya se calibraron; aprobaron 243 unitarias, cuatro casos seleccionados de
-navegador, typecheck y build. La publicación sigue pendiente; la fuente
-pública continúa siendo `f0402306`.
-[Alcance y visor local](docs/RUEN_NATURAL_STANCES.md).
+navegador, typecheck y build. La fuente vigente es **`878956ab`**, publicada
+tras el [PR #8](https://github.com/Dabot11/Veylun/pull/8) y confirmada por Actions.
+[Jugar](https://dabot11.github.io/Veylun/?v=878956ab) ·
+[Ver reposo y guardia](https://dabot11.github.io/Veylun/?inspect=ruen&motion=posture-v1&v=878956ab) ·
+[Alcance y evidencia](docs/RUEN_NATURAL_STANCES.md).
 
-## Acciones completas: publicadas
+## Etapa anterior: acciones completas publicadas
 
-La nueva etapa cubre daño, muerte, interacción, victoria, locomoción lateral
+La etapa anterior incorporó daño, muerte, interacción, victoria, locomoción lateral
 y hacia atrás, y combate compuesto con salto, caída, aterrizaje e interacción.
 Todos los estados existentes usan el modelo real con equipo cuando la carga
 es correcta. Aprobaron **234 unitarias y 13 casos seleccionados de navegador**,
 además de typecheck, build y calibración de contacto.
-La versión vigente es **`f0402306`**, publicada tras el
+Esa fuente fue **`f0402306`**, publicada tras el
 [PR #7](https://github.com/Dabot11/Veylun/pull/7) y confirmada por Actions.
 [Jugar](https://dabot11.github.io/Veylun/?v=f0402306) ·
 [Ver las acciones](https://dabot11.github.io/Veylun/?inspect=ruen&motion=actions-v1&v=f0402306) ·

@@ -1,0 +1,52 @@
+{
+  "sourceCommit": "878956ab518de28c6efa0ba8b681a1cfe3d1f96b",
+  "featureCommit": "382a5124af98cd2fb9f8d7c87be1f96134e4da37",
+  "featureAndMergedTreeIdentical": true,
+  "pullRequest": "https://github.com/Dabot11/Veylun/pull/8",
+  "ghPagesCommit": "b5bf8579457d839aeb47aadd3bab137df8134ba5",
+  "deploymentMarker": {
+    "sourceCommit": "878956ab518de28c6efa0ba8b681a1cfe3d1f96b",
+    "builtAt": "2026-10-24T16:48:16.577Z"
+  },
+  "markerUrl": "https://raw.githubusercontent.com/Dabot11/Veylun/b5bf8579457d839aeb47aadd3bab137df8134ba5/deployment.json",
+  "workflow": {
+    "id": 40113250432,
+    "url": "https://github.com/Dabot11/Veylun/actions/runs/40113250432",
+    "status": "completed",
+    "conclusion": "success",
+    "headSha": "b5bf8579457d839aeb47aadd3bab137df8134ba5",
+    "updatedAt": "2026-10-24T16:49:02Z",
+    "jobs": [
+      {
+        "id": 120929178465,
+        "name": "build",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40113250432,
+        "logs_url": null,
+        "steps": null
+      },
+      {
+        "id": 120929234456,
+        "name": "deploy",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40113250432,
+        "logs_url": null,
+        "steps": null
+      },
+      {
+        "id": 120929234527,
+        "name": "report-build-status",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 40113250432,
+        "logs_url": null,
+        "steps": null
+      }
+    ]
+  },
+  "gameUrl": "https://dabot11.github.io/Veylun/?v=878956ab",
+  "inspectorUrl": "https://dabot11.github.io/Veylun/?inspect=ruen&motion=posture-v1&v=878956ab",
+  "verification": "GitHub connector verified the exact gh-pages commit marker and successful build/deploy/report jobs. Direct public-site browser access is restricted in this environment; development and production browser checks ran locally."
+}

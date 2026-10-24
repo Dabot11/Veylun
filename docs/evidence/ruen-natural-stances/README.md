@@ -1,7 +1,6 @@
 # Evidencia de reposo y guardia de Ruen
 
-Estado: **validado; publicación pendiente**.
-La fuente pública vigente es `f0402306`.
+Estado: **validado y publicado desde `878956ab`**.
 [Alcance](../../RUEN_NATURAL_STANCES.md).
 
 ## Poses y agarre
@@ -117,5 +116,23 @@ aprobados. Capturas del caso del visor:
 
 El [manifiesto final de 106 archivos](source-manifest.sha256) registra el ajuste
 del test. Se conserva también el [manifiesto anterior](source-manifest-before-preview-pause.sha256).
-No se atribuyen a esta revisión las pruebas de etapas anteriores. La publicación
-aún no se ha iniciado.
+No se atribuyen a esta revisión las pruebas de etapas anteriores.
+
+
+## Publicación
+
+El [PR #8](https://github.com/Dabot11/Veylun/pull/8) se integró en la fuente
+`878956ab518de28c6efa0ba8b681a1cfe3d1f96b`, cuyo árbol coincide con el feature
+`382a5124af98cd2fb9f8d7c87be1f96134e4da37`. El build de `gh-pages` es
+`b5bf8579457d839aeb47aadd3bab137df8134ba5`, creado el `2026-10-24T16:48:16.577Z`.
+[Actions 40113250432](https://github.com/Dabot11/Veylun/actions/runs/40113250432) terminó con **Success**
+a las `2026-10-24T16:49:02Z`, incluidos build, deploy y report-build-status.
+El marcador remoto del commit confirma la fuente y la fecha del build.
+[Verificación](deployment-verification.json) · [Log de publicación](deploy.log).
+
+[Jugar](https://dabot11.github.io/Veylun/?v=878956ab) ·
+[Visor](https://dabot11.github.io/Veylun/?inspect=ruen&motion=posture-v1&v=878956ab).
+Desarrollo y producción se probaron localmente. La publicación se confirmó
+mediante GitHub y el marcador remoto; el dominio público no se abrió en
+navegador por la política de red. Los cambios documentales posteriores no
+modifican el build publicado.
