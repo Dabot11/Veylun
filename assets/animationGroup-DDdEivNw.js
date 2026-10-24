@@ -1,1 +1,0 @@
-import{J as e}from"./glTF-B4M5PdO1.js";import{n as t}from"./animationGroup.pure-C8VwxqJM.js";e(),t();
