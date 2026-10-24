@@ -1,0 +1,782 @@
+{
+  "schemaVersion": 1,
+  "scope": "Isolated real skinned model and equipment calibration; not gameplay input tests.",
+  "wristMeasure": "Angle between forearm extension and the hand longitudinal +Y axis; reported degrees are rig-space geometry, not a clinical joint measurement.",
+  "before": {
+    "source": {
+      "path": "/workspace/veylun-validation/ruen-natural-poses/before/poses.json",
+      "sha256": "eb03c3253a4a7ed91ae726bf681a4ae442789989176c432c8d1930f34e3cfb03"
+    },
+    "samplesPerSecond": 30,
+    "groupCount": 43,
+    "sourceTrackDigestBefore": {
+      "length": 29381164,
+      "fnv": 4266886877
+    },
+    "sourceTrackDigestAfter": {
+      "length": 29381164,
+      "fnv": 4266886877
+    },
+    "sourceTracksUnchanged": true,
+    "errors": [],
+    "profiles": [
+      {
+        "clip": "Ruen_Idle_Equipped",
+        "sampleCount": 121,
+        "durationSeconds": 4,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.07955000674262186,
+        "maxGripError": 1.55852916909499e-07,
+        "armsAtRest": [
+          {
+            "side": "Left",
+            "elbowFlexionDegrees": 85.22655314586959,
+            "wristBendDegrees": 1.142492261025444
+          },
+          {
+            "side": "Right",
+            "elbowFlexionDegrees": 10.30058345747534,
+            "wristBendDegrees": 6.197501829710767
+          }
+        ],
+        "maxWristBendDegrees": {
+          "Left": 1.1425078411579601,
+          "Right": 6.197504314669333
+        },
+        "rootUnchanged": true
+      },
+      {
+        "clip": "Ruen_Guard_Equipped",
+        "sampleCount": 121,
+        "durationSeconds": 4,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.37256591736797123,
+        "maxGripError": 1.6582198360058464e-07,
+        "armsAtRest": [
+          {
+            "side": "Left",
+            "elbowFlexionDegrees": 90.7804816393822,
+            "wristBendDegrees": 47.37975948844599
+          },
+          {
+            "side": "Right",
+            "elbowFlexionDegrees": 101.57802957286808,
+            "wristBendDegrees": 32.26209528817769
+          }
+        ],
+        "maxWristBendDegrees": {
+          "Left": 47.379761098915516,
+          "Right": 32.26210669666316
+        },
+        "rootUnchanged": true
+      }
+    ]
+  },
+  "initialFit": {
+    "source": {
+      "path": "/workspace/veylun-validation/ruen-natural-poses/fit1/poses.json",
+      "sha256": "6f6e2a0b96dec3727df1e7e57c4df52a8003997561a3b8766a98d18d487672ca"
+    },
+    "samplesPerSecond": 30,
+    "groupCount": 43,
+    "sourceTrackDigestBefore": {
+      "length": 29381164,
+      "fnv": 4266886877
+    },
+    "sourceTrackDigestAfter": {
+      "length": 29381164,
+      "fnv": 4266886877
+    },
+    "sourceTracksUnchanged": true,
+    "errors": [],
+    "profiles": [
+      {
+        "clip": "Ruen_Idle_Equipped",
+        "sampleCount": 121,
+        "durationSeconds": 4,
+        "minBodyWorldY": -0.0007646304438821971,
+        "minEquipmentWorldY": 0.17414198751185184,
+        "maxGripError": 7.734069650117174e-08,
+        "armsAtRest": [
+          {
+            "side": "Left",
+            "elbowFlexionDegrees": 86.66909649373073,
+            "wristBendDegrees": 56.57984171714842
+          },
+          {
+            "side": "Right",
+            "elbowFlexionDegrees": 0.7980968559157304,
+            "wristBendDegrees": 111.56158757664241
+          }
+        ],
+        "maxWristBendDegrees": {
+          "Left": 57.02002565198005,
+          "Right": 111.96591706742879
+        },
+        "rootUnchanged": true
+      },
+      {
+        "clip": "Ruen_Guard_Equipped",
+        "sampleCount": 121,
+        "durationSeconds": 4,
+        "minBodyWorldY": -0.0008525063749402761,
+        "minEquipmentWorldY": 0.8066272912203627,
+        "maxGripError": 1.1231786290829224e-07,
+        "armsAtRest": [
+          {
+            "side": "Left",
+            "elbowFlexionDegrees": 116.70391912782122,
+            "wristBendDegrees": 31.86306273469397
+          },
+          {
+            "side": "Right",
+            "elbowFlexionDegrees": 77.99278410420716,
+            "wristBendDegrees": 104.6112553462162
+          }
+        ],
+        "maxWristBendDegrees": {
+          "Left": 32.63068552527501,
+          "Right": 105.3014689098931
+        },
+        "rootUnchanged": true
+      }
+    ]
+  },
+  "acceptedStances": {
+    "source": {
+      "path": "/workspace/veylun-validation/ruen-natural-poses/fit2/poses.json",
+      "sha256": "d6aa6fa4b4f644aa9e4ffb18066aec3a06a8d4245f87c92adff374c78f1affdd"
+    },
+    "samplesPerSecond": 30,
+    "groupCount": 43,
+    "sourceTrackDigestBefore": {
+      "length": 29381164,
+      "fnv": 4266886877
+    },
+    "sourceTrackDigestAfter": {
+      "length": 29381164,
+      "fnv": 4266886877
+    },
+    "sourceTracksUnchanged": true,
+    "errors": [],
+    "profiles": [
+      {
+        "clip": "Ruen_Idle_Equipped",
+        "sampleCount": 121,
+        "durationSeconds": 4,
+        "minBodyWorldY": -0.0007646304438821971,
+        "minEquipmentWorldY": 0.134616621346501,
+        "maxGripError": 1.31930334592729e-07,
+        "armsAtRest": [
+          {
+            "side": "Left",
+            "elbowFlexionDegrees": 88.2725724580205,
+            "wristBendDegrees": 22.000144076749848
+          },
+          {
+            "side": "Right",
+            "elbowFlexionDegrees": 69.85796427840343,
+            "wristBendDegrees": 17.999286051063233
+          }
+        ],
+        "maxWristBendDegrees": {
+          "Left": 22.51651907705764,
+          "Right": 18.17242406904211
+        },
+        "rootUnchanged": true
+      },
+      {
+        "clip": "Ruen_Guard_Equipped",
+        "sampleCount": 121,
+        "durationSeconds": 4,
+        "minBodyWorldY": -0.0008525063749402761,
+        "minEquipmentWorldY": 0.8479574225519826,
+        "maxGripError": 1.0674227629087942e-07,
+        "armsAtRest": [
+          {
+            "side": "Left",
+            "elbowFlexionDegrees": 102.89670205967202,
+            "wristBendDegrees": 21.442805832613143
+          },
+          {
+            "side": "Right",
+            "elbowFlexionDegrees": 103.49913417156664,
+            "wristBendDegrees": 19.569423471307122
+          }
+        ],
+        "maxWristBendDegrees": {
+          "Left": 21.927780098390254,
+          "Right": 20.287160993436483
+        },
+        "rootUnchanged": true
+      }
+    ]
+  },
+  "initialCarryContact": {
+    "source": {
+      "path": "/workspace/veylun-validation/ruen-natural-poses/contact-fit2/poses.json",
+      "sha256": "c0a8e9a5fe9a0bd99f519330c71d9b3dbc5455729e508b89bb0e0c5089b06d45"
+    },
+    "clipCount": 22,
+    "sampleCount": 604,
+    "groupCount": 43,
+    "originalCount": 20,
+    "errors": [],
+    "floorTolerance": -0.01,
+    "minBodyWorldY": -0.0010469135595485568,
+    "minEquipmentWorldY": -0.140071792298043,
+    "profiles": [
+      {
+        "clip": "Ruen_Idle_Equipped",
+        "fps": 30,
+        "sampleCount": 61,
+        "fromFrame": 0,
+        "toFrame": 120,
+        "minBodyWorldY": -0.0007646304438821971,
+        "minEquipmentWorldY": 0.134616621346501,
+        "maxGripError": 1.31930334592729e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Equipped",
+        "fps": 60,
+        "sampleCount": 32,
+        "fromFrame": 0,
+        "toFrame": 61.99997663497925,
+        "minBodyWorldY": 0.02824517711997032,
+        "minEquipmentWorldY": 0.32316017703051597,
+        "maxGripError": 1.0088296613801812e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Equipped",
+        "fps": 60,
+        "sampleCount": 20,
+        "fromFrame": 0,
+        "toFrame": 37.99998164176941,
+        "minBodyWorldY": 0.016350092366337776,
+        "minEquipmentWorldY": 0.44121657135839126,
+        "maxGripError": 1.09100796843665e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Guard_Equipped",
+        "fps": 60,
+        "sampleCount": 121,
+        "fromFrame": 0,
+        "toFrame": 240,
+        "minBodyWorldY": -0.0008525063749402761,
+        "minEquipmentWorldY": 0.8479574225519826,
+        "maxGripError": 1.0674227629087942e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Block_Equipped",
+        "fps": 60,
+        "sampleCount": 8,
+        "fromFrame": 0,
+        "toFrame": 13.2,
+        "minBodyWorldY": -0.0008459333330392838,
+        "minEquipmentWorldY": 0.8361527177266883,
+        "maxGripError": 1.3641303349329442e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Attack1_Equipped",
+        "fps": 60,
+        "sampleCount": 16,
+        "fromFrame": 0,
+        "toFrame": 28.799999999999997,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.2420506430578272e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Attack2_Equipped",
+        "fps": 60,
+        "sampleCount": 16,
+        "fromFrame": 0,
+        "toFrame": 30,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.4051022060108855e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Attack3_Equipped",
+        "fps": 60,
+        "sampleCount": 20,
+        "fromFrame": 0,
+        "toFrame": 37.8,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.083771515113616e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Jump_Equipped",
+        "fps": 60,
+        "sampleCount": 13,
+        "fromFrame": 0,
+        "toFrame": 22.803508501982762,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 9.877299139299017e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Fall_Equipped",
+        "fps": 60,
+        "sampleCount": 10,
+        "fromFrame": 0,
+        "toFrame": 18,
+        "minBodyWorldY": -0.0007169376476667821,
+        "minEquipmentWorldY": 0.5882716019477581,
+        "maxGripError": 1.1349839930814342e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Land_Equipped",
+        "fps": 60,
+        "sampleCount": 5,
+        "fromFrame": 0,
+        "toFrame": 7.199999999999999,
+        "minBodyWorldY": -0.0007597805233672261,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 9.561324664539572e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Roll_Equipped",
+        "fps": 60,
+        "sampleCount": 15,
+        "fromFrame": 0,
+        "toFrame": 27,
+        "minBodyWorldY": -0.0010469135595485568,
+        "minEquipmentWorldY": 0.0892449670720038,
+        "maxGripError": 1.022009139380744e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Hurt_Equipped",
+        "fps": 60,
+        "sampleCount": 10,
+        "fromFrame": 0,
+        "toFrame": 18,
+        "minBodyWorldY": -0.0007667734753340483,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.2752487560893585e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Death_Equipped",
+        "fps": 60,
+        "sampleCount": 39,
+        "fromFrame": 0,
+        "toFrame": 75,
+        "minBodyWorldY": -0.0008137135300785303,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.2166211221664229e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Interact_Equipped",
+        "fps": 60,
+        "sampleCount": 16,
+        "fromFrame": 0,
+        "toFrame": 30,
+        "minBodyWorldY": -0.0007323115132749081,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.6067801589074007e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Victory_Equipped",
+        "fps": 60,
+        "sampleCount": 91,
+        "fromFrame": 0,
+        "toFrame": 180,
+        "minBodyWorldY": -0.000831860292237252,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.5716398957389908e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Left_Equipped",
+        "fps": 60,
+        "sampleCount": 25,
+        "fromFrame": 0,
+        "toFrame": 48,
+        "minBodyWorldY": 0.0026108974125236273,
+        "minEquipmentWorldY": 0.02199996599540721,
+        "maxGripError": 6.93114050280521e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Right_Equipped",
+        "fps": 60,
+        "sampleCount": 25,
+        "fromFrame": 0,
+        "toFrame": 48,
+        "minBodyWorldY": 0.003635614411905408,
+        "minEquipmentWorldY": 0.002676338261651756,
+        "maxGripError": 7.000864623892297e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Back_Equipped",
+        "fps": 60,
+        "sampleCount": 25,
+        "fromFrame": 0,
+        "toFrame": 48,
+        "minBodyWorldY": 0.007749846670776606,
+        "minEquipmentWorldY": 0.054394696333048,
+        "maxGripError": 5.155129170173608e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Left_Equipped",
+        "fps": 60,
+        "sampleCount": 12,
+        "fromFrame": 0,
+        "toFrame": 21.599999999999998,
+        "minBodyWorldY": 0.0010981669183820486,
+        "minEquipmentWorldY": -0.08299564428167411,
+        "maxGripError": 5.5622045445985946e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Right_Equipped",
+        "fps": 60,
+        "sampleCount": 12,
+        "fromFrame": 0,
+        "toFrame": 21.599999999999998,
+        "minBodyWorldY": 0.0047688852064311504,
+        "minEquipmentWorldY": -0.140071792298043,
+        "maxGripError": 5.698319251626158e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Back_Equipped",
+        "fps": 60,
+        "sampleCount": 12,
+        "fromFrame": 0,
+        "toFrame": 21.599999999999998,
+        "minBodyWorldY": 0.0036039731930941343,
+        "minEquipmentWorldY": -0.07560529889858042,
+        "maxGripError": 6.511388343378288e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      }
+    ]
+  },
+  "finalEquippedContact": {
+    "source": {
+      "path": "/workspace/veylun-validation/ruen-natural-poses/contact-final/poses.json",
+      "sha256": "eb15f3b035fadd6eabe2d6fcdb2b2d5a59bc2b298b74df8c1a0e4787c544ab9a"
+    },
+    "clipCount": 22,
+    "sampleCount": 1182,
+    "groupCount": 43,
+    "originalCount": 20,
+    "errors": [],
+    "floorTolerance": -0.01,
+    "minBodyWorldY": -0.0010469135595485568,
+    "minEquipmentWorldY": 0.0892449670720038,
+    "profiles": [
+      {
+        "clip": "Ruen_Idle_Equipped",
+        "fps": 30,
+        "sampleCount": 121,
+        "fromFrame": 0,
+        "toFrame": 120,
+        "minBodyWorldY": -0.0007646304438821971,
+        "minEquipmentWorldY": 0.134616621346501,
+        "maxGripError": 1.31930334592729e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Equipped",
+        "fps": 60,
+        "sampleCount": 63,
+        "fromFrame": 0,
+        "toFrame": 61.99997663497925,
+        "minBodyWorldY": 0.02718251571059227,
+        "minEquipmentWorldY": 0.6425335312262254,
+        "maxGripError": 1.351743399799327e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Equipped",
+        "fps": 60,
+        "sampleCount": 39,
+        "fromFrame": 0,
+        "toFrame": 37.99998164176941,
+        "minBodyWorldY": 0.011884808540344238,
+        "minEquipmentWorldY": 0.6973561689075537,
+        "maxGripError": 1.8074375468990746e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Guard_Equipped",
+        "fps": 60,
+        "sampleCount": 241,
+        "fromFrame": 0,
+        "toFrame": 240,
+        "minBodyWorldY": -0.0008525141165591776,
+        "minEquipmentWorldY": 0.8479574225519826,
+        "maxGripError": 1.0674227629087942e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Block_Equipped",
+        "fps": 60,
+        "sampleCount": 15,
+        "fromFrame": 0,
+        "toFrame": 13.2,
+        "minBodyWorldY": -0.0008459333330392838,
+        "minEquipmentWorldY": 0.8361527177266883,
+        "maxGripError": 1.3641303349329442e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Attack1_Equipped",
+        "fps": 60,
+        "sampleCount": 30,
+        "fromFrame": 0,
+        "toFrame": 28.799999999999997,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.2420506430578272e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Attack2_Equipped",
+        "fps": 60,
+        "sampleCount": 31,
+        "fromFrame": 0,
+        "toFrame": 30,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.4051022060108855e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Attack3_Equipped",
+        "fps": 60,
+        "sampleCount": 39,
+        "fromFrame": 0,
+        "toFrame": 37.8,
+        "minBodyWorldY": -2.006625976491705e-08,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.3915117089569262e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Jump_Equipped",
+        "fps": 60,
+        "sampleCount": 24,
+        "fromFrame": 0,
+        "toFrame": 22.803508501982762,
+        "minBodyWorldY": -1.3872265299141873e-05,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.537111934207862e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Fall_Equipped",
+        "fps": 60,
+        "sampleCount": 19,
+        "fromFrame": 0,
+        "toFrame": 18,
+        "minBodyWorldY": -0.0007169376476667821,
+        "minEquipmentWorldY": 0.5882716019477581,
+        "maxGripError": 1.1349839930814342e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Land_Equipped",
+        "fps": 60,
+        "sampleCount": 9,
+        "fromFrame": 0,
+        "toFrame": 7.199999999999999,
+        "minBodyWorldY": -0.0008074226207099855,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.1106668934559092e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Roll_Equipped",
+        "fps": 60,
+        "sampleCount": 28,
+        "fromFrame": 0,
+        "toFrame": 27,
+        "minBodyWorldY": -0.0010469135595485568,
+        "minEquipmentWorldY": 0.0892449670720038,
+        "maxGripError": 1.022009139380744e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Hurt_Equipped",
+        "fps": 60,
+        "sampleCount": 19,
+        "fromFrame": 0,
+        "toFrame": 18,
+        "minBodyWorldY": -0.0007711866055615246,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.2752487560893585e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Death_Equipped",
+        "fps": 60,
+        "sampleCount": 76,
+        "fromFrame": 0,
+        "toFrame": 75,
+        "minBodyWorldY": -0.0008137135300785303,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.2166211221664229e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Interact_Equipped",
+        "fps": 60,
+        "sampleCount": 31,
+        "fromFrame": 0,
+        "toFrame": 30,
+        "minBodyWorldY": -0.0007345388294197619,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.6067801589074007e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Victory_Equipped",
+        "fps": 60,
+        "sampleCount": 181,
+        "fromFrame": 0,
+        "toFrame": 180,
+        "minBodyWorldY": -0.0008644876070320606,
+        "minEquipmentWorldY": 0.09567790893201406,
+        "maxGripError": 1.5716398957389908e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Left_Equipped",
+        "fps": 60,
+        "sampleCount": 49,
+        "fromFrame": 0,
+        "toFrame": 48,
+        "minBodyWorldY": 0.0016842150362208486,
+        "minEquipmentWorldY": 0.5484560853187306,
+        "maxGripError": 7.677487773113857e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Right_Equipped",
+        "fps": 60,
+        "sampleCount": 49,
+        "fromFrame": 0,
+        "toFrame": 48,
+        "minBodyWorldY": 0.002814704552292824,
+        "minEquipmentWorldY": 0.5555258339560484,
+        "maxGripError": 6.03821534160824e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Walk_Back_Equipped",
+        "fps": 60,
+        "sampleCount": 49,
+        "fromFrame": 0,
+        "toFrame": 48,
+        "minBodyWorldY": 0.007749846670776606,
+        "minEquipmentWorldY": 0.610253408735886,
+        "maxGripError": 9.176562006703923e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Left_Equipped",
+        "fps": 60,
+        "sampleCount": 23,
+        "fromFrame": 0,
+        "toFrame": 21.599999999999998,
+        "minBodyWorldY": 0.0010981669183820486,
+        "minEquipmentWorldY": 0.3949884974544716,
+        "maxGripError": 1.0870395342541794e-07,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Right_Equipped",
+        "fps": 60,
+        "sampleCount": 23,
+        "fromFrame": 0,
+        "toFrame": 21.599999999999998,
+        "minBodyWorldY": 0.0030440720729529858,
+        "minEquipmentWorldY": 0.415651445665608,
+        "maxGripError": 8.092337450234353e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      },
+      {
+        "clip": "Ruen_Run_Back_Equipped",
+        "fps": 60,
+        "sampleCount": 23,
+        "fromFrame": 0,
+        "toFrame": 21.599999999999998,
+        "minBodyWorldY": 0.002477011876180768,
+        "minEquipmentWorldY": 0.48025341350425754,
+        "maxGripError": 8.380536742145073e-08,
+        "equipmentEnabled": true,
+        "correctHandParents": true
+      }
+    ]
+  },
+  "corrections": [
+    "Corrected sword/shield mount frames and palm contact positions so the handles cross the curled fingers.",
+    "Rejected fit1 wrist poses and solved new grip/elbow targets, distributing axial twist into the forearms.",
+    "The low sword carry intersected the floor during lateral running (minimum -0.1400717923). The final eight movement variants use the raised right arm from guard and relaxed left arm from Idle; torso and leg tracks retain their motion."
+  ],
+  "visualReview": "Final fit2 stance images were reviewed from front, side and back, including both hand closeups, by the implementation and independent review agents.",
+  "rawEvidenceLocation": "/workspace/veylun-validation/ruen-natural-poses"
+}

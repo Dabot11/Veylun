@@ -49,7 +49,7 @@ export class Application {
  }
  private async enableRuenModel():Promise<void>{
   const panel=document.createElement('aside');panel.id='ruen-model-trial';
-  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Espada y escudo · movimiento, combate y acciones</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=actions-v1&equipment=azure">Ver animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
+  panel.innerHTML=`<strong>RUEN</strong><span id="ruen-model-status" role="status" data-status="loading">Cargando Ruen…</span><small>Espada y escudo · movimiento, combate y acciones</small><nav><a href="${import.meta.env.BASE_URL}?inspect=ruen&motion=posture-v1&equipment=azure">Ver animaciones</a><a href="${import.meta.env.BASE_URL}?ruen=provisional">Modelo provisional</a></nav>`;
   document.querySelector('#app')!.append(panel);this.ruenStatus=panel.querySelector('#ruen-model-status')!;
   try{
    await import('../ui/ruenTrial.css');

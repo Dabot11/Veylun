@@ -63,6 +63,14 @@ en `f828d841`, y `b83b0f36` añadió salto y voltereta. La fuente vigente
 
 ## Animación
 
+La revisión de reposo y guardia ajusta la orientación y el contacto de las
+empuñaduras dentro del puño, las posturas de Idle/Guardia y el transporte de
+las armas al moverse. Conserva los cinco GLB y las escalas. Las poses y los
+contactos de 22 clips ya se calibraron; aprobaron 243 unitarias, cuatro casos
+seleccionados de navegador, typecheck y build. El visor local `posture-v1`
+conserva 43 grupos y comienza en reposo pausado.
+[Alcance del ajuste](docs/RUEN_NATURAL_STANCES.md). Publicación pendiente.
+
 **Validado y publicado desde `f0402306`:** cuatro clips de daño,
 muerte, interacción y victoria, seis variantes de caminar/correr hacia
 izquierda, derecha y atrás, y composición de combate con clips existentes.

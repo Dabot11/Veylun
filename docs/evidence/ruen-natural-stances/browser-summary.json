@@ -1,0 +1,136 @@
+{
+  "scope": {
+    "selected": 4,
+    "catalog": 53,
+    "development": 3,
+    "production": 1,
+    "newPreviewCases": 2,
+    "regressionCases": 2,
+    "fullJourneyRepeated": false
+  },
+  "status": {
+    "finalPassed": 4,
+    "finalFailed": 0,
+    "skipped": 0,
+    "firstAttemptPassed": 3,
+    "initialFailedAttempts": 1,
+    "isolatedRetests": 1
+  },
+  "runs": [
+    {
+      "report": "browser-report.json",
+      "sha256": "89280873e3fb23346186c42f395cde85638c8a5b85af95c81ca62f51f11073d4",
+      "stats": {
+        "startTime": "2026-10-24T16:35:07.187Z",
+        "duration": 222460.16199999998,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      }
+    },
+    {
+      "report": "preview-retest-report.json",
+      "sha256": "4cffe014d92f11a226b197adf417af0a9e173ff07585efca06455cb0430c462e",
+      "stats": {
+        "startTime": "2026-10-24T16:40:28.118Z",
+        "duration": 104796.937,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      }
+    }
+  ],
+  "durationMs": {
+    "executedRuns": 327257.099,
+    "finalCases": 305732
+  },
+  "cases": [
+    {
+      "file": "ruen-combat.spec.ts",
+      "title": "real shield input blocks a Brote hit and keeps equipped guard while moving under lock-on",
+      "environment": "development",
+      "attempts": [
+        {
+          "report": "browser-report.json",
+          "status": "passed",
+          "durationMs": 71022,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-meshy.spec.ts",
+      "title": "default Ruen breathes with reduced equipment, blends walking and running, and keeps gear through traversal",
+      "environment": "development",
+      "attempts": [
+        {
+          "report": "browser-report.json",
+          "status": "passed",
+          "durationMs": 106447,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-posture-preview.spec.ts",
+      "title": "posture preview keeps natural Idle and guard grounded, equipped and looping on the real skin",
+      "environment": "development",
+      "attempts": [
+        {
+          "report": "browser-report.json",
+          "status": "failed",
+          "durationMs": 17469,
+          "retry": 0
+        },
+        {
+          "report": "preview-retest-report.json",
+          "status": "passed",
+          "durationMs": 103397,
+          "retry": 0
+        }
+      ]
+    },
+    {
+      "file": "ruen-posture-preview.spec.ts",
+      "title": "production posture preview opens the relaxed Idle and offers guard without debug hooks or save writes",
+      "environment": "production",
+      "attempts": [
+        {
+          "report": "browser-report.json",
+          "status": "passed",
+          "durationMs": 24866,
+          "retry": 0
+        }
+      ]
+    }
+  ],
+  "sourceIntegrity": {
+    "manifest": "source-manifest.sha256",
+    "files": 106,
+    "sha256": "7ccf7f7d6492a047a67e2beb9ca8e8bc4e3e61a6c94337e642481667fe0e054b",
+    "changedAfterFinalManifest": [],
+    "applicationAndBuildUnchangedDuringBrowserRuns": true,
+    "testOnlyCorrection": "Selecting a clip starts playback. The development preview test now pauses with the UI before deterministic samples and before testing Play. Only tests/browser/ruen-posture-preview.spec.ts changed; original assertion/tolerances preserved.",
+    "previousManifest": "source-manifest-before-preview-pause.sha256"
+  },
+  "emptySelectionInvocation": {
+    "report": "preview-retest-no-tests-report.json",
+    "log": "preview-retest-no-tests.log",
+    "selected": 0,
+    "reason": "An anchored grep matched no full Playwright title; the corrected command selected only the intended development preview. This invocation executed no cases and is excluded from run duration totals."
+  },
+  "execution": {
+    "workers": 1,
+    "browser": "/usr/bin/chromium",
+    "renderer": "software",
+    "developmentURL": "http://127.0.0.1:5174",
+    "productionURL": "http://127.0.0.1:4173"
+  },
+  "notes": [
+    "First report and failed screenshot preserved externally.",
+    "Four selected cases passed; the complete53-case catalog was not repeated.",
+    "No public-site browser verification is claimed."
+  ]
+}

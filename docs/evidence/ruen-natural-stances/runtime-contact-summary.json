@@ -1,0 +1,231 @@
+{
+  "schemaVersion": 1,
+  "scope": "Manual adapter/Simulation calibration at 60 Hz on real skinned meshes; separate from browser input cases.",
+  "floorTolerance": -0.01,
+  "runs": [
+    {
+      "stage": "Initial carry transition",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/runtime-contact.json",
+      "sourceSha256": "0c782efc23fe745149b800480171ad372109578dce57b3d89cd4ae6b7427166c",
+      "summary": [
+        {
+          "scenario": "carry",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.016255028692779394,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": [
+            {
+              "step": 134,
+              "state": "idle",
+              "minBodyAboveFloor": -0.010899604933277351
+            },
+            {
+              "step": 135,
+              "state": "idle",
+              "minBodyAboveFloor": -0.01623661693898648
+            },
+            {
+              "step": 136,
+              "state": "idle",
+              "minBodyAboveFloor": -0.016255028692779394
+            },
+            {
+              "step": 137,
+              "state": "idle",
+              "minBodyAboveFloor": -0.013463888478326469
+            }
+          ]
+        },
+        {
+          "scenario": "guard-switch",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.004486622205556956,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        },
+        {
+          "scenario": "guard-moving",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.004486622205556956,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        },
+        {
+          "scenario": "direction-blends",
+          "sampleCount": 180,
+          "minBodyAboveFloor": 0.0021847223321603774,
+          "minEquipmentAboveFloor": 0.32874254133198716,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        }
+      ]
+    },
+    {
+      "stage": "Joint-support correction",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/runtime-contact-final.json",
+      "sourceSha256": "ef00e377fcdcef3a47a74e3af05ec67fef6cff8b494f7a8109312d48520e904b",
+      "summary": [
+        {
+          "scenario": "carry",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.010899604933277351,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": [
+            {
+              "step": 134,
+              "state": "idle",
+              "minBodyAboveFloor": -0.010899604933277351
+            }
+          ]
+        },
+        {
+          "scenario": "guard-switch",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.004486622205556956,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        },
+        {
+          "scenario": "guard-moving",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.004486622205556956,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        },
+        {
+          "scenario": "direction-blends",
+          "sampleCount": 180,
+          "minBodyAboveFloor": 0.0021847223321603774,
+          "minEquipmentAboveFloor": 0.32874254133198716,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        }
+      ]
+    },
+    {
+      "stage": "12 real sole probes",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/runtime-surface-final.json",
+      "sourceSha256": "60f158ac2725980357d1e896ad53c7c0e29ad8da63f8cc030777e98f801e2d8b",
+      "summary": [
+        {
+          "scenario": "carry",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.010899604933277351,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": [
+            {
+              "step": 134,
+              "state": "idle",
+              "minBodyAboveFloor": -0.010899604933277351
+            }
+          ]
+        },
+        {
+          "scenario": "guard-switch",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.004486622205556956,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        },
+        {
+          "scenario": "guard-moving",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.004486622205556956,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        },
+        {
+          "scenario": "direction-blends",
+          "sampleCount": 180,
+          "minBodyAboveFloor": 0.0021847223321603774,
+          "minEquipmentAboveFloor": 0.32874254133198716,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        }
+      ]
+    },
+    {
+      "stage": "20 real sole probes; isolated carry retest",
+      "source": "/workspace/veylun-validation/ruen-natural-poses/runtime-stop-final.json",
+      "sourceSha256": "8208354613d0a888332d6644a18eca663f4fbee603f886f5ffed7391f156a3d5",
+      "summary": [
+        {
+          "scenario": "carry",
+          "sampleCount": 180,
+          "minBodyAboveFloor": -0.0006521847742846296,
+          "minEquipmentAboveFloor": 0.114820121087855,
+          "maxRootDelta": 0,
+          "fallbackSamples": 0,
+          "penetrations": []
+        }
+      ]
+    }
+  ],
+  "acceptedSampleCount": 720,
+  "acceptedScenarios": [
+    {
+      "scenario": "guard-switch",
+      "sampleCount": 180,
+      "minBodyAboveFloor": -0.004486622205556956,
+      "minEquipmentAboveFloor": 0.114820121087855,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "scenario": "guard-moving",
+      "sampleCount": 180,
+      "minBodyAboveFloor": -0.004486622205556956,
+      "minEquipmentAboveFloor": 0.114820121087855,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "scenario": "direction-blends",
+      "sampleCount": 180,
+      "minBodyAboveFloor": 0.0021847223321603774,
+      "minEquipmentAboveFloor": 0.32874254133198716,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    },
+    {
+      "scenario": "carry",
+      "sampleCount": 180,
+      "minBodyAboveFloor": -0.0006521847742846296,
+      "minEquipmentAboveFloor": 0.114820121087855,
+      "maxRootDelta": 0,
+      "fallbackSamples": 0,
+      "penetrations": []
+    }
+  ],
+  "finalSelection": "540 unchanged guard-switch, guard-moving and direction-blends samples from runtime-surface-final plus 180 isolated carry samples from runtime-stop-final. The 20-probe correction only changes the blend into Idle after locomotion.",
+  "correction": "After animation blending, 20 sampled sole surface points bound to Foot/Toe/Leg joints lift only the visible pelvis when stopping. Root/controller positions and rules remain unchanged.",
+  "sourceManifest": "source-manifest.sha256",
+  "sourceManifestSha256": "7ccf7f7d6492a047a67e2beb9ca8e8bc4e3e61a6c94337e642481667fe0e054b",
+  "calibrationManifest": "source-manifest-before-preview-pause.sha256",
+  "calibrationManifestSha256": "54d93aa6d813c28ca35e129be7d901b7d230d37a3acbe2760a85b599a75481f7",
+  "testOnlyChangeAfterCalibration": "Only tests/browser/ruen-posture-preview.spec.ts changed to pause explicitly after selecting clips; application and production build stayed unchanged."
+}

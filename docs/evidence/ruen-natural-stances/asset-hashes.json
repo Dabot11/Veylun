@@ -1,0 +1,53 @@
+{
+  "checkedAtUtc": "2026-10-24T16:21:45.068907+00:00",
+  "baselineSource": "f0402306009e6b4362232d959574e61219939b2e",
+  "baselineInventory": "../ruen-complete-actions/asset-hashes.json",
+  "allFiveUnchanged": true,
+  "assets": [
+    {
+      "kind": "hero",
+      "role": "master",
+      "path": "public/assets/models/ruen/Meshy_AI_Crimson_Gemwarden_All_Animations.glb",
+      "bytes": 43216948,
+      "sha256": "d662ef7c34a346379d15f6eb31069a60f35b2dd161911ed5d6df98232ad5db35",
+      "previousSha256": "d662ef7c34a346379d15f6eb31069a60f35b2dd161911ed5d6df98232ad5db35",
+      "unchanged": true
+    },
+    {
+      "kind": "sword",
+      "role": "source",
+      "path": "public/assets/models/ruen/equipment/Meshy_AI_Azure_Oathblade_1022220336_texture.glb",
+      "bytes": 14817508,
+      "sha256": "111ea36ba748b0ff3d49651411cbb94bdd4bf4ca3f1728337be5d6b271e1e04d",
+      "previousSha256": "111ea36ba748b0ff3d49651411cbb94bdd4bf4ca3f1728337be5d6b271e1e04d",
+      "unchanged": true
+    },
+    {
+      "kind": "sword",
+      "role": "runtime",
+      "path": "public/assets/models/ruen/equipment/runtime/azure-oathblade.glb",
+      "bytes": 2622456,
+      "sha256": "a0f95310dcf9ef8f70055f261e482768f1864528e35f788476e19ae6ba2d844b",
+      "previousSha256": "a0f95310dcf9ef8f70055f261e482768f1864528e35f788476e19ae6ba2d844b",
+      "unchanged": true
+    },
+    {
+      "kind": "shield",
+      "role": "source",
+      "path": "public/assets/models/ruen/equipment/Meshy_AI_Aegis_of_the_Azure_St_1022222231_texture.glb",
+      "bytes": 29661132,
+      "sha256": "b639b29cd66260064cac6ea13f26764dd8c23e561b92da4440ce4e8b77ac7e23",
+      "previousSha256": "b639b29cd66260064cac6ea13f26764dd8c23e561b92da4440ce4e8b77ac7e23",
+      "unchanged": true
+    },
+    {
+      "kind": "shield",
+      "role": "runtime",
+      "path": "public/assets/models/ruen/equipment/runtime/aegis-of-the-azure.glb",
+      "bytes": 4986372,
+      "sha256": "0f06cabf8ae2c29f84475eb365a2b0bcf2d4bbd203c78cdb084586d137657bdf",
+      "previousSha256": "0f06cabf8ae2c29f84475eb365a2b0bcf2d4bbd203c78cdb084586d137657bdf",
+      "unchanged": true
+    }
+  ]
+}

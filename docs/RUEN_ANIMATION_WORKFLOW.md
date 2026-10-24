@@ -5,6 +5,17 @@ cada animación definimos poses en momentos concretos mediante keyframes; el
 motor interpola entre ellas. Así conservamos el modelo, su skin y materiales.
 El archivo master permanece intacto y los clips nuevos se guardan por separado.
 
+## Revisión de reposo y guardia
+
+La etapa en curso corrige el montaje dentro del puño y usa el reposo de
+exploración y la guardia como referencia visual. Se comprueban las muñecas,
+la flexión de codos y rodillas, la respiración y el apoyo de los pies desde
+tres vistas y acercamientos a las manos. El agarre debe mantenerse al caminar
+y correr. Las poses y los contactos ya se calibraron; aprobaron 243 unitarias,
+cuatro casos seleccionados de navegador, typecheck y build. La publicación
+sigue pendiente.
+[Alcance y evidencia](RUEN_NATURAL_STANCES.md).
+
 ## Acciones completas publicadas
 
 La etapa actual adapta daño, muerte, interacción, victoria y seis variantes
